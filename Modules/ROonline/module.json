@@ -1,0 +1,13 @@
+{
+    "name": "ROonline",
+    "alias": "roonline",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ROonline\\Providers\\ROonlineServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

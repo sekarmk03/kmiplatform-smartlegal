@@ -1,0 +1,13 @@
+{
+    "name": "FTQ",
+    "alias": "ftq",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\FTQ\\Providers\\FTQServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
