@@ -8,7 +8,6 @@
     <link href="{{ asset('/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css') }}" rel="stylesheet" />
 @endpush
-
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>

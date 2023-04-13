@@ -2,6 +2,7 @@
 <script src="{{ asset('/js/vendor.min.js') }}"></script>
 <script src="{{ asset('/js/app.min.js') }}"></script>
 <!-- ================== END core-js ================== -->
+<<<<<<< HEAD
 <script>
 var conn = new WebSocket('ws://localhost:8080');    
 conn.onopen = function(e) {
@@ -47,4 +48,7 @@ conn.onmessage = function(e) {
 };
 countNotif();
 </script>
+=======
+
+>>>>>>> 77cbe935 (upload from local to git)
 @stack('scripts')
