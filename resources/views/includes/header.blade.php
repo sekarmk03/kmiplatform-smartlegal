@@ -53,14 +53,14 @@
 		@endif
 	</div>
 	
-	@includeWhen($appHeaderMegaMenu, 'includes.component.header-mega-menu')
+	@include('includes.component.header-mega-menu')
 	
 	<!-- BEGIN header-nav -->
 	<div class="navbar-nav">
 		<div class="navbar-item dropdown">
-			<a href="#" data-bs-toggle="dropdown" class="navbar-link dropdown-toggle icon">
+			<a onclick="onReadNotif()" href="#" data-bs-toggle="dropdown" class="navbar-link dropdown-toggle icon notif-icon">
 				<i class="fa fa-bell"></i>
-				<span class="badge">5</span>
+				{{-- <span class="badge">0</span> --}}
 			</a>
 			@include('includes.component.header-dropdown-notification')
 		</div>

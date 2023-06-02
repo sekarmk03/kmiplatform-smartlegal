@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ManageMenuController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             $menus = Menu::all();
@@ -33,7 +33,7 @@ class ManageMenuController extends Controller
             return view('pages.admin.manage-menu');
         }
     }
-    public function postMenu(Request $request)
+    public function store(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, Menu::rules(), [], Menu::attributes());
@@ -51,7 +51,7 @@ class ManageMenuController extends Controller
             ], 200);
         }
     }
-    public function editMenu($id)
+    public function edit($id)
     {
         $menu = Menu::where('intMenu_ID', $id)->first();
         if ($menu) {
@@ -66,7 +66,7 @@ class ManageMenuController extends Controller
             ], 404);
         }
     }
-    public function updateMenu(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $input = $request->only([
             'txtMenuTitle', 'txtMenuIcon'
@@ -94,7 +94,7 @@ class ManageMenuController extends Controller
             }
         }
     }
-    public function destroyMenu($id)
+    public function destroy($id)
     {
         $menu = Menu::where('intMenu_ID', $id)->delete();
         if ($menu) {

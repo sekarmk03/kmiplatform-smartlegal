@@ -14,7 +14,7 @@ use App\Helpers\LevelAccess as LevelHelp;
 
 class ManageSubmenuController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             $menus = Submenu::join('mmenus', 'mmenus.intMenu_ID','=', 'msubmenus.intMenu_ID')
@@ -36,7 +36,7 @@ class ManageSubmenuController extends Controller
             ]);
         }
     }
-    public function postSubmenu(Request $request)
+    public function store(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, Submenu::rules(), [], Submenu::attributes());
@@ -64,7 +64,7 @@ class ManageSubmenuController extends Controller
             ], 200);
         }
     }
-    public function editSubmenu($id)
+    public function edit($id)
     {
         $submenu = Submenu::with('routes')->find($id);
         if ($submenu) {
@@ -79,7 +79,7 @@ class ManageSubmenuController extends Controller
             ], 404);
         }
     }
-    public function updateSubmenu(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $input = $request->only([
             'intMenu_ID', 'txtSubmenuTitle', 'txtSubmenuIcon', 'txtUrl', 'txtRouteName'
@@ -122,7 +122,7 @@ class ManageSubmenuController extends Controller
             }
         }
     }
-    public function destroySubmenu($id)
+    public function destroy($id)
     {
         $submenu = Submenu::find($id);
         if ($submenu) {

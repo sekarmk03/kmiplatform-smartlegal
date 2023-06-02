@@ -1,8 +1,5 @@
 <meta charset="utf-8" />
-<?php
-    $module = Module::find(Request::segment(1));
-?>
-<title><?php echo $__env->yieldContent('title'); ?> | <?php echo e($module->getName()); ?></title>
+<title><?php echo $__env->yieldContent('title'); ?> | RO Online</title>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 <meta content="" name="description" />
 <meta content="" name="author" />

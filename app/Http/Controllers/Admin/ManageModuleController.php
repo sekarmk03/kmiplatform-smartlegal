@@ -14,7 +14,7 @@ use File;
 
 class ManageModuleController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             if (Auth::user()->intLevel_ID == 1) {
@@ -45,7 +45,7 @@ class ManageModuleController extends Controller
         }
     }
 
-    public function storeModule(Request $request)
+    public function store(Request $request)
     {
         $input = $request->only(['txtModuleName']);
         $validator = Validator::make($input, Module::rules(), [], Module::attributes());
@@ -80,7 +80,7 @@ class ManageModuleController extends Controller
         }
     }
 
-    public function editModule($id)
+    public function edit($id)
     {
         $module = Module::find($id);
         if ($module) {
@@ -95,7 +95,7 @@ class ManageModuleController extends Controller
             ], 404);
         }
     }
-    public function updateModule($id, Request $request)
+    public function update($id, Request $request)
     {
         $input = $request->only(['txtModuleName']);
         $validator = Validator::make($input, Module::rules(), [], Module::attributes());
@@ -130,7 +130,7 @@ class ManageModuleController extends Controller
         }
     }
 
-    public function destroyModule($id)
+    public function destroy($id)
     {
         $module = Module::find($id);
         if ($module) {

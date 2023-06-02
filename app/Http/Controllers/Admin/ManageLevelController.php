@@ -14,7 +14,7 @@ use App\Models\LevelAccessModel as LevelAccess;
 
 class ManageLevelController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             $levels = Level::all();
@@ -32,7 +32,7 @@ class ManageLevelController extends Controller
             return view('pages.admin.manage-levels');
         }
     }
-    public function postLevel(Request $request)
+    public function store(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, Level::rules(), [], Level::attributes());
@@ -50,7 +50,7 @@ class ManageLevelController extends Controller
             ], 200);
         }
     }
-    public function editLevel($id)
+    public function edit($id)
     {
         $level = Level::find($id);
         if ($level) {
@@ -84,7 +84,7 @@ class ManageLevelController extends Controller
             ], 400);
         }
     }
-    public function updateLevel(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $input = $request->only(['txtLevelName']);
         $validator = Validator::make($input, Level::rules(), [], Level::attributes());
@@ -138,7 +138,7 @@ class ManageLevelController extends Controller
             ], 404);
         }
     }
-    public function destroyLevel($id)
+    public function destroy($id)
     {
         $level = Level::find($id);
         if ($level) {

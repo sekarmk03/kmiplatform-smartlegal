@@ -141,7 +141,7 @@
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('manage.subdepartment.update', ':id') }}";
             url = url.replace(':id', id);
-            method = "PUT";
+            method = "POST";
             $.get(editUrl, function(response){
                 $('#modal-level').modal('show');
                 $('select#DepartmentName').picker('set', response.data.intDepartment_ID);
@@ -208,7 +208,7 @@
             })
             $('.modal-body form').on('submit', function(e){
                 e.preventDefault();
-                var formData = new FormData($(this));
+                var formData = new FormData($(this)[0]);
                 formData.append('txtCreatedBy', "{{ Auth::user()->txtName }}");
                 formData.append('txtUpdatedBy', "{{ Auth::user()->txtName }}");
                 $.ajax({
@@ -216,6 +216,8 @@
                     method: getMethod(),
                     data: formData,
                     dataType: "JSON",
+                    processData: false,
+                    contentType: false,
                     success: function(response){
                         $('#modal-level').modal('hide');
                         refresh();
@@ -224,8 +226,8 @@
                     error: function(response){
                         let fields = response.responseJSON.fields;
                         $.each(fields, function(i, val){
-                            $.each(val, function(ind, value){
-                                notification(response.responseJSON.status, val[ind],'bg-danger');
+                            $.each(val, function(idx, value){
+                                notification(response.responseJSON.status, val[idx],'bg-danger');
                             })
                         })
                     }

@@ -69,6 +69,16 @@ var chartA = new Highcharts.chart('LineA', {
             enableMouseTracking: false
         }
     },
+    tooltip: {
+        useHTML: true,
+        formatter: function() {
+          return this.y +
+            '<br/>Some text.<br/><a href="http://www.highcharts.com"/>Click here to read more</a>'
+        },
+        style: {
+          pointerEvents: 'auto'
+        }
+    },
     exporting: {
         csv: {
             dateFormat: '%Y'

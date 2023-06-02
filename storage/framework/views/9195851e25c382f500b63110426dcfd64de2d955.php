@@ -1,5 +1,5 @@
 <div class="dropdown-menu dropdown-menu-end me-1">
-	<a href="javascript:;" class="dropdown-item">Edit Profile</a>
+	<a href="<?php echo e(route('user.profile')); ?>" class="dropdown-item">Edit Profile</a>
 	<a href="javascript:;" class="dropdown-item d-flex align-items-center">
 		Inbox
 		<span class="badge bg-danger rounded-pill ms-auto pb-4px">2</span>

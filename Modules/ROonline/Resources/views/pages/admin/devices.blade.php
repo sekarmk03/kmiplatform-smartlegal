@@ -115,7 +115,7 @@
         var daTable = $('#daTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('roonline.manage.device') }}",
+            ajax: "{{ route('roonline.device.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'dtmInserted', name: 'dtmInserted'},
@@ -137,15 +137,15 @@
         function create(){
             $('.modal-header h4').html('Create Level');
             $('#modal-level').modal('show');
-            url = "{{ route('roonline.manage.device.store') }}";
+            url = "{{ route('roonline.device.store') }}";
             method = "POST";
         }
         function edit(id){
             $('.modal-header h4').html('Edit Device');
             $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
-            let editUrl = "{!! route('roonline.manage.device.edit', ':id') !!}";
+            let editUrl = "{!! route('roonline.device.edit', ':id') !!}";
             editUrl = editUrl.replace(':id', id);
-            url = "{{ route('roonline.manage.device.update', ':id') }}";
+            url = "{{ route('roonline.device.update', ':id') }}";
             url = url.replace(':id', id);
             method = "POST";
             $.get(editUrl, function(response){
@@ -158,7 +158,7 @@
             });
         }
         function destroy(id){
-            let deleteUrl = "{{ route('roonline.manage.device.destroy', ':id') }}";
+            let deleteUrl = "{{ route('roonline.device.destroy', ':id') }}";
             deleteUrl = deleteUrl.replace(':id', id);
             swal({
                 title: 'Are you sure?',

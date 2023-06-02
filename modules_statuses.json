@@ -7,5 +7,7 @@
     "Myproject": true,
     "Roonline": true,
     "OEEonline": true,
-    "FTQ": true
+    "FTQ": true,
+    "FUI": true,
+    "Facerecognition": true
 }

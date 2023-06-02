@@ -11,7 +11,7 @@ use App\Helpers\LevelAccess as LevelHelp;
 
 class ManageDepartmentController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             $departments = Department::all();
@@ -29,7 +29,7 @@ class ManageDepartmentController extends Controller
             return view('pages.admin.manage-departments');
         }
     }
-    public function postDepartment(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), Department::rules(), [], Department::attributes());
         if ($validator->fails()) {
@@ -45,7 +45,7 @@ class ManageDepartmentController extends Controller
             ], 200);
         }
     }
-    public function editDepartment($id)
+    public function edit($id)
     {
         $department = Department::where('intDepartment_ID', $id)->first();
         if ($department) {
@@ -60,7 +60,7 @@ class ManageDepartmentController extends Controller
             ], 404);
         }
     }
-    public function updateDepartment(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), Department::rules(), [], Department::attributes());
         if ($validator->fails()) {
@@ -83,7 +83,7 @@ class ManageDepartmentController extends Controller
             }
         }
     }
-    public function destroyDepartment($id)
+    public function destroy($id)
     {
         $department = Department::where('intDepartment_ID', $id)->delete();
         if ($department) {

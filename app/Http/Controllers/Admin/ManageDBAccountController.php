@@ -13,7 +13,7 @@ use App\Helpers\LevelAccess as LevelHelp;
 
 class ManageDBAccountController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             if (Auth::user()->intLevel_ID == 1) {
@@ -35,7 +35,7 @@ class ManageDBAccountController extends Controller
             return view('pages.admin.manage-dbaccount');
         }
     }
-    public function storeAccount(Request $request)
+    public function store(Request $request)
     {
         $input = $request->only(['txtUsername', 'txtPassword']);
         $validator = Validator::make($input, Account::rules(), [], Account::attributes());
@@ -64,7 +64,7 @@ class ManageDBAccountController extends Controller
         }
     }
 
-    public function editAccount($id)
+    public function edit($id)
     {
         $account = Account::find($id);
         if ($account) {
@@ -79,7 +79,7 @@ class ManageDBAccountController extends Controller
             ], 404);
         }
     }
-    public function updateAccount($id, Request $request)
+    public function update($id, Request $request)
     {
         $account = Account::find($id);
         if ($account) {
@@ -113,7 +113,7 @@ class ManageDBAccountController extends Controller
             ], 404);
         }
     }
-    public function destroyAccount($id)
+    public function destroy($id)
     {
         $account = Account::find($id);
         if ($account) {

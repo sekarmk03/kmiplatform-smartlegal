@@ -32,7 +32,7 @@
 					Contact your admin to update your priviledge.
 				</div>
 				<div>
-					<a href="{{ route('manage.menu.index') }}" class="btn btn-success px-3">Go Home</a>
+					<a href="{{ route('dashboard.navigation') }}" class="btn btn-success px-3">Go Home</a>
 				</div>
 			</div>
 		</div>

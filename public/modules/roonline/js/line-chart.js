@@ -1,7 +1,14 @@
 let categories = [];
 var chartA = new Highcharts.chart('LineA', {
     chart: {
-        zoomType: 'x'
+        zoomType: 'x',
+        resetZoomButton: {
+            position: {
+              verticalAlign: 'bottom',
+              x: 0,
+              y: 100
+            }
+        },
     },
     title: {
         text: 'Chart RO Line A',
@@ -67,11 +74,35 @@ var chartA = new Highcharts.chart('LineA', {
                 enabled: true
             },
             enableMouseTracking: false
-        }
+        },
+        series: {
+            turboThreshold:3000,
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function() {
+                        if (this.y > 2) {
+                            reasonModal(this.series.name, this.category, this.y);
+                        }
+                    }
+                }
+            }
+        },
     },
     exporting: {
         csv: {
             dateFormat: '%Y'
+        }
+    },
+    tooltip: {
+        useHTML: true,
+        formatter: function() {
+            return 'RO :<span class="ro-value">'+this.y +'</span>'+
+                '<br>Waktu :<span class="time-value">'+this.x +'</span>'+
+                '<br>Line Process :<span class="line-value">'+this.series.name +'</span>';
+        },
+        style: {
+          pointerEvents: 'all'
         }
     },            
     series: [{
@@ -87,7 +118,14 @@ var chartA = new Highcharts.chart('LineA', {
 
 var chartE = new Highcharts.chart('LineE', {
     chart: {
-        zoomType: 'x'
+        zoomType: 'x',
+        resetZoomButton: {
+            position: {
+              verticalAlign: 'bottom',
+              x: 0,
+              y: 100
+            }
+        },
     },
     title: {
         text: 'Chart RO Line E',
@@ -153,13 +191,37 @@ var chartE = new Highcharts.chart('LineE', {
                 enabled: true
             },
             enableMouseTracking: false
-        }
+        },
+        series: {
+            turboThreshold:3000,
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function() {
+                        if (this.y > 2) {
+                            reasonModal(this.series.name, this.category, this.y);
+                        }
+                    }
+                }
+            }
+        },
     },
     exporting: {
         csv: {
             dateFormat: '%Y'
         }
-    },            
+    },    
+    tooltip: {
+        useHTML: true,
+        formatter: function() {
+            return 'RO :'+this.y +
+                '<br>Waktu :'+this.x +
+                '<br>Line Process :'+this.series.name;
+        },
+        style: {
+          pointerEvents: 'auto'
+        }
+    },        
     series: [{
         type: "area",
         name: 'Filling Sachet E1',
@@ -173,7 +235,14 @@ var chartE = new Highcharts.chart('LineE', {
 
 var chartJ = new Highcharts.chart('LineJ', {
     chart: {
-        zoomType: 'x'
+        zoomType: 'x',
+        resetZoomButton: {
+            position: {
+              verticalAlign: 'bottom',
+              x: 0,
+              y: 100
+            }
+        },
     },
     title: {
         text: 'Chart RO Line J',
@@ -239,13 +308,37 @@ var chartJ = new Highcharts.chart('LineJ', {
                 enabled: true
             },
             enableMouseTracking: false
-        }
+        },
+        series: {
+            turboThreshold:3000,
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function() {
+                        if (this.y > 2) {
+                            reasonModal(this.series.name, this.category, this.y);
+                        }
+                    }
+                }
+            }
+        },
     },
     exporting: {
         csv: {
             dateFormat: '%Y'
         }
-    },            
+    },
+    tooltip: {
+        useHTML: true,
+        formatter: function() {
+            return 'RO :'+this.y +
+                '<br>Waktu :'+this.x +
+                '<br>Line Process :'+this.series.name;
+        },
+        style: {
+          pointerEvents: 'auto'
+        }
+    },             
     series: [{
         type: "area",
         name: 'Filling Sachet J1',

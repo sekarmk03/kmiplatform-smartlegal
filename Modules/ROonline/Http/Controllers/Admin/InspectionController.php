@@ -24,8 +24,11 @@ class InspectionController extends Controller
             return DataTables::of($inspections)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $btn_edit = '<button onclick="edit('.$row->intProcess_ID.')" class="btn btn-sm btn-success" onclick="edit('.$row->intProcess_ID.')"><i class="fa-solid fa-pen-to-square"></i></button>';
-                    $btn_delete = '<button class="btn btn-sm btn-danger" onclick="destroy('.$row->intProcess_ID.')"><i class="fa-solid fa-trash"></i></button>';
+                    if (in_array($row->intProcess_ID, [2, 4, 6])) {
+                        $btn_edit = '<button onclick="edit('.$row->intProcess_ID.')" class="btn btn-sm btn-default disabled" onclick="edit('.$row->intProcess_ID.')"><i class="fa-solid fa-pen-to-square"></i></button>';
+                    } else {
+                        $btn_edit = '<button onclick="edit('.$row->intProcess_ID.')" class="btn btn-sm btn-success" onclick="edit('.$row->intProcess_ID.')"><i class="fa-solid fa-pen-to-square"></i></button>';                        
+                    }
                     return $btn_edit;
                 })
                 ->editColumn('dtmInserted', function($row){
@@ -61,6 +64,8 @@ class InspectionController extends Controller
             ]
         );
         $result = json_decode($response->getBody()->getContents(), true);
+        // var_dump($result);
+        // die();
         if (empty($request->batch)) {
             $datas = collect($result['data'])->groupBy('BATCH_NO')->all();
         } else {
@@ -68,6 +73,24 @@ class InspectionController extends Controller
         }
         // echo "<pre>",var_dump($datas),"</pre>";
         // die();
+        return response()->json([
+            'status' => 'success',
+            'data' => $datas
+        ], 200);
+    }
+    public function postLotNumber(Request $request)
+    {
+        $response = Http::withBasicAuth('admin', '@0332022')->get(
+            'http://10.175.11.56/api-kmi/api/oee/statusfinish',
+            [
+                'decode_content' => false,
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ],
+            ]
+        );
+        $result = json_decode($response->getBody()->getContents(), true);
+        $datas = collect($result['data'])->where('BATCH_NO', $request->batch)->groupBy('LOT_NUMBER')->all();
         return response()->json([
             'status' => 'success',
             'data' => $datas
@@ -131,6 +154,17 @@ class InspectionController extends Controller
         if ($inspection) {
             $input['dtmExpireDate'] = date('Y-m-d', strtotime($request->dtmExpireDate));
             $inspection->update($input);
+            switch ($id) {
+                case 1:
+                    ProcessModel::where('intProcess_ID', 2)->update($input);
+                    break;
+                case 3:
+                    ProcessModel::where('intProcess_ID', 4)->update($input);
+                    break;
+                case 5:
+                    ProcessModel::where('intProcess_ID', 6)->update($input);
+                    break;
+            }
             return response()->json([
                 'status' => 'success',
                 'message' => 'Inspection updated Successfully'

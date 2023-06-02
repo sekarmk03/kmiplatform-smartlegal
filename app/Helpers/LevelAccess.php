@@ -53,7 +53,7 @@ class LevelAccess {
 
         switch (true) {
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible == 1):
-                return $btn_edit.' '.$btn_delete;
+                return '<div class="btn-group">'.$btn_edit.' '.$btn_delete.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible != 1):
                 return $btn_edit;
@@ -76,10 +76,10 @@ class LevelAccess {
 
         switch (true) {
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible == 1 && self::canAccess('access')->intAccessible == 1):
-                return $btn_access.' '.$btn_edit.' '.$btn_delete;
+                return '<div class="btn-group">'.$btn_access.' '.$btn_edit.' '.$btn_delete.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible == 1):
-                return $btn_edit.' '.$btn_delete;
+                return '<div class="btn-group">'.$btn_edit.' '.$btn_delete.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible != 1):
                 return $btn_edit;
@@ -101,13 +101,13 @@ class LevelAccess {
 
         switch (true) {
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible == 1):
-                return $btn_db.' '.$btn_edit.' '.$btn_delete;
+                return '<div class="btn-group">'.$btn_db.' '.$btn_edit.' '.$btn_delete.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible != 1):
-                return $btn_db.' '.$btn_edit;
+                return '<div class="btn-group">'.$btn_db.' '.$btn_edit.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible != 1 && self::canAccess('delete')->intAccessible == 1):
-                return $btn_db.' '.$btn_delete;
+                return '<div class="btn-group">'.$btn_db.' '.$btn_delete.'</div>';
                 break;
             
             default:
@@ -124,16 +124,16 @@ class LevelAccess {
 
         switch (true) {
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible == 1 && self::canAccess('reset')->intAccessible == 1):
-                return $btn_access.' '.$btn_edit.' '.$btn_delete;
+                return '<div class="btn-group">'.$btn_access.' '.$btn_edit.' '.$btn_delete.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible == 1):
-                return $btn_edit.' '.$btn_delete;
+                return '<div class="btn-group">'.$btn_edit.' '.$btn_delete.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible == 1 && self::canAccess('delete')->intAccessible != 1):
-                return $btn_edit;
+                return '<div class="btn-group">'.$btn_edit.'</div>';
                 break;
             case (self::canAccess('edit')->intAccessible != 1 && self::canAccess('delete')->intAccessible == 1):
-                return $btn_delete;
+                return '<div class="btn-group">'.$btn_delete.'</div>';
                 break;
             default:
                 return 'Unavailable';

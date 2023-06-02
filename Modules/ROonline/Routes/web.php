@@ -11,28 +11,44 @@
 |
 */
 
-Route::get('/', 'ROonlineController@index');
-Route::get('/ro-chart', 'ROonlineController@ROChart')->name('roonline.chart');
-Route::get('/ro-widget', 'ROonlineController@getROWidget')->name('roonline.widget');
-Route::get('/ro-maxavg', 'ROonlineController@getMaxAvg')->name('roonline.maxAvg');
+Route::name('roonline.')->middleware('canAccess')->group(function () {
+    Route::get('/', 'ROonlineController@index');
+    Route::post('/postCheckReason', 'ROonlineController@getReasonRO')->name('reason.check');
+    Route::get('/ro-chart', 'ROonlineController@ROChart')->name('chart');
+    Route::get('/ro-widget', 'ROonlineController@getROWidget')->name('widget');
+    Route::get('/ro-maxavg', 'ROonlineController@getMaxAvg')->name('maxAvg');
+    Route::get('/rhtemp', 'ROonlineController@getRHTemp')->name('rhtemp');
+    Route::post('/export-histories', 'ROonlineController@getExportHistory')->name('export.histories');
+    Route::post('/export-rhtemp', 'ROonlineController@getExportRhTemp')->name('export.rhtemp');
+    Route::post('/reason', 'ROonlineController@storeReason')->name('reason.store');
 
-//Prefix: Admin
-Route::group(['prefix' => 'admin'], function(){
-    //Management: Devices
-    Route::get('/devices', 'Admin\DeviceController@index')->name('roonline.manage.device');
-    Route::post('/device', 'Admin\DeviceController@store')->name('roonline.manage.device.store');
-    Route::get('/device/{id}', 'Admin\DeviceController@edit')->name('roonline.manage.device.edit');
-    Route::put('/device/{id}', 'Admin\DeviceController@update')->name('roonline.manage.device.update');
-    Route::delete('/device/{id}', 'Admin\DeviceController@destroy')->name('roonline.manage.device.destroy');
+    //Prefix: Admin
+    Route::group(['prefix' => 'admin'], function(){
+        //Management: inspection
+        Route::get('/inspections', 'Admin\InspectionController@index')->name('manage.inspection');
+        Route::get('/inspections/okp', 'Admin\InspectionController@getOkp')->name('inspection.okp');
+        Route::post('/inspections/lot', 'Admin\InspectionController@postLotNumber')->name('inspection.lot');
+        Route::get('/inspection/{id}', 'Admin\InspectionController@edit')->name('manage.inspection.edit');
+        Route::put('/inspection/{id}', 'Admin\InspectionController@update')->name('manage.inspection.update');
 
-    //Management: inspection
-    Route::get('/inspections', 'Admin\InspectionController@index')->name('roonline.manage.inspection');
-    Route::get('/inspections/okp', 'Admin\InspectionController@getOkp')->name('roonline.inspection.okp');
-    Route::get('/inspection/{id}', 'Admin\InspectionController@edit')->name('roonline.manage.inspection.edit');
-    Route::put('/inspection/{id}', 'Admin\InspectionController@update')->name('roonline.manage.inspection.update');
-    
+        //Line
+        Route::resource('/line', 'Admin\LineController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+
+        //Area
+        Route::resource('/area', 'Admin\AreaController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+        
+        //Device
+        Route::resource('/device', 'Admin\DeviceController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+    });
+    //Log History
+    Route::get('/log-history', 'LogHistoryController@index')->name('log-history.index');
+    Route::get('/log-history/{id}', 'LogHistoryController@getDetail')->name('log-history.view');
+
+    //>2% RO Value
+    Route::resource('above-std', 'HighRoController')->only(['index', 'show']);
+
+    //Access Controll
+    Route::resource('/access-control', 'Admin\AccessControlController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+    Route::get('/access-control/{id}/users', 'Admin\AccessControlController@getUser')->name('access-control.users');
 });
-//Log History
-Route::get('/log-history', 'LogHistoryController@index')->name('roonline.log-history.index');
-Route::get('/log-history/{id}', 'LogHistoryController@getDetail')->name('roonline.log-history.view');
 

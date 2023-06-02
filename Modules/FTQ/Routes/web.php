@@ -11,4 +11,6 @@
 |
 */
 
-Route::get('/', 'FTQController@index');
+Route::name('ftq.')->group(function () {
+    Route::get('/', 'FTQController@index');
+});

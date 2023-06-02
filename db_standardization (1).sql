@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 13, 2023 at 06:22 AM
+-- Generation Time: May 16, 2023 at 09:11 AM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.33
 
@@ -170,7 +170,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (6, '2023_02_27_022223_create_msubmenus_table', 1),
 (7, '2023_03_24_080923_create_mmodules_table', 2),
 (8, '2023_03_24_134516_create_maccounts_table', 3),
-(9, '2023_03_26_032220_create_mdatabases_table', 4);
+(9, '2023_03_26_032220_create_mdatabases_table', 4),
+(10, '2023_05_08_133936_create_mform_table', 5);
 
 -- --------------------------------------------------------
 
@@ -391,19 +392,6 @@ CREATE TABLE `mlevel_access` (
   `txtUpdatedBy` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `mlevel_access`
---
-
-INSERT INTO `mlevel_access` (`intLevelAccess_ID`, `intSubmenu_ID`, `intLevel_ID`, `dtmCreated`, `txtCreatedBy`, `dtmUpdated`, `txtUpdatedBy`) VALUES
-(1, 2, 1, '2023-02-28 08:56:42', NULL, '2023-03-01 04:30:09', NULL),
-(2, 3, 1, '2023-02-28 08:57:08', NULL, '2023-03-01 04:30:07', NULL),
-(3, 1, 1, '2023-02-28 08:57:17', NULL, '2023-02-28 08:57:17', NULL),
-(4, 5, 1, '2023-03-01 02:52:10', NULL, '2023-03-01 02:52:10', NULL),
-(6, 8, 1, '2023-03-08 06:54:06', NULL, '2023-03-08 06:54:06', NULL),
-(7, 7, 1, '2023-03-16 02:48:54', NULL, '2023-03-16 02:48:54', NULL),
-(8, 9, 1, '2023-03-20 04:07:22', NULL, '2023-03-20 04:07:22', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -451,8 +439,7 @@ CREATE TABLE `mmodules` (
 --
 
 INSERT INTO `mmodules` (`intModule_ID`, `user_id`, `txtModuleName`, `intStatus`, `txtCreatedBy`, `dtmCreated`, `txtUpdatedBy`, `dtmUpdated`) VALUES
-(1, 330, 'ROonline', 1, 'ALI DAVIT', '2023-04-13 04:14:58', 'ALI DAVIT', '2023-04-13 04:15:02'),
-(2, 330, 'FTQ', 1, 'ALI DAVIT', '2023-04-13 04:17:48', 'ALI DAVIT', '2023-04-13 04:17:48');
+(1, 330, 'ROonline', 1, 'ALI DAVIT', '2023-04-13 04:14:58', 'ALI DAVIT', '2023-04-13 04:15:02');
 
 -- --------------------------------------------------------
 
@@ -467,7 +454,7 @@ CREATE TABLE `msubdepartments` (
   `txtCreatedBy` varchar(128) DEFAULT NULL,
   `dtmCreated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `txtUpdatedBy` varchar(128) DEFAULT NULL,
-  `dtmUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `dtmUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -510,8 +497,7 @@ INSERT INTO `msubdepartments` (`intSubdepartment_ID`, `intDepartment_ID`, `txtSu
 (33, 9, 'Warehouse Department', 'ADMIN', '2023-04-13 03:34:48', 'ADMIN', '2023-04-13 03:34:48'),
 (34, 9, 'Warehouse Section', 'ADMIN', '2023-04-13 03:34:48', 'ADMIN', '2023-04-13 03:34:48'),
 (35, 9, 'Warehouse Sub Unit', 'ADMIN', '2023-04-13 03:34:48', 'ADMIN', '2023-04-13 03:34:48'),
-(36, 9, 'Warehouse Unit', 'ADMIN', '2023-04-13 03:34:48', 'ADMIN', '2023-04-13 03:34:48'),
-(37, 8, 'QA INLINE PACKING', NULL, '2023-04-13 06:09:29', NULL, '2023-04-13 06:09:29');
+(36, 9, 'Warehouse Unit', 'ADMIN', '2023-04-13 03:34:48', 'ADMIN', '2023-04-13 03:34:48');
 
 -- --------------------------------------------------------
 
@@ -538,15 +524,17 @@ CREATE TABLE `msubmenus` (
 
 INSERT INTO `msubmenus` (`intSubmenu_ID`, `intMenu_ID`, `txtSubmenuTitle`, `txtSubmenuIcon`, `txtUrl`, `txtRouteName`, `txtCreatedBy`, `dtmCreated`, `txtUpdatedBy`, `dtmUpdated`) VALUES
 (1, 1, 'Dashboard PRD', 'fa-solid fa-chart-line', 'dashboard/prd', 'manage.user.index', NULL, '2023-02-28 08:54:22', NULL, '2023-03-20 03:56:07'),
-(2, 2, 'Manage Menu', 'fa-solid fa-list-check', 'admin/manage-menus', 'manage.menu.index', NULL, '2023-02-27 09:33:42', 'ADMIN', '2023-03-20 03:56:11'),
-(3, 2, 'Manage Submenu', 'fa-solid fa-list-check', 'admin/manage-submenus', 'manage.submenu.index', NULL, '2023-02-28 08:54:50', NULL, '2023-03-08 07:14:22'),
-(5, 2, 'Manage Users', 'fa-solid fa-user-plus', 'admin/manage-users', 'manage.user.index', NULL, '2023-03-01 02:51:44', 'ADMIN', '2023-03-26 09:56:38'),
-(7, 2, 'Manage Levels', 'fa-brands fa-elementor', 'admin/manage-levels', 'manage.level.index', NULL, '2023-03-08 02:23:14', 'ADMIN', '2023-03-16 07:03:02'),
-(8, 2, 'Manage Departments', 'fa-solid fa-user-tag', 'admin/manage-departments', 'manage.department.index', NULL, '2023-03-08 06:51:49', 'ADMIN', '2023-03-20 08:19:05'),
-(9, 2, 'Manage Modules', 'fa-solid fa-code', 'admin/manage-modules', 'manage.module.index', 'ADMIN', '2023-03-20 01:39:05', 'ADMIN', '2023-03-20 03:48:38'),
-(11, 2, 'Manage DB Account', 'fa-solid fa-database', 'admin/manage-dbaccounts', 'manage.dbaccount.index', 'ADMIN', '2023-03-24 07:04:24', NULL, '2023-03-24 07:30:24'),
+(2, 2, 'Manage Menu', 'fa-solid fa-list-check', 'admin/menu', 'manage.menu.index', NULL, '2023-02-27 09:33:42', 'ADMIN', '2023-05-05 01:36:32'),
+(3, 2, 'Manage Submenu', 'fa-solid fa-list-check', 'admin/submenu', 'manage.submenu.index', NULL, '2023-02-28 08:54:50', NULL, '2023-05-05 01:38:00'),
+(5, 2, 'Manage Users', 'fa-solid fa-user-plus', 'admin/user', 'manage.user.index', NULL, '2023-03-01 02:51:44', 'ADMIN', '2023-05-05 01:52:09'),
+(7, 2, 'Manage Levels', 'fa-brands fa-elementor', 'admin/level', 'manage.level.index', NULL, '2023-03-08 02:23:14', 'ADMIN', '2023-05-05 01:45:08'),
+(8, 2, 'Manage Departments', 'fa-solid fa-user-tag', 'admin/department', 'manage.department.index', NULL, '2023-03-08 06:51:49', 'ADMIN', '2023-05-05 01:33:44'),
+(9, 2, 'Manage Modules', 'fa-solid fa-code', 'admin/module', 'manage.module.index', 'ADMIN', '2023-03-20 01:39:05', 'ADMIN', '2023-05-05 01:42:16'),
+(11, 2, 'Manage DB Account', 'fa-solid fa-database', 'admin/dbaccount', 'manage.dbaccount.index', 'ADMIN', '2023-03-24 07:04:24', NULL, '2023-05-05 01:46:28'),
 (12, 1, 'Dashboard Navigation', 'fa-solid fa-rocket', 'dashboard', 'dashboard.navigation', 'ADMIN', '2023-04-13 01:25:04', NULL, '2023-04-13 01:34:14'),
-(13, 2, 'Manage Subdepartment', 'fa-solid fa-user-tag', 'admin/manage-subdepartments', 'manage.subdepartment.index', 'ALI DAVIT', '2023-04-13 04:38:54', NULL, '2023-04-13 04:38:54');
+(13, 2, 'Manage Subdepartment', 'fa-solid fa-user-tag', 'admin/subdepartment', 'manage.subdepartment.index', 'ALI DAVIT', '2023-04-13 04:38:54', NULL, '2023-05-05 01:38:56'),
+(14, 2, 'Manage Job Positions', 'fa-regular fa-id-badge', 'admin/jobposition', 'manage.jobposition.index', 'ALI DAVIT', '2023-04-14 02:02:55', NULL, '2023-05-05 01:48:39'),
+(15, 2, 'Manage CG', 'fa-solid fa-list-check', 'admin/cg', 'manage.cg.index', 'ALI DAVIT', '2023-05-05 02:15:28', NULL, '2023-05-05 02:15:28');
 
 -- --------------------------------------------------------
 
@@ -807,7 +795,7 @@ INSERT INTO `musers` (`id`, `intLevel_ID`, `intDepartment_ID`, `intSubdepartment
 (222, 3, 6, 7, 17, 116, 'IRVAN HASAN', '200500092', 'irvan.hasan', 'IHA', 'irvan.hasan@kalbenutritionals.com', '430', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (223, 3, 6, 8, 4, 117, 'TENDI SOBARNANSYAH', '200700143', 'tendi.sobarnansyah', 'TSH', 'tendi.sobarnansyah@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (224, 3, 9, 35, 22, 118, 'MUHAMAD RIDWAN', '200700144', 'muhamad.ridwan', 'MRN', 'muhamad.ridwan@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
-(225, 3, 10, 20, 11, 99, 'DENLEI DIYOROSSI', '201200194', 'denlei.diyorossi', 'DDI', 'denlei.diyorossi@kalbenutritionals.com', '911', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
+(225, 2, 10, 20, 11, 99, 'DENLEI DIYOROSSI', '201200194', 'denlei.diyorossi', 'DDI', 'denlei.diyorossi@kalbenutritionals.com', '911', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-05-05 09:04:33'),
 (226, 3, 4, 11, 6, 119, 'SETYO DEWI UTARI', '210100004', 'setyo.utari', 'SDU', 'setyo.utari@kalbenutritionals.com', '610', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (227, 3, 5, 16, 8, 120, 'SARI DIYAH PALUPY', '210100024', 'sari.palupy', 'SDP', 'sari.palupy@kalbenutritionals.com', '812', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (228, 3, 3, 22, 24, 121, 'TOSHIHITO  ABE', '211200171', 'toshihito.abe', 'TAE', 'toshihito.abe@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
@@ -912,7 +900,7 @@ INSERT INTO `musers` (`id`, `intLevel_ID`, `intDepartment_ID`, `intSubdepartment
 (327, 3, 8, 31, 21, 83, 'MUHAMAD FIRMAN GANI', 'K230200018', 'muhamad.firman', 'MFG', 'muhamad.firman@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (328, 3, 8, 31, 20, 150, 'KANIA DEWI FITRIANI', 'K230200019', 'kania.fitriani', 'KDF', 'kania.fitriani@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (329, 3, 4, 12, 2, 149, 'PUTRI NUR RAHMAWATI', 'K230200024', 'putri.rahmawati', 'PNR', 'putri.rahmawati@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
-(330, 1, 8, 31, 21, 150, 'ALI DAVIT', 'K230200025', 'ali.davit', 'ADT', 'ali.davit@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', 'QUvkceYZ8eMmhpxWMOCvMia4r49vTxq7zU880nR16xL0xJqM76cmgOz92Baq', 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:21:07'),
+(330, 1, 8, 31, 21, 150, 'ALI DAVIT', 'K230200025', 'ali.davit', 'ADT', 'ali.davit@kalbenutritionals.com', '#N/A', '1683267502330.webp', '$2y$10$LZM4yKC5Sdmr9toNsqfbUejMPkkA0exo2reUtIMQySjpyDv/8X1Ba', 'gkMyYijd14F7QWOCbNeCksIX8yRQX8P7CfDVIbycCq7NaqTS7hG7h87ChD2H', 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-05-09 01:45:12'),
 (331, 3, 4, 12, 7, 151, 'LILIS SUMARNI', 'O180500043', 'lilis.sumarni', 'LSI', 'lilis.sumarni@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (332, 3, 4, 12, 7, 152, 'CAHYADI', 'O181200144', 'cahyadi.cahyadi', 'CYI', 'cahyadi.cahyadi@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (333, 3, 4, 12, 7, 152, 'TATANG MEINSYAHYAR', 'O190600102', 'tatang.meinsyahyar', 'TMR', 'tatang.meinsyahyar@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
@@ -1012,50 +1000,60 @@ INSERT INTO `trlevel_access` (`intLevel_ID`, `intSubmenu_ID`, `intRoute_ID`, `in
 (2, 11, 31, 1, NULL, '2023-04-13 01:34:53', NULL, '2023-04-13 01:34:53'),
 (2, 11, 32, 1, NULL, '2023-04-13 01:34:53', NULL, '2023-04-13 01:34:53'),
 (2, 12, 39, 1, NULL, '2023-04-13 01:34:53', NULL, '2023-04-13 01:34:53'),
-(1, 2, 1, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 2, 2, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 2, 3, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 2, 4, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 2, 5, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 3, 6, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 3, 7, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 3, 8, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 3, 9, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 3, 10, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 5, 33, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 5, 34, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 5, 35, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 5, 36, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 5, 37, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 5, 38, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 7, 11, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 7, 12, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 7, 13, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 7, 14, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 7, 15, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 7, 16, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 7, 27, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 8, 17, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 8, 18, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 8, 19, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 8, 20, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 8, 21, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 9, 22, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 9, 23, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 9, 24, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 9, 25, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 9, 26, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 11, 28, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 11, 29, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 11, 30, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 11, 31, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 11, 32, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 12, 39, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 13, 40, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 13, 41, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 13, 42, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 13, 43, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08'),
-(1, 13, 44, 1, NULL, '2023-04-13 04:39:08', NULL, '2023-04-13 04:39:08');
+(1, 2, 1, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 2, 2, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 2, 3, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 2, 4, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 2, 5, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 3, 6, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 3, 7, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 3, 8, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 3, 9, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 3, 10, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 5, 33, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 5, 34, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 5, 35, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 5, 36, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 5, 37, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 5, 38, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 7, 11, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 7, 12, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 7, 13, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 7, 14, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 7, 15, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 7, 16, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 7, 27, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 8, 17, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 8, 18, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 8, 19, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 8, 20, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 8, 21, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 9, 22, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 9, 23, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 9, 24, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 9, 25, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 9, 26, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 11, 28, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 11, 29, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 11, 30, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 11, 31, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 11, 32, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 12, 39, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 13, 40, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 13, 41, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 13, 42, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 13, 43, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 13, 44, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 14, 45, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 14, 46, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 14, 47, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 14, 48, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 14, 49, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 15, 50, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 15, 51, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 15, 52, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 15, 53, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01'),
+(1, 15, 54, 1, NULL, '2023-05-05 02:16:01', NULL, '2023-05-05 02:16:01');
 
 -- --------------------------------------------------------
 
@@ -1120,7 +1118,17 @@ INSERT INTO `trroutes` (`intRoute_ID`, `intSubmenu_ID`, `txtRouteTitle`, `txtRou
 (41, 13, 'create', 'manage.subdepartment.store', '2023-04-13 04:38:54', '2023-04-13 04:38:54'),
 (42, 13, 'edit', 'manage.subdepartment.edit', '2023-04-13 04:38:54', '2023-04-13 04:38:54'),
 (43, 13, 'update', 'manage.subdepartment.update', '2023-04-13 04:38:54', '2023-04-13 04:38:54'),
-(44, 13, 'delete', 'manage.subdepartment.destroy', '2023-04-13 04:38:54', '2023-04-13 04:38:54');
+(44, 13, 'delete', 'manage.subdepartment.destroy', '2023-04-13 04:38:54', '2023-04-13 04:38:54'),
+(45, 14, 'read', 'manage.jobposition.index', '2023-04-14 02:02:55', '2023-04-14 02:02:55'),
+(46, 14, 'create', 'manage.jobposition.store', '2023-04-14 02:02:55', '2023-04-14 02:02:55'),
+(47, 14, 'edit', 'manage.jobposition.edit', '2023-04-14 02:02:55', '2023-04-14 02:02:55'),
+(48, 14, 'update', 'manage.jobposition.update', '2023-04-14 02:02:55', '2023-04-14 02:02:55'),
+(49, 14, 'delete', 'manage.jobposition.destroy', '2023-04-14 02:02:55', '2023-04-14 02:02:55'),
+(50, 15, 'read', 'manage.cg.index', '2023-05-05 02:15:28', '2023-05-05 02:15:28'),
+(51, 15, 'create', 'manage.cg.store', '2023-05-05 02:15:28', '2023-05-05 02:15:28'),
+(52, 15, 'edit', 'manage.cg.edit', '2023-05-05 02:15:28', '2023-05-05 02:15:28'),
+(53, 15, 'update', 'manage.cg.update', '2023-05-05 02:15:28', '2023-05-05 02:15:28'),
+(54, 15, 'delete', 'manage.cg.destroy', '2023-05-05 02:15:28', '2023-05-05 02:15:28');
 
 --
 -- Indexes for dumped tables
@@ -1221,8 +1229,8 @@ ALTER TABLE `musers`
   ADD KEY `musers_intlevel_id_foreign` (`intLevel_ID`),
   ADD KEY `musers_intdepartment_id_foreign` (`intDepartment_ID`),
   ADD KEY `musers_intsubdepartment_id_foreign` (`intSubdepartment_ID`),
-  ADD KEY `musers_intCg_id_foreign` (`intCg_ID`),
-  ADD KEY `musers_intJabatan_id_foreign` (`intJabatan_ID`);
+  ADD KEY `musers_intJabatan_id_foreign` (`intJabatan_ID`),
+  ADD KEY `musers_intCg_ID_to_mcgs` (`intCg_ID`);
 
 --
 -- Indexes for table `trlevel_access`
@@ -1256,6 +1264,12 @@ ALTER TABLE `maccounts`
   MODIFY `intAccount_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `mcgs`
+--
+ALTER TABLE `mcgs`
+  MODIFY `intCg_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
 -- AUTO_INCREMENT for table `mdatabases`
 --
 ALTER TABLE `mdatabases`
@@ -1271,13 +1285,13 @@ ALTER TABLE `mdepartments`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `mjabatans`
 --
 ALTER TABLE `mjabatans`
-  MODIFY `intJabatan_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `intJabatan_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
 
 --
 -- AUTO_INCREMENT for table `mlevels`
@@ -1301,7 +1315,7 @@ ALTER TABLE `mmenus`
 -- AUTO_INCREMENT for table `mmodules`
 --
 ALTER TABLE `mmodules`
-  MODIFY `intModule_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `intModule_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `msubdepartments`
@@ -1313,7 +1327,7 @@ ALTER TABLE `msubdepartments`
 -- AUTO_INCREMENT for table `msubmenus`
 --
 ALTER TABLE `msubmenus`
-  MODIFY `intSubmenu_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `intSubmenu_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `musers`
@@ -1325,7 +1339,7 @@ ALTER TABLE `musers`
 -- AUTO_INCREMENT for table `trroutes`
 --
 ALTER TABLE `trroutes`
-  MODIFY `intRoute_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `intRoute_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- Constraints for dumped tables
@@ -1378,7 +1392,7 @@ ALTER TABLE `msubmenus`
 -- Constraints for table `musers`
 --
 ALTER TABLE `musers`
-  ADD CONSTRAINT `musers_intCg_id_foreign` FOREIGN KEY (`intCg_ID`) REFERENCES `mcgs` (`intCg_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `musers_intCg_ID_to_mcgs` FOREIGN KEY (`intCg_ID`) REFERENCES `mcgs` (`intCg_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `musers_intdepartment_id_foreign` FOREIGN KEY (`intDepartment_ID`) REFERENCES `mdepartments` (`intDepartment_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `musers_intJabatan_id_foreign` FOREIGN KEY (`intJabatan_ID`) REFERENCES `mjabatans` (`intJabatan_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `musers_intlevel_id_foreign` FOREIGN KEY (`intLevel_ID`) REFERENCES `mlevels` (`intLevel_ID`) ON DELETE CASCADE ON UPDATE CASCADE,

@@ -14,7 +14,7 @@ use App\Helpers\LevelAccess as LevelHelper;
 
 class ManageUserController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             $user = User::join('mlevels', 'mlevels.intLevel_ID','=', 'musers.intLevel_ID')
@@ -38,7 +38,7 @@ class ManageUserController extends Controller
             ]);
         }
     }
-    public function postUser(Request $request)
+    public function store(Request $request)
     {
         $input = $request->only([
             'txtName', 'txtUsername', 'txtNik', 
@@ -72,7 +72,7 @@ class ManageUserController extends Controller
             }
         }
     }
-    public function editUser($id)
+    public function edit($id)
     {
         $user = User::find($id);
         if ($user) {
@@ -87,7 +87,7 @@ class ManageUserController extends Controller
             ], 404);
         }
     }
-    public function updateUser(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $input = $request->only([
             'txtName', 'txtUsername', 'txtNik', 
@@ -158,7 +158,7 @@ class ManageUserController extends Controller
             ], 404);
         }
     }
-    public function destroyUser($id)
+    public function destroy($id)
     {
         $user = User::find($id);
         if ($user) {

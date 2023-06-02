@@ -30,7 +30,7 @@
 	
 	<div id="app" class="app app-sidebar-fixed {{ $appClass }}">
 		
-		@includeWhen(!$appHeaderHide, 'roonline::includes.header')
+		@includeWhen(!$appHeaderHide, 'includes.header')
 		
 		@includeWhen($appTopMenu, 'roonline::includes.top-menu')
 		

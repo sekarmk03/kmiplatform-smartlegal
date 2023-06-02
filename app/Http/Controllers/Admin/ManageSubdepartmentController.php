@@ -12,7 +12,7 @@ use App\Models\SubdepartmentModel as Subdepartment;
 
 class ManageSubdepartmentController extends Controller
 {
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
             $datas = Subdepartment::join('mdepartments AS mdept', 'mdept.intDepartment_ID', '=', 'msubdepartments.intDepartment_ID')
@@ -33,7 +33,7 @@ class ManageSubdepartmentController extends Controller
             ]);
         }
     }
-    public function storeSubdepartment(Request $request)
+    public function store(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, Subdepartment::rules(), [], Subdepartment::attributes());
@@ -41,7 +41,7 @@ class ManageSubdepartmentController extends Controller
             return response()->json([
                 'status' => 'error',
                 'fields' => $validator->errors()
-            ], 401);
+            ], 400);
         } else {
             $create = Subdepartment::create($input);
             if ($create) {
@@ -57,7 +57,7 @@ class ManageSubdepartmentController extends Controller
             }
         }
     }
-    public function editSubdepartment($id)
+    public function edit($id)
     {
         $data = Subdepartment::find($id);
         if ($data) {
@@ -72,15 +72,15 @@ class ManageSubdepartmentController extends Controller
             ], 404);
         }
     }
-    public function updateSubdepartment(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        $input = $request->all();
+        $input = $request->only(['intDepartment_ID', 'txtSubdepartmentName', 'txtCreatedBy', 'txtUpdatedBy']);
         $validator = Validator::make($input, Subdepartment::rules(), [], Subdepartment::attributes());
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'fields' => $validator->errors()
-            ], 401);
+            ], 400);
         } else {
             $data = Subdepartment::find($id);
             if ($data) {
@@ -97,7 +97,7 @@ class ManageSubdepartmentController extends Controller
             }
         }
     }
-    public function destroySubdepartment($id)
+    public function destroy($id)
     {
         $data = Subdepartment::find($id);
         if ($data) {

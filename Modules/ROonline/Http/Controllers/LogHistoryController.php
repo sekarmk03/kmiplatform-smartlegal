@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\ROonline\Entities\LogHistoryModel as LogHistory;
 use Yajra\DataTables\DataTables;
+use App\Models\User;
 
 class LogHistoryController extends Controller
 {
@@ -42,19 +43,7 @@ class LogHistoryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            $lines = [
-                'Filling Sachet A1', 'Filling Sachet A2',
-                'Filling Sachet E1', 'Filling Sachet E2',
-                'Filling Sachet J1', 'Filling Sachet J2'
-            ];
-            $statuses = [
-                'Ready', 'Measuring', 'Measure Hold', 'Measure Delay',
-                'Flush-Back', 'Heating'
-            ];
-            return view('roonline::pages.log-history',[
-                'lines' => $lines,
-                'statuses' => $statuses
-            ]);
+            var_dump(User::online()->get());
         }
     }
     public function getDetail($id)

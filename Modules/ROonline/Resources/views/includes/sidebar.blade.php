@@ -1,5 +1,9 @@
 @php
 	$appSidebarClass = (!empty($appSidebarTransparent)) ? 'app-sidebar-transparent' : '';
+	$user_level = DB::connection('roonline')
+		->table('truser_level')
+		->where('user_id', Auth::user()->id)
+		->first();
 @endphp
 <!-- BEGIN #sidebar -->
 <div id="sidebar" class="app-sidebar {{ $appSidebarClass }}">
@@ -56,22 +60,38 @@
 			<div class="menu-item {{ (empty(Request::segment(2))?'active':'') }}">
 				<a href="/roonline" class="menu-link">
 					<div class="menu-icon">
-						<i class="ion-md-analytics bg-gradient-green"></i>
+						<i class="ion-ios-pulse bg-gradient-green"></i>
 					</div>
 					<div class="menu-text">Dashboard</div>
 				</a>
 			</div>
-			<div class="menu-item has-sub {{ (in_array(Request::segment(3), ['devices', 'inspections'])?'active':'') }}">
+			<div class="menu-item has-sub {{ (in_array(Request::segment(3), ['device', 'inspections', 'line', 'area'])?'active':'') }}">
 				<a href="javascript:;" class="menu-link">
 					<div class="menu-icon">
-						<i class="ion-md-list-box bg-gradient-blue"></i>
+						<i class="ion-ios-list-box bg-gradient-blue"></i>
 					</div>
 					<div class="menu-text">Data Management</div>
 					<div class="menu-caret"></div>
 				</a>
 				<div class="menu-submenu">
-					<div class="menu-item {{ (Request::segment(3) == 'devices'?'active':'') }}">
-						<a href="{{ route('roonline.manage.device') }}" class="menu-link">
+					<div class="menu-item {{ (Request::segment(3) == 'line'?'active':'') }}">
+						<a href="{{ route('roonline.line.index') }}" class="menu-link">
+							<div class="menu-text">
+								<i class="fa-solid fa-clipboard text-theme"></i> 
+								Line
+							</div>
+						</a>
+					</div>
+					<div class="menu-item {{ (Request::segment(3) == 'area'?'active':'') }}">
+						<a href="{{ route('roonline.area.index') }}" class="menu-link">
+							<div class="menu-text">
+								<i class="fa-solid fa-clipboard text-theme"></i> 
+								Area
+							</div>
+						</a>
+					</div>
+					<div class="menu-item {{ (Request::segment(3) == 'device'?'active':'') }}">
+						<a href="{{ route('roonline.device.index') }}" class="menu-link">
 							<div class="menu-text">
 								<i class="fa-solid fa-microchip text-theme"></i> 
 								Devices
@@ -94,6 +114,22 @@
 						<i class="ion-md-clock bg-gradient-purple"></i>
 					</div>
 					<div class="menu-text">Log History</div>
+				</a>
+			</div>
+			<div class="menu-item {{ (Request::segment(2) == 'above-std'?'active':'') }}">
+				<a href="{{ route('roonline.above-std.index') }}" class="menu-link">
+					<div class="menu-icon">
+						<i class="ion-ios-stats bg-gradient-red"></i>
+					</div>
+					<div class="menu-text">Log RO >2%</div>
+				</a>
+			</div>
+			<div class="menu-item {{ (Request::segment(2) == 'access-control'?'active':'') }}">
+				<a href="{{ route('roonline.access-control.index') }}" class="menu-link">
+					<div class="menu-icon">
+						<i class="ion-ios-lock bg-gradient-yellow"></i>
+					</div>
+					<div class="menu-text">Level Access</div>
 				</a>
 			</div>
 			<!-- BEGIN minify-button -->

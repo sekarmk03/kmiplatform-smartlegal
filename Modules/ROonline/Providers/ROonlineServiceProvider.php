@@ -28,6 +28,7 @@ class ROonlineServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        app()->make('router')->aliasMiddleware('canAccess', \Modules\ROonline\Http\Middleware\CanAccess::class);
     }
 
     /**
