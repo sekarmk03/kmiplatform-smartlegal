@@ -1,0 +1,13 @@
+{
+    "name": "Faceid",
+    "alias": "faceid",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Faceid\\Providers\\FaceidServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
