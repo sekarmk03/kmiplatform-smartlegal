@@ -4,7 +4,9 @@ namespace Modules\FTQ\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Routing\Controller;
+use Modules\FTQ\Entities\Mokp;
 
 class FTQController extends Controller
 {
@@ -15,6 +17,51 @@ class FTQController extends Controller
     public function index()
     {
         return view('ftq::index');
+    }
+
+    // function getOkp(Request $request){
+    //     if ($request->okp) {
+    //         $response = Http::withBasicAuth('admin', 'admin')->get(
+    //             'http://kmisvrlar.kalbemorinaga.local:84/api/okpformula',
+    //             [
+    //                 'nookp' => $request->okp,
+    //                 'decode_content' => false,
+    //                 'headers' => [
+    //                     'Content-Type' => 'application/json',
+    //                 ],
+    //             ]
+    //         );
+    //         $result = json_decode($response->getBody()->getContents(), true);
+    //         $datas = collect($result['data'])->all();
+    //     } else {
+    //         $response = Http::withBasicAuth('admin', 'admin')->get(
+    //             'http://kmisvrlar.kalbemorinaga.local:84/api/okpformula',
+    //             [
+    //                 'decode_content' => false,
+    //                 'headers' => [
+    //                     'Content-Type' => 'application/json',
+    //                 ],
+    //             ]
+    //         );
+    //         $result = json_decode($response->getBody()->getContents(), true);
+    //         $datas = collect($result['data'])->groupBy('nookp');
+    //     }
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'data' => $datas
+    //     ], 200);
+    // }
+
+    public function getOkp(Request $request){
+        if ($request->okp) {
+            $data = Mokp::where('txtOkp', $request->okp)->get();
+        } else {
+            $data = Mokp::all(['txtOkp']);
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
     }
 
     /**

@@ -14,6 +14,7 @@ use Modules\ROonline\Entities\LogHistoryModel as LogHistory;
 use Modules\ROonline\Entities\Reason;
 use Modules\ROonline\Entities\Area;
 use Modules\ROonline\Entities\LogRHTemp;
+use VisitLog;
 
 class ROonlineController extends Controller
 {
@@ -36,7 +37,7 @@ class ROonlineController extends Controller
     }
     public function index()
     {        
-        visitor()->visit();
+        VisitLog::save();
         $lines = [
             'Filling Sachet A1', 'Filling Sachet A2',
             'Filling Sachet E1', 'Filling Sachet E2',

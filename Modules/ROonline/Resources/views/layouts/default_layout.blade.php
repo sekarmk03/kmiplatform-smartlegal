@@ -25,9 +25,7 @@
 	
 	$appContentClass = (!empty($appContentClass)) ? $appContentClass : '';
 @endphp
-<body class="{{ $bodyClass }}">
-	@include('roonline::includes.component.page-loader')
-	
+<body class="{{ $bodyClass }}">	
 	<div id="app" class="app app-sidebar-fixed {{ $appClass }}">
 		
 		@includeWhen(!$appHeaderHide, 'includes.header')

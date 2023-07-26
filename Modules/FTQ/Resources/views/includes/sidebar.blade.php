@@ -61,13 +61,32 @@
 					<div class="menu-text">Dashboard</div>
 				</a>
 			</div>
-          <div class="menu-item {{ (Request::segment(3) == 'menu-baru'?'active':'') }}">
-				<a href="/ftq" class="menu-link">
+			<div class="menu-item has-sub {{ (in_array(Request::segment(2), ['verifikasi'])?'active':'') }}">
+				<a href="javascript:;" class="menu-link">
 					<div class="menu-icon">
-						<i class="ion-md-analytics bg-gradient-green"></i>
+						<i class="ion-ios-list-box bg-gradient-blue"></i>
 					</div>
-					<div class="menu-text">Menu Baru</div>
+					<div class="menu-text">Verifikasi</div>
+					<div class="menu-caret"></div>
 				</a>
+				<div class="menu-submenu">
+					<div class="menu-item {{ (Request::segment(3) == 'fat-blend'?'active':'') }}">
+						<a href="{{ route('ftq.verifikasi.fat-blend.index') }}" class="menu-link">
+							<div class="menu-text">
+								<i class="fa-solid fa-clipboard text-theme"></i> 
+								Fat Blend
+							</div>
+						</a>
+					</div>
+					<div class="menu-item {{ (Request::segment(3) == 'line'?'active':'') }}">
+						<a href="{{ route('roonline.line.index') }}" class="menu-link">
+							<div class="menu-text">
+								<i class="fa-solid fa-clipboard text-theme"></i> 
+								Material Eductor
+							</div>
+						</a>
+					</div>
+				</div>
 			</div>
 			<!-- BEGIN minify-button -->
 			<div class="menu-item d-flex">

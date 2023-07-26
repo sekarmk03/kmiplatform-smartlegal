@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Shetabit\Visitor\Traits\Visitor;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -23,6 +23,11 @@ class User extends Authenticatable
         'txtName', 'txtNik', 'txtUsername', 'txtEmail', 'intDepartment_ID', 'txtInitial',
         'txtPassword', 'txtPhoto', 'intLevel_ID', 'txtCreatedBy', 'txtUpdatedBy'
     ];
+    public function modules(): HasMany 
+    {
+        return $this->hasMany(ModuleModel::class, 'user_id');
+    }
+
     public function getAuthPassword()
     {
         return $this->txtPassword;

@@ -9,46 +9,23 @@
       </a>
       <div class="dropdown-menu dropdown-menu-lg">
         <div class="row">
-          <div class="col-lg-1 col-md-1">
-            <div class="h5 fw-bolder mb-2">QA</div>
+          @php
+              $modules = App\Models\DepartmentModel::departmentModule();
+          @endphp
+          @foreach ($modules as $item)
+          <div class="col-lg">
+            <div class="h5 fw-bolder mb-2">{{ $item['department'] }}</div>
             <div class="row mb-3">
               <div class="col-lg-6">
                 <ul class="nav d-block fw-bold">
-                  <li><a href="{{ route('roonline.') }}" class="text-ellipsis text-dark text-decoration-none"><i class="fa fa-chevron-right fa-fw text-gray-500"></i> RO online</a></li>
+                  @foreach ($item['modules'] as $row)                      
+                    <li><a href="/{{ strtolower($row['module']) }}" class="text-ellipsis text-dark text-decoration-none"><i class="fa fa-chevron-right fa-fw text-gray-500"></i> {{ $row['module'] }}</a></li>
+                  @endforeach
                 </ul>
               </div>
             </div>
-          </div>
-          <div class="col-lg-1 col-md-1">
-            <div class="h5 fw-bolder mb-2">MDP</div>
-            <div class="row mb-3">
-              <div class="col-lg-6">
-                <ul class="nav d-block fw-bold">
-                  <li><a href="{{ route('roonline.') }}" class="text-ellipsis text-dark text-decoration-none"><i class="fa fa-chevron-right fa-fw text-gray-500"></i> OEE</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-1 col-md-1">
-            <div class="h5 fw-bolder mb-2">IOS</div>
-            <div class="row mb-3">
-              <div class="col-lg-6">
-                <ul class="nav d-block fw-bold">
-                  <li><a href="{{ route('roonline.') }}" class="text-ellipsis text-dark text-decoration-none"><i class="fa fa-chevron-right fa-fw text-gray-500"></i> OEE</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-1 col-md-1">
-            <div class="h5 fw-bolder mb-2">HC</div>
-            <div class="row mb-3">
-              <div class="col-lg-6">
-                <ul class="nav d-block fw-bold">
-                  <li><a href="{{ route('roonline.') }}" class="text-ellipsis text-dark text-decoration-none"><i class="fa fa-chevron-right fa-fw text-gray-500"></i> Test</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          </div>              
+          @endforeach
         </div>
       </div>
     </div>

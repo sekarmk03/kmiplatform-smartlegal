@@ -4,7 +4,7 @@ return [
     'url' => '',
     'host' => 'localhost',
     'port' => '3306',
-    'database' => 'database',
+    'database' => 'db_ftq',
     'username' => 'root',
     'password' => '',
     'unix_socket' => '',

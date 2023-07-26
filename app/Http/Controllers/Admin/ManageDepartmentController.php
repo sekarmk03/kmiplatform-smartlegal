@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use App\Models\DepartmentModel as Department;
 use App\Helpers\LevelAccess as LevelHelp;
+use VisitLog;
+use App\Models\Notification;
 
 class ManageDepartmentController extends Controller
 {
@@ -26,6 +28,7 @@ class ManageDepartmentController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
+            VisitLog::save();
             return view('pages.admin.manage-departments');
         }
     }
@@ -39,6 +42,9 @@ class ManageDepartmentController extends Controller
             ], 400);
         } else {
             $create = Department::create($request->all());
+            Notification::create([
+                'txtnotification' => 'Department ditambah!'
+            ]);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Department created Successfully'
@@ -87,6 +93,9 @@ class ManageDepartmentController extends Controller
     {
         $department = Department::where('intDepartment_ID', $id)->delete();
         if ($department) {
+            Notification::create([
+                'txtnotification' => 'Department ditambah!'
+            ]);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Department deleted Successfully'
@@ -97,5 +106,12 @@ class ManageDepartmentController extends Controller
                 'message' => 'Department deleted Failed'
             ], 400);
         }
+    }
+    
+    public function listUsers(){
+        return response()->json([
+            'status' => 'success',
+            'data' => Department::departmentModule() 
+        ], 200);
     }
 }

@@ -25,9 +25,7 @@
 	
 	$appContentClass = (!empty($appContentClass)) ? $appContentClass : '';
 ?>
-<body class="<?php echo e($bodyClass); ?>">
-	<?php echo $__env->make('roonline::includes.component.page-loader', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-	
+<body class="<?php echo e($bodyClass); ?>">	
 	<div id="app" class="app app-sidebar-fixed <?php echo e($appClass); ?>">
 		
 		<?php echo $__env->renderWhen(!$appHeaderHide, 'includes.header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path'])); ?>

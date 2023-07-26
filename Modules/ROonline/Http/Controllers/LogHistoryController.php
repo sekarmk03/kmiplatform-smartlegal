@@ -43,7 +43,14 @@ class LogHistoryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            var_dump(User::online()->get());
+            $statuses = ['Ready', 'Heating', 'Measure Delay', 'Measuring', 'Flush-Back', 'Error'];
+            $lines = ['Filling Sachet A1', 'Filling Sachet A2',
+                'Filling Sachet E1', 'Filling Sachet E2',
+                'Filling Sachet J1', 'Filling Sachet J2'];
+            return view('roonline::pages.log-history', [
+                'statuses' => $statuses,
+                'lines' => $lines
+            ]);
         }
     }
     public function getDetail($id)

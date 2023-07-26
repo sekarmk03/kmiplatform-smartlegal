@@ -5,7 +5,7 @@
 <script>
 var conn = new WebSocket('ws://localhost:8080');    
 conn.onopen = function(e) {
-    console.log("Connection established!");
+    console.log(e);
 };
 function countNotif(){
     let notif = $('.notif-icon');
@@ -46,8 +46,10 @@ function onReadNotif(){
 }
 conn.onmessage = function(e) {
     let data = e.data.split(',');
+    console.log(data[1]);
     if (data[1] == 'department') {
         refresh();
+        countNotif();
     }
 };
 countNotif();

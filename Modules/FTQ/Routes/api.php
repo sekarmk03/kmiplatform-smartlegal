@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Modules\FTQ\Http\Controllers\FTQController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,4 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/ftq', function (Request $request) {
-    return $request->user();
-});
+Route::get('okp', [FTQController::class, 'getOkp']);
