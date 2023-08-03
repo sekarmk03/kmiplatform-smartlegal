@@ -3,15 +3,16 @@
 namespace Modules\FTQ\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\PublishForm;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use Modules\FTQ\Entities\LevelAccess;
 use Modules\FTQ\Entities\MfatblendVerification as Mfatblend;
 use Modules\FTQ\Entities\TrfatblendVerification as TrFatblend;
 use Yajra\DataTables\DataTables;
-
-use function PHPUnit\Framework\returnSelf;
 
 class FatBlendVerificationController extends Controller
 {
@@ -19,6 +20,10 @@ class FatBlendVerificationController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    protected $leader;
+    public function __construct(){
+        $this->leader = LevelAccess::where('intLevel_ID', 4)->get(['user_id'])->toArray();
+    }
     private function _isMessageSuccess($param){
         switch ($param) {
             case 'draft':
@@ -35,19 +40,39 @@ class FatBlendVerificationController extends Controller
     }
     function _isAnalyst() {
         $data = Mfatblend::join('db_standardization.musers AS user', 'user.id', '=', 'mfatblend_verification.txtCreatedBy')
-            ->where('mfatblend_verification.txtCreatedBy', Auth::user()->id)->get(['mfatblend_verification.*', 'user.txtName']);
+            ->get(['mfatblend_verification.*', 'user.txtName']);
+        return $data;
+    }
+    function _isLeader(){
+        $data = Mfatblend::join('db_standardization.musers AS user', 'user.id', '=', 'mfatblend_verification.txtCreatedBy')
+            ->where('intIsDraft', 0)
+            ->get(['mfatblend_verification.*', 'user.txtName']);
         return $data;
     }
     public function index(Request $request)
     {
+        $role = LevelAccess::where('user_id', Auth::user()->id)->first();
         if ($request->wantsJson()) {
-            return DataTables::of($this->_isAnalyst())
+            switch ($role->intLevel_ID) {
+                case 4:
+                    $data = $this->_isLeader();
+                    break;
+                
+                default:
+                    $data = $this->_isAnalyst();
+                    break;
+            }
+            return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
+                ->addColumn('action', function($row) use ($role) {
                     if ($row->intIsDraft == 1) {
                         $btn_edit = '<button onclick="edit('.$row->intVerification_ID.')" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button> <button onclick="destroy('.$row->intVerification_ID.')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
                     } else {
-                        $btn_edit = '<span class="badge bg-secondary">Not Available</span>';                        
+                        if ($role->intLevel_ID == 4) {
+                            $btn_edit = '<button onclick="edit('.$row->intVerification_ID.')" class="btn btn-sm btn-info"><i class="fa-solid fa-eye"></i></button>';
+                        } else {
+                            $btn_edit = '<span class="badge bg-secondary">Not Available</span>';                        
+                        }
                     }
                     return $btn_edit;
                 })
@@ -58,7 +83,7 @@ class FatBlendVerificationController extends Controller
                     if ($row->intIsDraft == 1) {
                         $status = '<span class="badge bg-secondary">Draft</span>';
                     } else {
-                        $status = '<span class="badge bg-danger">Non-active</span>';
+                        $status = '<span class="badge bg-success">Published</span>';
                     }
                     return $status;
                 })
@@ -67,7 +92,8 @@ class FatBlendVerificationController extends Controller
         } else {   
             $qa_emp = User::where('intDepartment_ID', 8)->get(['txtName']);     
             return view('ftq::pages.verifikasi.fat-blend', [
-                'qa_emp' => $qa_emp
+                'qa_emp' => $qa_emp,
+                'role' => $role
             ]);
         }
     }
@@ -123,6 +149,9 @@ class FatBlendVerificationController extends Controller
         }
         TrFatblend::insert($trfatblend);
         if ($create) {
+            if ($request->intIsDraft == 0) {
+                Notification::send(User::whereIn('id', $this->leader)->get(), new PublishForm('Verifikasi Fat Blend', Auth::user()->txtName));
+            }
             return response()->json([
                 'status' => 'success',
                 'message' => $this->_isMessageSuccess($request->intIsDraft == 1?'draft':'publish'),
@@ -174,6 +203,10 @@ class FatBlendVerificationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $fatblend = Mfatblend::find($id);
+        $fatblend->update([
+            'intIsDraft' => $request->intIsDraft
+        ]);
         TrFatblend::where('intVerification_ID', $id)->delete();
         $trfatblend = [];
         foreach ($request->txtIngredient as $key => $item) {
@@ -189,6 +222,9 @@ class FatBlendVerificationController extends Controller
         }
         $insert = TrFatblend::insert($trfatblend);
         if ($insert) {
+            if ($request->intIsDraft == 0) {
+                Notification::send(User::whereIn('id', $this->leader)->get(), new PublishForm('Verifikasi Fat Blend', Auth::user()->txtName));
+            }
             return response()->json([
                 'status' => 'success',
                 'message' => 'Draft Verifikasi berhasil diubah',

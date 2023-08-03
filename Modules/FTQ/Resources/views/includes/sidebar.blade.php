@@ -51,43 +51,53 @@
 			<div class="menu-search mb-n3">
         		<input type="text" class="form-control" placeholder="Sidebar menu filter..." data-sidebar-search="true" />
 			</div>
-			@endif			
-			<div class="menu-header">Navigation</div>
-			<div class="menu-item {{ (empty(Request::segment(2))?'active':'') }}">
-				<a href="/ftq" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-md-analytics bg-gradient-green"></i>
-					</div>
-					<div class="menu-text">Dashboard</div>
-				</a>
-			</div>
-			<div class="menu-item has-sub {{ (in_array(Request::segment(2), ['verifikasi'])?'active':'') }}">
-				<a href="javascript:;" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-list-box bg-gradient-blue"></i>
-					</div>
-					<div class="menu-text">Verifikasi</div>
-					<div class="menu-caret"></div>
-				</a>
-				<div class="menu-submenu">
-					<div class="menu-item {{ (Request::segment(3) == 'fat-blend'?'active':'') }}">
-						<a href="{{ route('ftq.verifikasi.fat-blend.index') }}" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-clipboard text-theme"></i> 
-								Fat Blend
-							</div>
-						</a>
-					</div>
-					<div class="menu-item {{ (Request::segment(3) == 'line'?'active':'') }}">
-						<a href="{{ route('roonline.line.index') }}" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-clipboard text-theme"></i> 
-								Material Eductor
-							</div>
-						</a>
+			@endif	
+			<div class="menu-header">Navigation</div>		
+			@php
+				$menus = Modules\FTQ\Entities\Menu::with('submenu')->orderBy('intQueue', 'ASC')->get();
+				$currentUrl = (Request::path() != '/') ? '/'. Request::path() : '/';
+			@endphp
+			@foreach ($menus as $item)
+			@if (count($item->submenu) > 0)
+			@php				
+				$submenu = $item->submenu;
+				$active = '';
+				foreach ($submenu as $key => $val) {
+					if ('/'.$val->txtSubmenuUrl == $currentUrl) {
+						$active = 'active';
+						break;
+					} else {
+						$active = '';
+					}
+				}
+			@endphp
+				<div class="menu-item has-sub {{ $active }}">
+					<a href="javascript:;" class="menu-link">
+						<div class="menu-icon">
+							<i class="{{ $item->txtMenuIcon }}"></i>
+						</div>
+						<div class="menu-text">{{ $item->txtMenuTitle }}</div>
+						<div class="menu-caret"></div>
+					</a>
+					<div class="menu-submenu">
+						@foreach ($item->submenu as $sub)
+						<div class="menu-item {{ Route::currentRouteName() == $sub->txtSubmenuRoute?'active':''; }}">
+							<a href="{{ '/'.$sub->txtSubmenuUrl }}" class="menu-link"><div class="menu-text"><i class="{{ $sub->txtSubmenuIcon }} text-theme ms-1"></i> {{ $sub->txtSubmenuTitle }}</div></a>
+						</div>
+						@endforeach
 					</div>
 				</div>
-			</div>
+				@else
+				<div class="menu-item {{ Route::currentRouteName() == $item->txtMenuRoute ? 'active':'' }}">
+					<a href="{{ '/'.$item->txtMenuUrl }}" class="menu-link">
+						<div class="menu-icon">
+							<i class="{{ $item->txtMenuIcon }}"></i>
+						</div>
+						<div class="menu-text">{{ $item->txtMenuTitle }}</div>
+					</a>
+				</div>
+				@endif
+			@endforeach
 			<!-- BEGIN minify-button -->
 			<div class="menu-item d-flex">
 				<a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i class="fa fa-angle-double-left"></i></a>

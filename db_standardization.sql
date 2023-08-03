@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 16, 2023 at 09:11 AM
+-- Generation Time: Aug 03, 2023 at 09:32 AM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.33
 
@@ -29,13 +29,13 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `failed_jobs` (
   `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_general_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_general_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_general_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -46,13 +46,20 @@ CREATE TABLE `failed_jobs` (
 CREATE TABLE `maccounts` (
   `intAccount_ID` int UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `txtUsername` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtPassword` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUsername` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtPassword` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `maccounts`
+--
+
+INSERT INTO `maccounts` (`intAccount_ID`, `user_id`, `txtUsername`, `txtPassword`, `txtCreatedBy`, `dtmCreated`, `txtUpdatedBy`, `dtmUpdated`) VALUES
+(5, 330, 'qa.champion', 'QaChampion2023', 'ALI DAVIT', '2023-05-16 14:31:14', NULL, '2023-05-16 14:31:14');
 
 -- --------------------------------------------------------
 
@@ -62,10 +69,10 @@ CREATE TABLE `maccounts` (
 
 CREATE TABLE `mcgs` (
   `intCg_ID` int UNSIGNED NOT NULL,
-  `txtCgName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `txtCgName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `dtmCreated` timestamp NULL DEFAULT NULL,
   `dtmUpdated` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mcgs`
@@ -106,12 +113,19 @@ INSERT INTO `mcgs` (`intCg_ID`, `txtCgName`, `dtmCreated`, `dtmUpdated`) VALUES
 CREATE TABLE `mdatabases` (
   `intDatabase_ID` int UNSIGNED NOT NULL,
   `intAccount_ID` int UNSIGNED NOT NULL,
-  `txtDatabaseName` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtDatabaseName` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mdatabases`
+--
+
+INSERT INTO `mdatabases` (`intDatabase_ID`, `intAccount_ID`, `txtDatabaseName`, `txtCreatedBy`, `dtmCreated`, `txtUpdatedBy`, `dtmUpdated`) VALUES
+(9, 5, 'db_contoh', 'ALI DAVIT', '2023-06-02 03:48:48', 'ALI DAVIT', '2023-06-02 03:48:48');
 
 -- --------------------------------------------------------
 
@@ -121,13 +135,13 @@ CREATE TABLE `mdatabases` (
 
 CREATE TABLE `mdepartments` (
   `intDepartment_ID` int UNSIGNED NOT NULL,
-  `txtDepartmentName` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtInitial` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtDepartmentName` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtInitial` varchar(8) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mdepartments`
@@ -153,9 +167,9 @@ INSERT INTO `mdepartments` (`intDepartment_ID`, `txtDepartmentName`, `txtInitial
 
 CREATE TABLE `migrations` (
   `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `batch` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -171,7 +185,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2023_03_24_080923_create_mmodules_table', 2),
 (8, '2023_03_24_134516_create_maccounts_table', 3),
 (9, '2023_03_26_032220_create_mdatabases_table', 4),
-(10, '2023_05_08_133936_create_mform_table', 5);
+(10, '2023_05_08_133936_create_mform_table', 5),
+(11, '2023_05_25_145217_create_visits_table', 6),
+(12, '2016_09_12_99999_create_visitlogs_table', 7),
+(13, '2023_08_01_095426_create_menu_table', 8),
+(14, '2023_08_01_095817_create_submenu_table', 8),
+(15, '2023_08_03_133138_create_notifications_table', 9);
 
 -- --------------------------------------------------------
 
@@ -183,11 +202,11 @@ CREATE TABLE `mjabatans` (
   `intJabatan_ID` int UNSIGNED NOT NULL,
   `intDepartment_ID` int UNSIGNED NOT NULL,
   `txtNamaJabatan` varbinary(155) DEFAULT NULL,
-  `txtCreatedBy` varchar(128) DEFAULT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mjabatans`
@@ -360,12 +379,12 @@ INSERT INTO `mjabatans` (`intJabatan_ID`, `intDepartment_ID`, `txtNamaJabatan`, 
 
 CREATE TABLE `mlevels` (
   `intLevel_ID` int UNSIGNED NOT NULL,
-  `txtLevelName` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtLevelName` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mlevels`
@@ -387,10 +406,10 @@ CREATE TABLE `mlevel_access` (
   `intSubmenu_ID` int UNSIGNED NOT NULL,
   `intLevel_ID` int UNSIGNED NOT NULL,
   `dtmCreated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtCreatedBy` varchar(128) DEFAULT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -400,13 +419,13 @@ CREATE TABLE `mlevel_access` (
 
 CREATE TABLE `mmenus` (
   `intMenu_ID` int UNSIGNED NOT NULL,
-  `txtMenuTitle` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtMenuIcon` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtMenuTitle` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtMenuIcon` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mmenus`
@@ -426,20 +445,45 @@ INSERT INTO `mmenus` (`intMenu_ID`, `txtMenuTitle`, `txtMenuIcon`, `txtCreatedBy
 CREATE TABLE `mmodules` (
   `intModule_ID` int UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `txtModuleName` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `txtModuleName` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
   `intStatus` tinyint(1) NOT NULL DEFAULT '1',
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mmodules`
 --
 
 INSERT INTO `mmodules` (`intModule_ID`, `user_id`, `txtModuleName`, `intStatus`, `txtCreatedBy`, `dtmCreated`, `txtUpdatedBy`, `dtmUpdated`) VALUES
-(1, 330, 'ROonline', 1, 'ALI DAVIT', '2023-04-13 04:14:58', 'ALI DAVIT', '2023-04-13 04:15:02');
+(1, 330, 'ROonline', 1, 'ALI DAVIT', '2023-04-13 04:14:58', 'ALI DAVIT', '2023-04-13 04:15:02'),
+(21, 330, 'FTQ', 1, 'ALI DAVIT', '2023-06-02 03:40:53', NULL, '2023-06-02 03:40:53'),
+(22, 141, 'Faceid', 1, 'ADNAN SAMSULEH', '2023-06-16 01:44:23', NULL, '2023-06-16 01:44:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mnotifications`
+--
+
+CREATE TABLE `mnotifications` (
+  `intNotification_ID` int UNSIGNED NOT NULL,
+  `txtnotification` varchar(128) COLLATE utf8mb4_general_ci NOT NULL,
+  `dtmCreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `dtmUpdatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mnotifications`
+--
+
+INSERT INTO `mnotifications` (`intNotification_ID`, `txtnotification`, `dtmCreatedAt`, `dtmUpdatedAt`) VALUES
+(10, 'Department ditambah!', '2023-06-05 02:40:58', '2023-06-05 02:40:58'),
+(11, 'Department ditambah!', '2023-06-05 02:43:01', '2023-06-05 02:43:01'),
+(12, 'Department ditambah!', '2023-06-05 02:43:53', '2023-06-05 02:43:53'),
+(13, 'Department ditambah!', '2023-06-05 02:46:28', '2023-06-05 02:46:28');
 
 -- --------------------------------------------------------
 
@@ -450,12 +494,12 @@ INSERT INTO `mmodules` (`intModule_ID`, `user_id`, `txtModuleName`, `intStatus`,
 CREATE TABLE `msubdepartments` (
   `intSubdepartment_ID` int UNSIGNED NOT NULL,
   `intDepartment_ID` int UNSIGNED NOT NULL,
-  `txtSubdepartmentName` varchar(128) NOT NULL,
-  `txtCreatedBy` varchar(128) DEFAULT NULL,
+  `txtSubdepartmentName` varchar(128) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `msubdepartments`
@@ -508,15 +552,15 @@ INSERT INTO `msubdepartments` (`intSubdepartment_ID`, `intDepartment_ID`, `txtSu
 CREATE TABLE `msubmenus` (
   `intSubmenu_ID` int UNSIGNED NOT NULL,
   `intMenu_ID` int UNSIGNED NOT NULL,
-  `txtSubmenuTitle` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtSubmenuIcon` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtUrl` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtRouteName` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtSubmenuTitle` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtSubmenuIcon` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtUrl` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtRouteName` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `msubmenus`
@@ -549,21 +593,21 @@ CREATE TABLE `musers` (
   `intSubdepartment_ID` int UNSIGNED NOT NULL,
   `intCg_ID` int UNSIGNED NOT NULL,
   `intJabatan_ID` int UNSIGNED NOT NULL,
-  `txtName` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtNik` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtUsername` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtInitial` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtEmail` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `txtExt` char(4) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `txtPhoto` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'default.png',
-  `txtPassword` varchar(155) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(155) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtName` varchar(128) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtNik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtUsername` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtInitial` varchar(6) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtEmail` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtExt` char(4) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `txtPhoto` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default.png',
+  `txtPassword` varchar(155) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `remember_token` varchar(155) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `intActive` tinyint DEFAULT '0',
-  `txtCreatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `musers`
@@ -690,7 +734,7 @@ INSERT INTO `musers` (`id`, `intLevel_ID`, `intDepartment_ID`, `intSubdepartment
 (118, 3, 7, 27, 19, 29, 'DWIKI ARIA DARMAWAN', '130193012', 'dwiki.darmawan', 'DAD', 'dwiki.darmawan@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (119, 3, 6, 8, 5, 24, 'ERFAN KIMA BAHTERA', '130193013', 'erfan.bahtera', 'EKB', 'erfan.bahtera@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (120, 3, 8, 31, 20, 70, 'ERIS MOCHAMAD FIRDAUS', '130193014', 'eris.firdaus', 'EMF', 'eris.firdaus@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
-(121, 3, 8, 31, 21, 51, 'FARIZ FAUZI PRATAMA', '130193015', 'fariz.pratama', 'FFP', 'fariz.pratama@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
+(121, 3, 8, 31, 21, 51, 'FARIZ FAUZI PRATAMA', '130193015', 'fariz.pratama', 'FFP', 'fariz.pratama@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', 'xf5ZKaEyMdDyrtZiifh9WoUrf9si2ixP5HQWzH5ulEYtPH5Kp6Zp2IUmCZkI', 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-08-02 08:15:22'),
 (122, 3, 7, 27, 13, 29, 'FEBRIANGGONO DANNY SETIYADI', '130193016', 'febrianggono.setiyadi', 'FDS', 'febrianggono.setiyadi@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (123, 3, 9, 36, 23, 89, 'HADI', '130193017', 'hadi.hadi', 'HDI', 'hadi.hadi@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (124, 3, 7, 27, 14, 29, 'HERU AHMAD SAPRUDIN', '130193018', 'heru.saprudin', 'HAS', 'heru.saprudin@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
@@ -900,7 +944,7 @@ INSERT INTO `musers` (`id`, `intLevel_ID`, `intDepartment_ID`, `intSubdepartment
 (327, 3, 8, 31, 21, 83, 'MUHAMAD FIRMAN GANI', 'K230200018', 'muhamad.firman', 'MFG', 'muhamad.firman@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (328, 3, 8, 31, 20, 150, 'KANIA DEWI FITRIANI', 'K230200019', 'kania.fitriani', 'KDF', 'kania.fitriani@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (329, 3, 4, 12, 2, 149, 'PUTRI NUR RAHMAWATI', 'K230200024', 'putri.rahmawati', 'PNR', 'putri.rahmawati@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
-(330, 1, 8, 31, 21, 150, 'ALI DAVIT', 'K230200025', 'ali.davit', 'ADT', 'ali.davit@kalbenutritionals.com', '#N/A', '1683267502330.webp', '$2y$10$LZM4yKC5Sdmr9toNsqfbUejMPkkA0exo2reUtIMQySjpyDv/8X1Ba', 'gkMyYijd14F7QWOCbNeCksIX8yRQX8P7CfDVIbycCq7NaqTS7hG7h87ChD2H', 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-05-09 01:45:12'),
+(330, 1, 8, 31, 21, 150, 'ALI DAVIT', 'K230200025', 'ali.davit', 'ADT', 'ali.davit@kalbenutritionals.com', '#N/A', '1683267502330.webp', '$2y$10$LZM4yKC5Sdmr9toNsqfbUejMPkkA0exo2reUtIMQySjpyDv/8X1Ba', 'JQTMJE96elDouxQuC24Ya34m9DuuYU8JpzXoFOoetKVEjbTurAxNBGNmb0PX', 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-08-03 09:00:11'),
 (331, 3, 4, 12, 7, 151, 'LILIS SUMARNI', 'O180500043', 'lilis.sumarni', 'LSI', 'lilis.sumarni@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (332, 3, 4, 12, 7, 152, 'CAHYADI', 'O181200144', 'cahyadi.cahyadi', 'CYI', 'cahyadi.cahyadi@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
 (333, 3, 4, 12, 7, 152, 'TATANG MEINSYAHYAR', 'O190600102', 'tatang.meinsyahyar', 'TMR', 'tatang.meinsyahyar@kalbenutritionals.com', '#N/A', 'default.png', '$2y$12$AZqgg65Z9qjrb1IDM1DAqOAGKCAXnxLmUZGO1Tt5nxeFkhrkcds3m', NULL, 1, 'ADMIN', '2023-04-13 04:11:19', 'ADMIN', '2023-04-13 04:15:59'),
@@ -942,6 +986,76 @@ INSERT INTO `musers` (`id`, `intLevel_ID`, `intDepartment_ID`, `intSubdepartment
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_id` bigint UNSIGNED NOT NULL,
+  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
+('0e717dce-e9c9-42aa-876b-68608c2556d9', 'App\\Notifications\\PublishForm', 'App\\Models\\User', 121, '{\"title\":\"Verifikasi Fat Blend\",\"message\":\"Berhasil dipublish oleh ALI DAVIT\"}', '2023-08-03 09:29:55', '2023-08-03 09:29:44', '2023-08-03 09:29:55'),
+('75268dcc-846f-42c1-b2b7-6c1588a90fcc', 'App\\Notifications\\PublishForm', 'App\\Models\\User', 54, '{\"title\":\"Verifikasi Fat Blend\",\"message\":\"Berhasil dipublish oleh ALI DAVIT\"}', NULL, '2023-08-03 09:29:44', '2023-08-03 09:29:44'),
+('88e3918c-04a6-45c5-9762-0817a5926d05', 'App\\Notifications\\PublishForm', 'App\\Models\\User', 15, '{\"title\":\"Verifikasi Fat Blend\",\"message\":\"Berhasil dipublish oleh ALI DAVIT\"}', NULL, '2023-08-03 09:29:44', '2023-08-03 09:29:44'),
+('ac7855ed-019d-4a4e-836d-909dc288970c', 'App\\Notifications\\PublishForm', 'App\\Models\\User', 173, '{\"title\":\"Verifikasi Fat Blend\",\"message\":\"Berhasil dipublish oleh ALI DAVIT\"}', NULL, '2023-08-03 09:29:44', '2023-08-03 09:29:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shetabit_visits`
+--
+
+CREATE TABLE `shetabit_visits` (
+  `id` bigint UNSIGNED NOT NULL,
+  `method` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `request` mediumtext COLLATE utf8mb4_general_ci,
+  `url` mediumtext COLLATE utf8mb4_general_ci,
+  `referer` mediumtext COLLATE utf8mb4_general_ci,
+  `languages` text COLLATE utf8mb4_general_ci,
+  `useragent` text COLLATE utf8mb4_general_ci,
+  `headers` text COLLATE utf8mb4_general_ci,
+  `device` text COLLATE utf8mb4_general_ci,
+  `platform` text COLLATE utf8mb4_general_ci,
+  `browser` text COLLATE utf8mb4_general_ci,
+  `ip` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `visitable_type` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `visitable_id` bigint UNSIGNED DEFAULT NULL,
+  `visitor_type` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `visitor_id` bigint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shetabit_visits`
+--
+
+INSERT INTO `shetabit_visits` (`id`, `method`, `request`, `url`, `referer`, `languages`, `useragent`, `headers`, `device`, `platform`, `browser`, `ip`, `visitable_type`, `visitable_id`, `visitor_type`, `visitor_id`, `created_at`, `updated_at`) VALUES
+(1, 'GET', '[]', 'http://standardization.test/roonline', 'http://standardization.test/', '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImZHVWh5WWpSclZMZytxLzB6WUV5RHc9PSIsInZhbHVlIjoiNjBnQnRCM2VDTnZoc25WYU54WHd3RlkrLzdDdSs3SjFXVEhMNXdlTGRlOWZ6ODhiaHg4cjlxMm9PNGljTE84NDNxQy9ZS2hteklCZnNQS2ZGajl0UVQraXpxOEM0SnlQK1NMVlVlbHJXTVBKQURVdTJITVRjRGVQSUIwNXZRTUNZeTdmcEtiSGRQbzU3VHUyWlgvallUdGppT0NCeThCV3ZURnJ0c0lhMWhDeUZUa3JTSDJWTk1Ma3B2ZjVMYXdpc0NsTTNub0J4dmV5UGhQOVdITStjOEI3UUhpTytWbzM0aFVmQWpHUUd1QT0iLCJtYWMiOiJlZjkwNjBkYTI1ZTE3MTgxZWVlZjQwNjI5OWUyYjI1N2MzYjQzNWZlNmU0ODI5Yjk3OGVlMjM1MjA5Y2MxNTRhIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6Ik9jNG0zN2lzS2dMaTZnUHhRa3I3dkE9PSIsInZhbHVlIjoiT2Q5MGxaVTFaai9vN0lUN1p6RGlyUk9xMnIrUGJKUWhyalovM0h1eFozSXU3bU13NG5uelE2MFREazRjaTdFUC9GSkoyWEQxZkdMLzlwWTMwSTFkd1FWVTBsUThhTXM0eWVlbHFJQU1RQjBEeldUaEpESFJpY0NXc3JlaDNSdmYiLCJtYWMiOiJkNGYxNDM4NGU0MGFiNTQ2ZjU4MTAzYjJkOWJkMTAwZGViMTdhY2E4N2JiNzM3MDgwNTU5YjhlZjQ1NjdhZWUwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImdiNTl1eEtLZUU3WXRadlgvNm8rdkE9PSIsInZhbHVlIjoidDI4VFRVa2hGcDhNdnBDZDBjRWMvYi9JdEU2ZDB0RU9mMzdpdUg3R3BLUFV5N3FGOGg2ZkpsRk9laHNuK01COWRucUxvVk5DZFE5WWtlbk9reE1kOWhDcHl3cS91SHRGeXhYalFTbnRDSkEvSWFZN1lwTlowdTd6eVBsM3BKY0oiLCJtYWMiOiI4NGFiMzFiNGM3ODY1MTljNjExZTMwN2E1YmI5N2ZkMGM5OGIwZTMzMDAzZGUxMjQ4NzJiODg4MzgxMWQ3NzJmIiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"referer\":[\"http:\\/\\/standardization.test\\/\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"cache-control\":[\"max-age=0\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-05-25 08:02:45', '2023-05-25 08:02:45'),
+(2, 'GET', '[]', 'http://standardization.test/roonline', 'http://standardization.test/', '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6InhoZUlHM29MeWJXbk1oRHpBdW5FZmc9PSIsInZhbHVlIjoiaHBoc3ZuaVZ2c2JQTC9BbW5JTkgzeXJGLy9mMWJYV2taa0NYVVk0WXVib1ZrZVVPNVl3MnhwY2x4Y3k5bmN4Wkk3UGVJaHFiZkVnMEx6cFRWcDFFSzNTRTFIRXhOZ3c1Q1lPWld3V01mcVNsQ3BaNUZnS1pXd1Nqa3luSmYwd3FNSmJrM0M2Q1BCeU1kbk9ZQitWMnh4eXRadVNxTGU3NytiYXl4aFZpcWhyRGd1YnBzc2RmTU9wenY3RWlLODc2M25wSlRwMkNQVldNa2VrZDRjUDAxZWlmcnFaSlZ4aEZwS1ZDencxcE1QOD0iLCJtYWMiOiI1ZDEzM2JkYzc0N2M3NzI5ZTg5Nzk4YmE3MTU3MjA1N2E0NjE0ODZlNjE5NDFmZTNkODJkMmE0MjRiZTEwZGVmIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6IkwvRDV2ZWpEWU12L0VXSmg3TUNMZXc9PSIsInZhbHVlIjoiME5rcWhBcWNVNmMrc2NZNmdCSmdCeTU4VXZHWHZpTVlXOFhpeWhQc0V2ckZSOTNrOEFUY0liV205ZVNqdW9yUkZKSWhQWjM3WGVYRjlqaE5VWDVmM1djNC84U2pjd1hJUFloTk05L2xBT3FWc3ZFemxxN3c5VFdaM1NidTIxM20iLCJtYWMiOiI3ZDJjOGRhM2Y0Y2M5ZjkzYmU1MzlkMWZlYWFmNGVmMTllMjkxODJkM2QxNjlmOGQ1ZjFlM2QxNGQ1NzRlMGUyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImI1Qi9JSzZlamJWZ3hQYW1PbGxLS2c9PSIsInZhbHVlIjoiVDZ6Z0U0NTN4a3pQdk5KNm9lNGhkbG5LZmcrcTJvQUtBS2lXNHBQditFSVFETy8xSUpRSDB4dVlvZERCYytUNytNVmpFZzVmV1V1YWxVS05lQWR4alVpRVoySDRpWm16NDQ5eHVjamgvQUM0dHJ1aHhzcTFtWnBXWWpZTWJ0bHAiLCJtYWMiOiJjMThkNWY0YWRjZjYxM2I3NTBkZjM1NmEyMWYxNTBmZjI4NGE0M2RhMjY0ZmI3ZThlNzZjNThkNTIzNzg0MzllIiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"referer\":[\"http:\\/\\/standardization.test\\/\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/avif,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36\"],\"upgrade-insecure-requests\":[\"1\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Chrome', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 274, '2023-05-25 08:07:14', '2023-05-25 08:07:14'),
+(3, 'GET', '[]', 'http://standardization.test/roonline', 'http://standardization.test/roonline', '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImZHVWh5WWpSclZMZytxLzB6WUV5RHc9PSIsInZhbHVlIjoiNjBnQnRCM2VDTnZoc25WYU54WHd3RlkrLzdDdSs3SjFXVEhMNXdlTGRlOWZ6ODhiaHg4cjlxMm9PNGljTE84NDNxQy9ZS2hteklCZnNQS2ZGajl0UVQraXpxOEM0SnlQK1NMVlVlbHJXTVBKQURVdTJITVRjRGVQSUIwNXZRTUNZeTdmcEtiSGRQbzU3VHUyWlgvallUdGppT0NCeThCV3ZURnJ0c0lhMWhDeUZUa3JTSDJWTk1Ma3B2ZjVMYXdpc0NsTTNub0J4dmV5UGhQOVdITStjOEI3UUhpTytWbzM0aFVmQWpHUUd1QT0iLCJtYWMiOiJlZjkwNjBkYTI1ZTE3MTgxZWVlZjQwNjI5OWUyYjI1N2MzYjQzNWZlNmU0ODI5Yjk3OGVlMjM1MjA5Y2MxNTRhIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6IkxoVS9pdytpdHNhVWdFT3R6Smlmdmc9PSIsInZhbHVlIjoiK1BNMTVWOGM1V2lwMzlkR1pTbFpKT3kzM3A1NTVFVElENFJUQ0Vqd2FCZWtidk82SkpNOEZJc2dDMFB0N3M2M3ZOR2lpeGd1amt2cUNzcDdzSU5USnJLUjgxVEZERlYyVU1FMGhFZFAwN2YxSEZxRVNQMXQ3NTFycGRDWTVlMTgiLCJtYWMiOiJiNzY2ZjE0NjE4OWI0MWI4YWM4ZmU1NzUyYmE3ODFhMDJmZmIwNDllNWI3ZDVmMTk5ODIwZWY3ZDc5NzVkMWY1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImR4MTg4RWVobTF3OU9ieU56ZVZDaUE9PSIsInZhbHVlIjoiUTlLMGphcVZvamNkemZrZXM3YUFlS3lWdTh4d2p0SURQQ0gzdm9mb01GMG43eEhaOW1hL0p0bkZka1JNbkRpUmFFNTZMaWVPYk1RRVk1b3lYZHdwRU1vU3FldDJZZnNLdVFUL2J2dHROY1E0QUFXd0dFYWFaTXJqSmY3MFRzMmUiLCJtYWMiOiIyYTc3MTdmMGIyODI5NjBlMTcxMzZlYWQ3ZGIyMDdlZTAxMWRmN2E4NjJjZTEyNmNkYTcxN2MwNzc1ODUzMjQwIiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"referer\":[\"http:\\/\\/standardization.test\\/roonline\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-05-25 08:09:32', '2023-05-25 08:09:32'),
+(4, 'GET', '[]', 'http://standardization.test/roonline', 'http://standardization.test/roonline', '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImZHVWh5WWpSclZMZytxLzB6WUV5RHc9PSIsInZhbHVlIjoiNjBnQnRCM2VDTnZoc25WYU54WHd3RlkrLzdDdSs3SjFXVEhMNXdlTGRlOWZ6ODhiaHg4cjlxMm9PNGljTE84NDNxQy9ZS2hteklCZnNQS2ZGajl0UVQraXpxOEM0SnlQK1NMVlVlbHJXTVBKQURVdTJITVRjRGVQSUIwNXZRTUNZeTdmcEtiSGRQbzU3VHUyWlgvallUdGppT0NCeThCV3ZURnJ0c0lhMWhDeUZUa3JTSDJWTk1Ma3B2ZjVMYXdpc0NsTTNub0J4dmV5UGhQOVdITStjOEI3UUhpTytWbzM0aFVmQWpHUUd1QT0iLCJtYWMiOiJlZjkwNjBkYTI1ZTE3MTgxZWVlZjQwNjI5OWUyYjI1N2MzYjQzNWZlNmU0ODI5Yjk3OGVlMjM1MjA5Y2MxNTRhIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6ImtJbUZMZ0ZmSVlXYjVBYVhld3J5alE9PSIsInZhbHVlIjoicmlFaUVXMTJXbWVTcElqOGdUQlF5dEF0Ulp5Mmt2SVNaNm1xZmhuQ3RkVXJ6TlNPd0RldW5TRmFSQ3Y0MDl1enN2eDdtUlRyT2NvS2lQZHUrakUyVHBhelQ4R1FQUkVWbDJwMk1JSWk2RWUyMEthUDlCZ3V3bTYrcVF4M3NlUHIiLCJtYWMiOiIyMTFlNzgyNzJkZTI3NjczNjNiMjQxNjdlZjZjNDAwZjgxZjI2M2FmMGUzNWVjYjYwOWY2ZDllZmJkY2E2OGJjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ik9SZ3hSMXZVZ1FUUFAxTFlrTDNHaUE9PSIsInZhbHVlIjoiRXBZSy9RdFc5dFhwQ2NaaDAvWElzWE1wZ3JmZUV3dUpSbEprM0tNRG40YUVWb1g2K1JqK3Bic2o5YzYraWxMNERmMzJEZDluZktaL3Y4eG40THBuYjZSanF0aW5pTWFKZ1ZMYlNKajJXcXUyMVBMYVB3Zis1c3I4KzM4NXZsd2MiLCJtYWMiOiIwZGY4ODUyMmRjMzU5YzRmODc1ZTNmYTUzNWQ1ZTEzNWQ0NmEwNzc2ZGIyZjlhMDI4NDJiMzA3MjhiZDkyZjQ0IiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"referer\":[\"http:\\/\\/standardization.test\\/roonline\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"cache-control\":[\"max-age=0\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-05-25 08:44:59', '2023-05-25 08:44:59'),
+(5, 'GET', '[]', 'http://standardization.test/roonline', NULL, '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImZHVWh5WWpSclZMZytxLzB6WUV5RHc9PSIsInZhbHVlIjoiNjBnQnRCM2VDTnZoc25WYU54WHd3RlkrLzdDdSs3SjFXVEhMNXdlTGRlOWZ6ODhiaHg4cjlxMm9PNGljTE84NDNxQy9ZS2hteklCZnNQS2ZGajl0UVQraXpxOEM0SnlQK1NMVlVlbHJXTVBKQURVdTJITVRjRGVQSUIwNXZRTUNZeTdmcEtiSGRQbzU3VHUyWlgvallUdGppT0NCeThCV3ZURnJ0c0lhMWhDeUZUa3JTSDJWTk1Ma3B2ZjVMYXdpc0NsTTNub0J4dmV5UGhQOVdITStjOEI3UUhpTytWbzM0aFVmQWpHUUd1QT0iLCJtYWMiOiJlZjkwNjBkYTI1ZTE3MTgxZWVlZjQwNjI5OWUyYjI1N2MzYjQzNWZlNmU0ODI5Yjk3OGVlMjM1MjA5Y2MxNTRhIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6IlNJSjVXN20xK0ZKalBBQ2RsN1ltUGc9PSIsInZhbHVlIjoib1FRWnhFOU8xTDlaekRMb3Bpem01SVdqb2FqaCsyUDl0Z2l1cEVzY1BiSWxVR2h1VG1PU2ErckFzUlF2TWxabmN2Vnl3YjY5elFmTHZlWkZoN01hVFROWEJ3VlJmcEZ4UTM0cy92YU1GRjFScFkxNnNpNG5wc2ZiUWFEUGJpNHgiLCJtYWMiOiI3MDlhMjk5ZjU0ZDUyNDZlOTg4YzljNDE2NjQyMmY4NmNmZDBiYzA3OTVhNGMwZTA5MThhOWNmZGM0N2M0MWUyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkMvNTdhcjBiNVRqQmFwM1gxbW1BWXc9PSIsInZhbHVlIjoiUGNTZ2hoTndxNnEvaEtqcVpZUlk0dm1YK2xpR3pKOC9uSEJBdUtlSThCbFMxSk0xSkNjL1ZkOENhd3BZRWRWTExsdFdoVURyL3IwQnFoRnZCQ1Yramk1bUNnWFlRUjA0U1dHeG5aSCtKRzh6cDMvOFVTZVBSRDhSbGI2WThRODQiLCJtYWMiOiI0M2IxMTAxZTVkNWE5OWU5ZWJkZjMxNDM1ZWY0NGNjOGQ0N2Y1Yzk2NWFiN2U0NjFjZWM0ZGM5YjBjNjlmN2M1IiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-05-26 01:22:00', '2023-05-26 01:22:00'),
+(6, 'GET', '[]', 'http://standardization.test/roonline', NULL, '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImZHVWh5WWpSclZMZytxLzB6WUV5RHc9PSIsInZhbHVlIjoiNjBnQnRCM2VDTnZoc25WYU54WHd3RlkrLzdDdSs3SjFXVEhMNXdlTGRlOWZ6ODhiaHg4cjlxMm9PNGljTE84NDNxQy9ZS2hteklCZnNQS2ZGajl0UVQraXpxOEM0SnlQK1NMVlVlbHJXTVBKQURVdTJITVRjRGVQSUIwNXZRTUNZeTdmcEtiSGRQbzU3VHUyWlgvallUdGppT0NCeThCV3ZURnJ0c0lhMWhDeUZUa3JTSDJWTk1Ma3B2ZjVMYXdpc0NsTTNub0J4dmV5UGhQOVdITStjOEI3UUhpTytWbzM0aFVmQWpHUUd1QT0iLCJtYWMiOiJlZjkwNjBkYTI1ZTE3MTgxZWVlZjQwNjI5OWUyYjI1N2MzYjQzNWZlNmU0ODI5Yjk3OGVlMjM1MjA5Y2MxNTRhIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6InZqVHZiQnQyVmpTcitCdU1vbmpNTWc9PSIsInZhbHVlIjoiMmQwNTZEWjF3T25NQkVzK3hjZkRpSGdFQkRtcVFvNWxabmNDOFBBTXd1N2QyS2xJWGJBL2VSU2ZFRnVrcWFURjN6Ylp6c29DNmR2ZzhscnNqOXJHclBVdjFzSGdYODF2djZ1eXlmc3RiWUhYd1pVK1hGa2ExOS9Id09LN3JxNlciLCJtYWMiOiIwNTc4ZDM1MmE5OWU0ZTViYjU3OTJjZWNkOWIzMTRjMzNiYWEwYTBkZDNmMTU5ZjZkNzQ2OWZhOGY3YzljMTI5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InFCQWtyaVk2U3NzUUJ6TDdiK2s2Vmc9PSIsInZhbHVlIjoibVJsWVQ3OHhHOENvKzhwSFdWZGhSR21IMUZwanAvQXJTMU5BZnBJSnJUY0o4bnlVMTFnTm1nL1hlQUdvOEZwaFBFSllYVTh3UG5NSm16dld2THh6THhoeXdMUVNhOGIwV3dCZjJBL3Z2NzBsSlFTWGE4d1ltOHArQ2NGQkt2bzIiLCJtYWMiOiIxNzMwMmQ3YTFkNWQ4OGIxY2Y0NzJhYzE4MzU3MjRjNTU2MWFkYjE3ZDIzYjRmOGVmOTFjNDEzNGFlNWZiYTAzIiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-05-31 01:21:10', '2023-05-31 01:21:10'),
+(7, 'GET', '[]', 'http://standardization.test/roonline', NULL, '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImZHVWh5WWpSclZMZytxLzB6WUV5RHc9PSIsInZhbHVlIjoiNjBnQnRCM2VDTnZoc25WYU54WHd3RlkrLzdDdSs3SjFXVEhMNXdlTGRlOWZ6ODhiaHg4cjlxMm9PNGljTE84NDNxQy9ZS2hteklCZnNQS2ZGajl0UVQraXpxOEM0SnlQK1NMVlVlbHJXTVBKQURVdTJITVRjRGVQSUIwNXZRTUNZeTdmcEtiSGRQbzU3VHUyWlgvallUdGppT0NCeThCV3ZURnJ0c0lhMWhDeUZUa3JTSDJWTk1Ma3B2ZjVMYXdpc0NsTTNub0J4dmV5UGhQOVdITStjOEI3UUhpTytWbzM0aFVmQWpHUUd1QT0iLCJtYWMiOiJlZjkwNjBkYTI1ZTE3MTgxZWVlZjQwNjI5OWUyYjI1N2MzYjQzNWZlNmU0ODI5Yjk3OGVlMjM1MjA5Y2MxNTRhIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6IklMY0U4cUJjdHZvc0c5Wm9hbEl0d0E9PSIsInZhbHVlIjoidUpxM3JROGhvZjZzcmZPOWM5elNiNkRrZlBzMnBpS1dGWTEwbFZ5cHd5WVcxNFphK3RZSkxPL2o0YkVGbGJ5K082R1VxQ3VGS2JzUktEYUFMUmdHTmdxQVk4a0VnL1ZBM1pUTDU2ZXJwOXhkOW12V1A2Z0xWZndGK0dtakRmb20iLCJtYWMiOiIyZTlkODY2MWM1NGUwMmNmODhmMTQyMWIzOWNkOWNjOWNmMDc2NmNhOWYwYjdhMjQxMjkwNDFmNTIwZDEwZTNhIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlMb3Vza1NQZGhFUGpMU1JNeDBsS3c9PSIsInZhbHVlIjoiQytxWC9idXh6cGEyK2w3RjU3Q29vLzNveGhiaHhHOUxrZHdGTndEc0o4Q2VwZFpmdDdjaDJzVmdYQUNkMGxidHdGWDFXOU9QOTFON2JHUk1EMEMrMi9vWlZzMnpXMDRDNjZEY3BuRFRwdnk5TkFaMlJBUFlxTVFCY01LWDVjS0UiLCJtYWMiOiJmZmRjOTFkYWFmOGI0ODZiMGE0MWEyY2MxMGNkZjlmYTNkZWFjYjU2MzkyMDIxN2RlYjdlMzEyZTA5MDkwYjJiIiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"cache-control\":[\"max-age=0\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-05-31 01:21:52', '2023-05-31 01:21:52'),
+(8, 'GET', '[]', 'http://standardization.test/roonline', NULL, '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImZHVWh5WWpSclZMZytxLzB6WUV5RHc9PSIsInZhbHVlIjoiNjBnQnRCM2VDTnZoc25WYU54WHd3RlkrLzdDdSs3SjFXVEhMNXdlTGRlOWZ6ODhiaHg4cjlxMm9PNGljTE84NDNxQy9ZS2hteklCZnNQS2ZGajl0UVQraXpxOEM0SnlQK1NMVlVlbHJXTVBKQURVdTJITVRjRGVQSUIwNXZRTUNZeTdmcEtiSGRQbzU3VHUyWlgvallUdGppT0NCeThCV3ZURnJ0c0lhMWhDeUZUa3JTSDJWTk1Ma3B2ZjVMYXdpc0NsTTNub0J4dmV5UGhQOVdITStjOEI3UUhpTytWbzM0aFVmQWpHUUd1QT0iLCJtYWMiOiJlZjkwNjBkYTI1ZTE3MTgxZWVlZjQwNjI5OWUyYjI1N2MzYjQzNWZlNmU0ODI5Yjk3OGVlMjM1MjA5Y2MxNTRhIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6ImlIUkZPdnl4ZGxwb1NZT3FDMlRnQnc9PSIsInZhbHVlIjoiVTN2c3djN2lPeVFCSnVWd3h1cnV0Uk9kK2dUSENtRVViWUorWTNTandCdWZxeUE0QmljR05ZOHdXS2tMdGp3a1dETU1wcm1RV2E3bjN6OVF6ZFdFUGhtZWg2NEp5U21QYmxEVVZyTFh3Skx5MzBSMWZNc1BTNUNhQ0ViZ1dOblgiLCJtYWMiOiIzN2M4NDdkNTM3OTFhZTUwYTM3M2ZmZjE0NWZkZDQwYTljYWNkZjBjMTM3NWYwMjk5YzczMmM4NGQwYWZiMjE3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlVwckxyZlk4T255SWsydDQ1Z045dXc9PSIsInZhbHVlIjoiRmd3Rmwvc3VZU1JFN0pVNUxNd0tlM1VWZnp6dzlMb2U4aE1TSWV3dnU0N2EvVUJNekhyVVUxa2JtK2RZMVdOOHVaZEFsSnRZYml3NDByL0Zzb0wvYWQzdnpEOXVDMU5NTk1sWkNFcFZFTFBIcnBUQUFUSXRCSDVqaG9yZW1xT0giLCJtYWMiOiIwN2JhODE1OTkwNzM3MTUzYzljYTMwNzMwODE0YzIzM2VhZGY3ZDUxZDhiNDFhNmVjOTVhZmNhYWZhOTQwOTE3IiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"cache-control\":[\"max-age=0\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-05-31 01:22:49', '2023-05-31 01:22:49'),
+(9, 'GET', '[]', 'http://standardization.test/roonline', 'http://standardization.test/', '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"app-sidebar-minified=true; XSRF-TOKEN=eyJpdiI6ImREOGNZWXMyZUtJUnRuVnE3VUtSU0E9PSIsInZhbHVlIjoiNjEwK3hnS01tYlM2NVlNWU9wN0haODJvVFpjOHN6eHJqamo4c2o1K1JDeEQvaGo3ZXBQSmtrcGYreHJUdGl0SVpyaVV6a2FGSDBYM1NZMGFwRzY5TllrTFNib0ZXODZpdndiUU5WUnY3Tld5STBROGNyd0hXbG14TWk3ZTkySEsiLCJtYWMiOiI4YmJkNDkyYWYxYWM1YWMzYzQ0ZGEwYzMzZWVkODY2ZGFlMTVkYjU5ZjMzMGQyY2JhMzQ5NTA5ZWYzY2Q3MGY3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjM5QVQ5c21PY3Q1aDFSc0J6RDRmdXc9PSIsInZhbHVlIjoiQzZZei9HZWpNT29FVHA4QUduWHl6am1qWjJ2U3M0akJpQ2s0MFlWbnpXcDMrd2tJUHN4MVJkeXZxd3p6VWFFREQyYlMyWVU4bnl2cVIxeko1TSsxT0JFZWEyenZLcEZUbnBtSEgzek5GZm0ydFRGUFVCUThtNVlIY2ZuV08yaFoiLCJtYWMiOiI4ZWJlMGQyOTc0OWZlMDhlNmZkMjU2ZTQ5NDFjNDlmMzBjYzhiYjY2MTZmZDk2ZDI5YzA1YTM0ZjVkM2UzYWRlIiwidGFnIjoiIn0%3D; remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6IlNicWQrRCtLdGFXUjlYdkRoM3h3aUE9PSIsInZhbHVlIjoibHRJbVhvWTVDdnNyRUN6OEdIOXhjT3d5K0o0Wm5oUGp3VG9yYmdOV3VLRXZCMERFNHJwRldoWTFxOVV5UTNEcFVtb21DQk1XdXZsdlhNQjNpNEF5VGVpZEUzbHpqL3hkY25vNGRHYTNTZ0FJa1l0K20wYi9RQ0hJQU5SZGEzdWl6V3hYWkczZU5GM0UwdUJaV3A5YjlmajVqdENWWi9ObUNUaEZQakJialdEMHp4MmRYMWlkeHRpVUJzM2V6T3FndHFscVIwSjNOanJMS3R3blIraE9UMmI5NS8rNnJLaFZpa0dlQytBeVR2QT0iLCJtYWMiOiJkMTY2YzNlMzU1NGZiM2QyMmVmY2U2MTYzYmM3NDk5MGZkZDZlYjBkNDhmZTdkZTBlNjVlMTgwYTZhMzRlYmE5IiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"referer\":[\"http:\\/\\/standardization.test\\/\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-06-02 02:51:50', '2023-06-02 02:51:50'),
+(10, 'GET', '[]', 'http://standardization.test/roonline', NULL, '[\"en-us\",\"en\"]', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42', '{\"cookie\":[\"remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6IkpIUXBtTTkyZWFxc0MzSjlGcUtTSWc9PSIsInZhbHVlIjoiMTZVeEFaOVJ1UmUxYkNTdFluOU1NcXdiOXBPQkpRanJnYzloZit0eEdteWNweEJESkNVR0E2eEIxRHp0RVN5OXV3eE9UY2gwMmpIM3ZTRW1TNi9Vd2t6NTVIWGJ2VTlNU0gyTUU1K0lFSFRPK0V5ZldLSS9Sc0hMMFdjNW9vMG9nTE82bllPNXRxbHNUd0pTOXo2cU5KRXpaVld1dzI2Uno3d2dNYTdhTUt2bklBQjdMTWhSanJ1cDZZN2s2NGt1N2RyZTVINy90OWVFZWk1a2ZnZVMySjNFZ2o1ckVKNzYvY2RTck9NeEd6QT0iLCJtYWMiOiI2YzllN2E0M2RlYmYzZjM0NzJlNGU5YjJkMjg5NjUzM2QzOTZlZjQ5M2Y3OTRmYjBkNzMxODkxODliMzdiMjU2IiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6Im1PS1hSKytOKzlucGxYSElmNlo5UXc9PSIsInZhbHVlIjoiSitOZHU1U2F6WlY0SG1Oa1hibEFVNndueERVemY0SHNFTlFtQk9wcVk4NTFrNUhBK2hscHR3emhkbVpvakJOc1k2SGgzZkN2WjVRc1k5amFSSmQ1cE9KMy9ZSk5nTHUzYzYveGdVUUdHZ051WUROUFp3dkZCT1QrSGR3dmpvamoiLCJtYWMiOiI0NzgzZjRlMjI1ZGY2NzFkY2FiZjNjYjk2N2ViZTVhMjAzNjllMTNiYjY1MzcxYjRmYjQ3MzA1YWNlODU2NmZmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjJQYlhIbi9oL043VmlMVHFIZ2h6Nmc9PSIsInZhbHVlIjoiVVhUREJxcWtnWEpoN2liemNIU2VLMHdHVlB1MzMvMTUyek12L2VuWUtVZ3pZQmVSTzlJT0wxYXFlSy9uQmFhYjF2TDVDOVpDVk84RURYbFhmOGVNUDNwL2RndG12RDkxWkV2OVFyWlFqd3B2b2RDUDdxbXYvYXp5MHF3YzFRRnciLCJtYWMiOiJmOWY1N2JkNDk0ZTFiM2U2YjJhYmU0MzkwZGRhOTlhYTE3YTcwMTgyODJiYmYzYzJiYzczOWUxNGZkMjU1Yjc5IiwidGFnIjoiIn0%3D\"],\"accept-language\":[\"en-US,en;q=0.9\"],\"accept-encoding\":[\"gzip, deflate\"],\"accept\":[\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8,application\\/signed-exchange;v=b3;q=0.7\"],\"user-agent\":[\"Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/113.0.0.0 Safari\\/537.36 Edg\\/113.0.1774.42\"],\"upgrade-insecure-requests\":[\"1\"],\"connection\":[\"close\"],\"host\":[\"standardization.test\"]}', 'WebKit', 'Windows', 'Edge', '127.0.0.1', NULL, NULL, 'App\\Models\\User', 330, '2023-06-05 02:06:28', '2023-06-05 02:06:28');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `trlevel_access`
 --
 
@@ -950,11 +1064,11 @@ CREATE TABLE `trlevel_access` (
   `intSubmenu_ID` int UNSIGNED NOT NULL,
   `intRoute_ID` int UNSIGNED NOT NULL,
   `intAccessible` tinyint(1) NOT NULL DEFAULT '0',
-  `txtCreatedBy` varchar(128) DEFAULT NULL,
+  `txtCreatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmCreated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `txtUpdatedBy` varchar(128) DEFAULT NULL,
+  `txtUpdatedBy` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dtmUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `trlevel_access`
@@ -1064,11 +1178,11 @@ INSERT INTO `trlevel_access` (`intLevel_ID`, `intSubmenu_ID`, `intRoute_ID`, `in
 CREATE TABLE `trroutes` (
   `intRoute_ID` int UNSIGNED NOT NULL,
   `intSubmenu_ID` int UNSIGNED NOT NULL,
-  `txtRouteTitle` varchar(128) NOT NULL,
-  `txtRouteName` varchar(128) NOT NULL,
+  `txtRouteTitle` varchar(128) COLLATE utf8mb4_general_ci NOT NULL,
+  `txtRouteName` varchar(128) COLLATE utf8mb4_general_ci NOT NULL,
   `dtmCreated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `dtmUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `trroutes`
@@ -1129,6 +1243,53 @@ INSERT INTO `trroutes` (`intRoute_ID`, `intSubmenu_ID`, `txtRouteTitle`, `txtRou
 (52, 15, 'edit', 'manage.cg.edit', '2023-05-05 02:15:28', '2023-05-05 02:15:28'),
 (53, 15, 'update', 'manage.cg.update', '2023-05-05 02:15:28', '2023-05-05 02:15:28'),
 (54, 15, 'delete', 'manage.cg.destroy', '2023-05-05 02:15:28', '2023-05-05 02:15:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tr_user_has_read`
+--
+
+CREATE TABLE `tr_user_has_read` (
+  `intNotification_ID` int UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tr_user_has_read`
+--
+
+INSERT INTO `tr_user_has_read` (`intNotification_ID`, `user_id`) VALUES
+(10, 330),
+(11, 330),
+(12, 330),
+(13, 330);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visitlogs`
+--
+
+CREATE TABLE `visitlogs` (
+  `id` int UNSIGNED NOT NULL,
+  `ip` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0.0.0.0',
+  `browser` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `os` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `country_code` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `country_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `region_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `city` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `zip_code` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `time_zone` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `latitude` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `longitude` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_banned` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -1208,6 +1369,12 @@ ALTER TABLE `mmodules`
   ADD KEY `mmodules_user_id_foreign` (`user_id`);
 
 --
+-- Indexes for table `mnotifications`
+--
+ALTER TABLE `mnotifications`
+  ADD PRIMARY KEY (`intNotification_ID`);
+
+--
 -- Indexes for table `msubdepartments`
 --
 ALTER TABLE `msubdepartments`
@@ -1233,6 +1400,21 @@ ALTER TABLE `musers`
   ADD KEY `musers_intCg_ID_to_mcgs` (`intCg_ID`);
 
 --
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
+
+--
+-- Indexes for table `shetabit_visits`
+--
+ALTER TABLE `shetabit_visits`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `shetabit_visits_visitable_type_visitable_id_index` (`visitable_type`,`visitable_id`),
+  ADD KEY `shetabit_visits_visitor_type_visitor_id_index` (`visitor_type`,`visitor_id`);
+
+--
 -- Indexes for table `trlevel_access`
 --
 ALTER TABLE `trlevel_access`
@@ -1248,6 +1430,19 @@ ALTER TABLE `trroutes`
   ADD KEY `FK_MRoute_intSubmenu_ID_to_msubmenus` (`intSubmenu_ID`);
 
 --
+-- Indexes for table `tr_user_has_read`
+--
+ALTER TABLE `tr_user_has_read`
+  ADD KEY `FK_mnotification_notification_id_to_mnotification` (`intNotification_ID`),
+  ADD KEY `FK_tr_user_has_read_user_id_to_musers` (`user_id`);
+
+--
+-- Indexes for table `visitlogs`
+--
+ALTER TABLE `visitlogs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1261,7 +1456,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `maccounts`
 --
 ALTER TABLE `maccounts`
-  MODIFY `intAccount_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `intAccount_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `mcgs`
@@ -1273,19 +1468,19 @@ ALTER TABLE `mcgs`
 -- AUTO_INCREMENT for table `mdatabases`
 --
 ALTER TABLE `mdatabases`
-  MODIFY `intDatabase_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `intDatabase_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `mdepartments`
 --
 ALTER TABLE `mdepartments`
-  MODIFY `intDepartment_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `intDepartment_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `mjabatans`
@@ -1309,13 +1504,19 @@ ALTER TABLE `mlevel_access`
 -- AUTO_INCREMENT for table `mmenus`
 --
 ALTER TABLE `mmenus`
-  MODIFY `intMenu_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `intMenu_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `mmodules`
 --
 ALTER TABLE `mmodules`
-  MODIFY `intModule_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `intModule_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `mnotifications`
+--
+ALTER TABLE `mnotifications`
+  MODIFY `intNotification_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `msubdepartments`
@@ -1336,10 +1537,22 @@ ALTER TABLE `musers`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=367;
 
 --
+-- AUTO_INCREMENT for table `shetabit_visits`
+--
+ALTER TABLE `shetabit_visits`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `trroutes`
 --
 ALTER TABLE `trroutes`
   MODIFY `intRoute_ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+
+--
+-- AUTO_INCREMENT for table `visitlogs`
+--
+ALTER TABLE `visitlogs`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -1411,6 +1624,13 @@ ALTER TABLE `trlevel_access`
 --
 ALTER TABLE `trroutes`
   ADD CONSTRAINT `FK_MRoute_intSubmenu_ID_to_msubmenus` FOREIGN KEY (`intSubmenu_ID`) REFERENCES `msubmenus` (`intSubmenu_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tr_user_has_read`
+--
+ALTER TABLE `tr_user_has_read`
+  ADD CONSTRAINT `FK_mnotification_notification_id_to_mnotification` FOREIGN KEY (`intNotification_ID`) REFERENCES `mnotifications` (`intNotification_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_tr_user_has_read_user_id_to_musers` FOREIGN KEY (`user_id`) REFERENCES `musers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

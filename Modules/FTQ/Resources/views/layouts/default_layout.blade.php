@@ -50,6 +50,6 @@
 	
 	@yield('outside-content')
 	
-	@include('ftq::includes.page-js')
+	@include('includes.page-js')
 </body>
 </html>
