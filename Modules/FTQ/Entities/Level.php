@@ -5,6 +5,7 @@ namespace Modules\FTQ\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\FTQ\Entities\LevelAccess;
+use Modules\FTQ\Entities\LevelMenu;
 
 class Level extends Model
 {
@@ -29,8 +30,11 @@ class Level extends Model
         ];
     }
 
-    public function access()
-    {
+    public function access(){
         return $this->hasMany(LevelAccess::class, 'intLevel_ID');
+    }
+
+    public function menu(){
+        return $this->hasMany(LevelMenu::class, 'intLevel_ID');
     }
 }

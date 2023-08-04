@@ -54,7 +54,11 @@
 			@endif	
 			<div class="menu-header">Navigation</div>		
 			@php
-				$menus = Modules\FTQ\Entities\Menu::with('submenu')->orderBy('intQueue', 'ASC')->get();
+				$user = DB::connection('ftq')->table('truser_level')
+					->where('user_id', Auth::user()->id)->first();
+				$menus = Modules\FTQ\Entities\Menu::with('submenu')
+					->whereIn('intMenu_ID', Modules\FTQ\Entities\LevelMenu::where('intLevel_ID', $user->intLevel_ID)->get(['intMenu_ID'])->toArray())
+					->orderBy('intQueue', 'ASC')->get();
 				$currentUrl = (Request::path() != '/') ? '/'. Request::path() : '/';
 			@endphp
 			@foreach ($menus as $item)

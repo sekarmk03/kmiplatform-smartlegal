@@ -5,6 +5,7 @@
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -13,9 +14,11 @@
     <script src="{{ asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
+    <script src="{{ asset('plugins/select2/dist/js/select2.min.js') }}"></script>
     <script>
         let url = '';
         let method = '';
+        let menu_id = [];
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -41,11 +44,24 @@
         function refresh(){
             daTable.ajax.reload(null, false);
         }
+        function getMenuList(id = false){
+            let wrapper = $('select#intMenu');
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('ftq.admin.menu.list') }}", function(response){
+                $.each(response.data, function(i, val){
+                    option += '<option value="'+val.intMenu_ID+'">'+val.txtMenuTitle+'</option>';
+                })
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            })
+        }
         function create(){
             $('.modal-header h4').html('Create Level');
             $('#modal-level').modal('show');
             url = "{{ route('ftq.admin.level.store') }}";
             method = "POST";
+            getMenuList();
         }
         function edit(id){
             $('.modal-header h4').html('Edit Level');
@@ -58,6 +74,10 @@
             $.get(editUrl, function(response){
                 $('#modal-level').modal('show');
                 $('input#LevelName').val(response.data.txtLevelName);
+                $.each(response.data.menu, function(i, val){
+                    menu_id.push(val.intMenu_ID);
+                })
+                getMenuList(menu_id);
             }).fail(function(response){
                 notification(response.responseJSON.status, response.responseJSON.message,'bg-danger');
             });
@@ -111,7 +131,13 @@
             $('#modal-level').on('hide.bs.modal', function(){
                 $('.modal-body form')[0].reset();
                 $('input[name="_method"]').remove();
+                menu_id = [];
             })
+            $('select#intMenu').select2({
+                placeholder: 'Select Menu',
+                allowClear: true,
+                dropdownParent: $('#modal-level')
+            });
             $('#form-level').on('submit', function(e){
                 e.preventDefault();
                 var formData = new FormData($(this)[0]);
@@ -176,7 +202,7 @@
                                 <tr>
                                     <th>#</th>
                                     <TH>DATE CREATED</TH>
-                                    <th>AREA NAME</th>
+                                    <th>LEVEL NAME</th>
                                     <TH>ACTION</TH>
                                 </tr>
                                 </thead>
@@ -200,8 +226,12 @@
         <div class="modal-body">
           <form action="" method="post" id="form-level" data-parsley-validate="true">
             <div class="mb-3">
-                <label class="form-label" id="LevelName">Level Name</label>
+                <label class="form-label" for="LevelName">Level Name</label>
                 <input class="form-control" type="text" name="txtLevelName" id="LevelName" placeholder="Level Name" oninput="this.value = this.value.toUpperCase()"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="intMenu">Menu</label>
+                <select name="intMenu_ID[]" id="intMenu" class="form-control" multiple></select>
             </div>
         </div>
         <div class="modal-footer">

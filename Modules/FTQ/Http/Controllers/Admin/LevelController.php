@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use Modules\FTQ\Entities\Level;
+use Modules\FTQ\Entities\LevelMenu;
 
 class LevelController extends Controller
 {
@@ -63,6 +64,14 @@ class LevelController extends Controller
         } else {
             $create = Level::create($input);
             if ($create) {
+                $result = [];
+                foreach ($request->intMenu_ID as $key => $item) {
+                    $result[] = [
+                        'intLevel_ID' => $create->intLevel_ID,
+                        'intMenu_ID' => $item
+                    ];
+                }
+                LevelMenu::insert($result);
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Level created Successfully'
@@ -93,7 +102,7 @@ class LevelController extends Controller
      */
     public function edit($id)
     {
-        $data = Level::find($id);
+        $data = Level::with('menu')->find($id);
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -126,6 +135,15 @@ class LevelController extends Controller
             $data = Level::find($id);
             if ($data) {
                 $data->update($input);
+                LevelMenu::where('intLevel_ID', $id)->delete();
+                $result = [];
+                foreach ($request->intMenu_ID as $key => $item) {
+                    $result[] = [
+                        'intLevel_ID' => $id,
+                        'intMenu_ID' => $item
+                    ];
+                }
+                LevelMenu::insert($result);
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Level updated Successfully'
