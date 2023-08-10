@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\FTQ\Entities\Mokp;
 
 class FTQController extends Controller
@@ -58,6 +59,14 @@ class FTQController extends Controller
         } else {
             $data = Mokp::all(['txtOkp']);
         }
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
+    }
+
+    public function getOracle(){
+        $data = DB::connection('oracle')->select("SELECT DISTINCT TEST_CODE FROM XXKMIDQM.KMI_DQM_SPECPARAMTRS_V ORDER BY TEST_CODE ASC");
         return response()->json([
             'status' => 'success',
             'data' => $data

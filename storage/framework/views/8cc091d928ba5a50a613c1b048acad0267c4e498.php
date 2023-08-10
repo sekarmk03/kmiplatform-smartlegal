@@ -48,7 +48,7 @@
 	
 	<?php echo $__env->yieldContent('outside-content'); ?>
 	
-	<?php echo $__env->make('roonline::includes.page-js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+	<?php echo $__env->make('includes.page-js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 </body>
 </html>
 <?php /**PATH C:\laragon\www\standardization\Modules/ROonline\Resources/views/layouts/default_layout.blade.php ENDPATH**/ ?>

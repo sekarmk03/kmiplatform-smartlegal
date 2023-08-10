@@ -48,6 +48,6 @@
 	
 	@yield('outside-content')
 	
-	@include('roonline::includes.page-js')
+	@include('includes.page-js')
 </body>
 </html>

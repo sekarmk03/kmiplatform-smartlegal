@@ -18,7 +18,8 @@
         "maatwebsite/excel": "^3.1",
         "nwidart/laravel-modules": "^8.3",
         "sarfraznawaz2005/visitlog": "^3.0",
-        "yajra/laravel-datatables-oracle": "^9.21"
+        "yajra/laravel-datatables-oracle": "^9.21",
+        "yajra/laravel-oci8": "8.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

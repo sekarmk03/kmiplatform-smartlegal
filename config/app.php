@@ -167,6 +167,7 @@ return [
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Sarfraznawaz2005\VisitLog\VisitLogServiceProvider::class,
+        Yajra\Oci8\Oci8ServiceProvider::class,
 
         /*
          * Application Service Providers...

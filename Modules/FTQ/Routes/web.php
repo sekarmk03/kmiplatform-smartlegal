@@ -14,6 +14,7 @@
 Route::name('ftq.')->group(function () {
     Route::get('/', 'FTQController@index');
     Route::get('/okp/list', 'FTQController@getOkp')->name('okp.list');
+    Route::get('oracle', 'FTQController@getOracle')->name('oracle.list');
     Route::name('verifikasi.')->prefix('verifikasi')->group(function(){
         Route::resource('fat-blend', 'FatBlendVerificationController')->only(['index', 'store', 'edit', 'update', 'destroy']);
     });
