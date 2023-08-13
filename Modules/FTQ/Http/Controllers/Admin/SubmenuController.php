@@ -34,8 +34,7 @@ class SubmenuController extends Controller
                 ->make(true);
         } else {
             return view('ftq::pages.admin.submenu');
-        }
-        
+        }        
     }
 
     /**

@@ -56,82 +56,55 @@
         		<input type="text" class="form-control" placeholder="Sidebar menu filter..." data-sidebar-search="true" />
 			</div>
 			@endif			
-			<div class="menu-header">Navigation</div>
-			<div class="menu-item {{ (empty(Request::segment(2))?'active':'') }}">
-				<a href="/roonline" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-pulse bg-gradient-green"></i>
-					</div>
-					<div class="menu-text">Dashboard</div>
-				</a>
-			</div>
-			<div class="menu-item has-sub {{ (in_array(Request::segment(3), ['device', 'inspections', 'line', 'area'])?'active':'') }}">
-				<a href="javascript:;" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-list-box bg-gradient-blue"></i>
-					</div>
-					<div class="menu-text">Data Management</div>
-					<div class="menu-caret"></div>
-				</a>
-				<div class="menu-submenu">
-					<div class="menu-item {{ (Request::segment(3) == 'line'?'active':'') }}">
-						<a href="{{ route('roonline.line.index') }}" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-clipboard text-theme"></i> 
-								Line
-							</div>
-						</a>
-					</div>
-					<div class="menu-item {{ (Request::segment(3) == 'area'?'active':'') }}">
-						<a href="{{ route('roonline.area.index') }}" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-clipboard text-theme"></i> 
-								Area
-							</div>
-						</a>
-					</div>
-					<div class="menu-item {{ (Request::segment(3) == 'device'?'active':'') }}">
-						<a href="{{ route('roonline.device.index') }}" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-microchip text-theme"></i> 
-								Devices
-							</div>
-						</a>
-					</div>
-					<div class="menu-item {{ (Request::segment(3) == 'inspections'?'active':'') }}">
-						<a href="{{ route('roonline.manage.inspection') }}" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-bug text-theme"></i> 
-								Inspections
-							</div>
-						</a>
+			<div class="menu-header">Navigation</div>		
+			@php
+				$user = Modules\ROonline\Entities\TrUser::where('user_id', Auth::user()->id)->first();
+				$menus = Modules\ROonline\Entities\Menu::with('submenu')
+					->whereIn('intMenu_ID', Modules\ROonline\Entities\LevelMenu::where('intLevel_ID', $user->intLevel_ID)->get(['intMenu_ID'])->toArray())
+					->orderBy('intQueue', 'ASC')->get();
+				$currentUrl = (Request::path() != '/') ? '/'. Request::path() : '/';
+			@endphp
+			@foreach ($menus as $item)
+			@if (count($item->submenu) > 0)
+			@php				
+				$submenu = $item->submenu;
+				$active = '';
+				foreach ($submenu as $key => $val) {
+					if ('/'.$val->txtSubmenuUrl == $currentUrl) {
+						$active = 'active';
+						break;
+					} else {
+						$active = '';
+					}
+				}
+			@endphp
+				<div class="menu-item has-sub {{ $active }}">
+					<a href="javascript:;" class="menu-link">
+						<div class="menu-icon">
+							<i class="{{ $item->txtMenuIcon }}"></i>
+						</div>
+						<div class="menu-text">{{ $item->txtMenuTitle }}</div>
+						<div class="menu-caret"></div>
+					</a>
+					<div class="menu-submenu">
+						@foreach ($item->submenu as $sub)
+						<div class="menu-item {{ Route::currentRouteName() == $sub->txtSubmenuRoute?'active':''; }}">
+							<a href="{{ '/'.$sub->txtSubmenuUrl }}" class="menu-link"><div class="menu-text"><i class="{{ $sub->txtSubmenuIcon }} text-theme ms-1"></i> {{ $sub->txtSubmenuTitle }}</div></a>
+						</div>
+						@endforeach
 					</div>
 				</div>
-			</div>
-			<div class="menu-item {{ (Request::segment(2) == 'log-history'?'active':'') }}">
-				<a href="{{ route('roonline.log-history.index') }}" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-md-clock bg-gradient-purple"></i>
-					</div>
-					<div class="menu-text">Log History</div>
-				</a>
-			</div>
-			<div class="menu-item {{ (Request::segment(2) == 'above-std'?'active':'') }}">
-				<a href="{{ route('roonline.above-std.index') }}" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-stats bg-gradient-red"></i>
-					</div>
-					<div class="menu-text">Log RO >2%</div>
-				</a>
-			</div>
-			<div class="menu-item {{ (Request::segment(2) == 'access-control'?'active':'') }}">
-				<a href="{{ route('roonline.access-control.index') }}" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-lock bg-gradient-yellow"></i>
-					</div>
-					<div class="menu-text">Level Access</div>
-				</a>
-			</div>
+				@else
+				<div class="menu-item {{ Route::currentRouteName() == $item->txtMenuRoute ? 'active':'' }}">
+					<a href="{{ '/'.$item->txtMenuUrl }}" class="menu-link">
+						<div class="menu-icon">
+							<i class="{{ $item->txtMenuIcon }}"></i>
+						</div>
+						<div class="menu-text">{{ $item->txtMenuTitle }}</div>
+					</a>
+				</div>
+				@endif
+			@endforeach
 			<!-- BEGIN minify-button -->
 			<div class="menu-item d-flex">
 				<a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i class="fa fa-angle-double-left"></i></a>

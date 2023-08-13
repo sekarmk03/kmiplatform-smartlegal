@@ -5,11 +5,18 @@ namespace Modules\ROonline\Http\Controllers\Admin;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Yajra\DataTables\DataTables;
-use Modules\ROonline\Entities\MLevel as level;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+
+//Package
+use Yajra\DataTables\DataTables;
+
+//Model
+use Modules\ROonline\Entities\MLevel as level;
+use App\Models\User;
+use Modules\ROonline\Entities\TrUser;
+use Modules\ROonline\Entities\Menu;
+use Modules\ROonline\Entities\LevelMenu;
 
 class AccessControlController extends Controller
 {
@@ -18,13 +25,41 @@ class AccessControlController extends Controller
      * @return Renderable
      */
     protected $rules = [
-        'txtLevelName' => 'required',
-        'user_id' => 'required'
+        'txtLevelName' => 'required'
     ];
     protected $attributes = [
         'txtLevelName' => 'Level Name',
         'user_id' => 'Users Select'
     ];
+
+    private function _insertMenu($intMenu, $intLevel, $param = false){
+        $result = [];
+        foreach ($intMenu as $key => $val) {
+            $result[] = [
+                'intLevel_ID' => $intLevel,
+                'intMenu_ID' => $val
+            ];
+        }
+        if ($param) {
+            LevelMenu::where('intLevel_ID', $intLevel)->delete();
+        }
+        LevelMenu::insert($result);
+    }
+
+    private function _insertUsers($users, $intLevel, $param = false){
+        $result = [];
+        foreach ($users as $key => $val) {
+            $result[] = [
+                'intLevel_ID' => $intLevel,
+                'user_id' => $val
+            ];
+        }
+        if ($param) {
+            TrUser::where('intLevel_ID', $intLevel)->delete();
+        }
+        TrUser::insert($result);
+    }
+
     private function _listLevels(){
         return level::orderBy('intLevel_ID', 'DESC')->get();
     }
@@ -46,8 +81,10 @@ class AccessControlController extends Controller
                 ->make(true);
         } else {
             $users = User::all();
+            $menu = Menu::all();
             return view('roonline::pages.admin.access-control', [
-                'users' => $users
+                'users' => $users,
+                'menus' => $menu
             ]);
         }        
     }
@@ -68,7 +105,35 @@ class AccessControlController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->only(['txtLevelName']);
+        $validator = Validator::make($input, $this->rules, [], $this->attributes);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 400);
+        } else {
+            $level = Level::create($request->only(['txtLevelName']));
+            if ($level) {
+                $users = $request->user_id;
+                if ($users) {
+                    $this->_insertUsers($users, $level->intLevel_ID);
+                }
+                $menus = $request->intMenu_ID;
+                if ($menus) {
+                    $this->_insertMenu($menus, $level->intLevel_ID);
+                }
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Level and Access created Successfully'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Level and Access created Failed'
+                ], 500);
+            }
+        }
     }
 
     /**
@@ -90,8 +155,7 @@ class AccessControlController extends Controller
     {
         $data = level::find($id);
         $list = [];
-        $user_id = DB::connection('roonline')->table('truser_level')
-            ->where('intLevel_ID', $id)
+        $user_id = TrUser::where('intLevel_ID', $id)
             ->get('user_id');
         foreach ($user_id as $key => $val) {
             array_push($list, $val->user_id);
@@ -100,7 +164,8 @@ class AccessControlController extends Controller
             return response()->json([
                 'status' => 'success',
                 'data' => $data,
-                'list' => $list
+                'list' => $list,
+                'menu' => LevelMenu::where('intLevel_ID', $id)->get()
             ], 200);
         } else {
             return response()->json([
@@ -112,8 +177,7 @@ class AccessControlController extends Controller
     
     public function getUser($id){
         $list = [];
-        $user_id = DB::connection('roonline')->table('truser_level')
-            ->where('intLevel_ID', '<>', $id)
+        $user_id = TrUser::where('intLevel_ID', '<>', $id)
             ->get('user_id');
         foreach ($user_id as $key => $val) {
             array_push($list, $val->user_id);
@@ -145,20 +209,9 @@ class AccessControlController extends Controller
             $level = Level::find($id);
             if ($level) {
                 $users = $request->user_id;
-                $result = [];
-                foreach ($users as $key => $val) {
-                    $result[] = [
-                        'intLevel_ID' => $id,
-                        'user_id' => $val
-                    ];
-                }            
-                DB::connection('roonline')
-                    ->table('truser_level')
-                    ->where('intLevel_ID', $id)
-                    ->delete();
-                DB::connection('roonline')
-                    ->table('truser_level')
-                    ->insert($result);
+                $menus = $request->intMenu_ID;
+                $this->_insertUsers($users, $id, 'UPDATE');
+                $this->_insertMenu($menus, $id, 'UPDATE');
                 return response()->json([
                     'status' => 'success',
                     'message' => 'User Access has been updated !'

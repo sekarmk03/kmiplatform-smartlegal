@@ -1,22 +1,20 @@
 @extends('roonline::layouts.default_layout')
-@section('title', 'Manage Access Levels')
+@section('title', 'Manage Submenu')
 @push('css')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
-    <link href="{{ asset('/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('plugins/select2/dist/css/select2.min.css') }}">
+    <link href="{{ asset('plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('/plugins/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('/plugins/select-picker/dist/picker.min.js') }}"></script>
-    <script src="{{ asset('plugins/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
+    <script src="{{ asset('plugins/select2/dist/js/select2.min.js') }}"></script>
     <script>
         let url = '';
         let method = '';
@@ -28,21 +26,17 @@
         var daTable = $('#daTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('roonline.access-control.index') }}",
+            ajax: "{{ route('roonline.submenu.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'dtmCreatedAt', name: 'dtmCreatedAt'},
-                {data: 'txtLevelName', name: 'txtLevelName'},
+                {data: 'txtMenuTitle', name: 'txtMenuTitle'},
+                {data: 'txtSubmenuTitle', name: 'txtSubmenuTitle'},
+                {data: 'txtSubmenuIcon', name: 'txtSubmenuIcon'},
+                {data: 'txtSubmenuUrl', name: 'txtSubmenuUrl'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
-        function valMenu(menu){
-            let list = [];
-            $.each(menu, function(i, val){
-                list.push(val.intMenu_ID);
-            })
-            return list;
-        }
         function getUrl(){
             return url;
         }
@@ -52,43 +46,46 @@
         function refresh(){
             daTable.ajax.reload(null, false);
         }
+        function getMenuList(id = false){
+            let wrapper = $('select#intMenu_ID');
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('roonline.menu.list') }}", function(response){
+                $.each(response.data, function(i, val){
+                    option += '<option value="'+val.intMenu_ID+'">'+val.txtMenuTitle+'</option>';
+                })
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            })
+        }
         function create(){
-            $('.modal-header h4').html('Create Level And Access Menu');
+            $('.modal-header h4').html('Create Submenu');
             $('#modal-level').modal('show');
+            url = "{!! route('roonline.submenu.store') !!}";
             method = "POST";
+            getMenuList();  
         }
         function edit(id){
-            $('.modal-header h4').html('Edit Level and User');
+            $('.modal-header h4').html('Edit Submenu');
             $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
-            let userUrl = "{{ route('roonline.access-control.users', ':id') }}";
-            userUrl = userUrl.replace(':id', id);
-            let selectForm = $('#User');
-            let opt = '';
-            selectForm.find('option').remove();
-            $.get(userUrl, function(response){
-                let datas = response.data;
-                $.each(datas, function(i, val){
-                    opt += '<option value="'+val.id+'">'+val.txtName+'</option>';
-                })
-                selectForm.append(opt).trigger('change');
-            }).then(() => {
-                let editUrl = "{!! route('roonline.access-control.edit', ':id') !!}";
-                editUrl = editUrl.replace(':id', id);
-                url = "{{ route('roonline.access-control.update', ':id') }}";
-                url = url.replace(':id', id);
-                method = "POST";
-                $.get(editUrl, function(response){
-                    $('#modal-level').modal('show');
-                    $('input[name="txtLevelName"]').val(response.data.txtLevelName);
-                    $('#User').val(response.list).trigger('change');
-                    $('#Menu').val(valMenu(response.menu)).trigger('change');
-                })                
+            let editUrl = "{!! route('roonline.submenu.edit', ':id') !!}";
+            editUrl = editUrl.replace(':id', id);
+            url = "{{ route('roonline.submenu.update', ':id') }}";
+            url = url.replace(':id', id);
+            method = "POST";
+            $.get(editUrl, function(response){
+                $('input#SubmenuTitle').val(response.data.txtSubmenuTitle);
+                $('input#SubmenuIcon').val(response.data.txtSubmenuIcon);
+                $('input#SubmenuUrl').val(response.data.txtSubmenuUrl);
+                $('input#SubmenuRoute').val(response.data.txtSubmenuRoute);
+                getMenuList(response.data.intMenu_ID)
+                $('#modal-level').modal('show');
             }).fail(function(response){
                 notification(response.responseJSON.status, response.responseJSON.message,'bg-danger');
             });
         }
         function destroy(id){
-            let deleteUrl = "";
+            let deleteUrl = "{{ route('roonline.submenu.destroy', ':id') }}";
             deleteUrl = deleteUrl.replace(':id', id);
             swal({
                 title: 'Are you sure?',
@@ -133,26 +130,19 @@
             return false;
         }
         $(document).ready(function(){
-            $('#User').select2({
-                placeholder: "Select Users",
-                allowClear: true,
-                dropdownParent: $('#modal-level')
-            });
-            $('#Menu').select2({
-                placeholder: "Select Menu",
-                allowClear: true,
-                dropdownParent: $('#modal-level')
-            });
             $('#modal-level').on('hide.bs.modal', function(){
                 $('.modal-body form')[0].reset();
                 $('input[name="_method"]').remove();
-                $('#User').val(null).trigger('change');
-                $('#Menu').val(null).trigger('change');
             })
+            $('select#intMenu_ID').select2({
+                placeholder: 'Select Menu',
+                allowClear: true,
+                dropdownParent: $('#modal-level')
+            });
             $('#form-level').on('submit', function(e){
                 e.preventDefault();
                 var formData = new FormData($(this)[0]);
-                formData.append('txtInsertedBy', "{{ Auth::user()->txtName }}");
+                formData.append('txtCreatedBy', "{{ Auth::user()->txtName }}");
                 formData.append('txtUpdatedBy', "{{ Auth::user()->txtName }}");
                 $.ajax({
                     url: getUrl(),
@@ -167,7 +157,7 @@
                         notification(response.status, response.message,'bg-success');
                     },
                     error: function(response){
-                        let fields = response.responseJSON.fields;
+                        let fields = response.responseJSON.errors;
                         $.each(fields, function(i, val){
                             notification(response.status, val[0],'bg-danger');
                         })
@@ -181,17 +171,17 @@
     <!-- BEGIN breadcrumb -->
 	<ol class="breadcrumb float-xl-end">
 		<li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
-		<li class="breadcrumb-item active">Manage Access Level</li>
+		<li class="breadcrumb-item active">Manage Submenu</li>
 	</ol>
 	<!-- END breadcrumb -->
 	<!-- BEGIN page-header -->
-	<h1 class="page-header">Manage Access Level</h1>
+	<h1 class="page-header">Manage Submenu</h1>
 	<!-- END page-header -->
     <div class="row">
         <div class="col">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Access Level Table</h4>
+                    <h4 class="panel-title">Submenu Table</h4>
                     <div class="panel-heading-btn">
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
                         <a type="button" onclick="refresh()" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i class="fa fa-redo"></i></a>
@@ -202,7 +192,7 @@
                 <div class="panel-body">
                     <div class="row my-3">
                         <div class="col-md-2 ms-auto">
-                            <button class="btn btn-sm btn-success float-end" onclick="create()"><i class="fa-solid fa-plus"></i> New Level</button>
+                            <button class="btn btn-sm btn-success float-end" onclick="create()"><i class="fa-solid fa-plus"></i> New Submenu</button>
                         </div>
                     </div>
                     <div class="row">
@@ -213,7 +203,10 @@
                                 <tr>
                                     <th>#</th>
                                     <TH>DATE CREATED</TH>
-                                    <th>LEVEL</th>
+                                    <th>MENU TITLE</th>
+                                    <th>SUBMENU TITLE</th>
+                                    <th>SUBMENU ICON</th>
+                                    <th>SUBMENU URL</th>
                                     <TH>ACTION</TH>
                                 </tr>
                                 </thead>
@@ -237,23 +230,26 @@
         <div class="modal-body">
           <form action="" method="post" id="form-level" data-parsley-validate="true">
             <div class="mb-3">
-                <label class="form-label" id="LevelName">Level Name</label>
-                <input class="form-control" type="text" name="txtLevelName" id="LevelName" placeholder="Level Name" oninput="this.value = this.value.toUpperCase()"/>
-            </div>
-            <div class="mb-3">
-                <label for="User" class="form-label">Users</label>
-                <select class="select2 form-control" id="User" name="user_id[]" data-parsley-required="true" multiple>
-                    <option></option>
+                <label class="form-label" for="intMenu_ID">Menu</label>
+                <select class="form-control" name="intMenu_ID" id="intMenu_ID">
                 </select>
             </div>
             <div class="mb-3">
-                <label for="Menu" class="form-label">Menu</label>
-                <select class="select2 form-control" id="Menu" name="intMenu_ID[]" data-parsley-required="true" multiple>
-                    <option></option>
-                    @foreach ($menus as $item)
-                        <option value="{{ $item->intMenu_ID }}">{{ $item->txtMenuTitle }}</option>
-                    @endforeach
-                </select>
+                <label class="form-label" for="SubmenuTitle">Submenu Title</label>
+                <input class="form-control" type="text" name="txtSubmenuTitle" id="SubmenuTitle" placeholder="Submenu Title"
+                data-placeholder="Select Menu"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="SubmenuIcon">Submenu Icon</label>
+                <input class="form-control" type="text" name="txtSubmenuIcon" id="SubmenuIcon" placeholder="Submenu Icon"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="SubmenuUrl">Submenu Url</label>
+                <input class="form-control" type="text" name="txtSubmenuUrl" id="SubmenuUrl" placeholder="Submenu Url"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="SubmenuRoute">Submenu Route</label>
+                <input class="form-control" type="text" name="txtSubmenuRoute" id="SubmenuRoute" placeholder="Submenu Route"/>
             </div>
         </div>
         <div class="modal-footer">

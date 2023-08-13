@@ -1,13 +1,14 @@
 <?php
 
-namespace Modules\FTQ\Http\Controllers\Admin;
+namespace Modules\ROonline\Http\Controllers\Admin;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+
 //Model
-use Modules\FTQ\Entities\Menu;
+use Modules\ROonline\Entities\Menu;
 
 //Package
 use Yajra\DataTables\DataTables;
@@ -35,17 +36,21 @@ class MenuController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            return view('ftq::pages.admin.menu');
-        }        
+            return view('roonline::pages.admin.menu');
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function list()
     {
-        return view('ftq::create');
+        $data = Menu::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -75,7 +80,7 @@ class MenuController extends Controller
                     'message' => 'internal server error'
                 ], 500);
             }            
-        }        
+        }
     }
 
     /**
@@ -83,13 +88,9 @@ class MenuController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function list()
+    public function show($id)
     {
-        $data = Menu::all();
-        return response()->json([
-            'status' => 'success',
-            'data' => $data
-        ], 200);
+        return view('roonline::show');
     }
 
     /**
@@ -100,17 +101,10 @@ class MenuController extends Controller
     public function edit($id)
     {
         $data = Menu::find($id);
-        if ($data) {
-            return response()->json([
-                'status' => 'success',
-                'data' => $data
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data Menu not exist'
-            ], 404);
-        }        
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -164,6 +158,6 @@ class MenuController extends Controller
                 'status' => 'error',
                 'message' => 'Data Menu not exist'
             ], 404);
-        }  
+        }
     }
 }

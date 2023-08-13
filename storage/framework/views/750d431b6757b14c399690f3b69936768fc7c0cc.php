@@ -57,82 +57,55 @@
         		<input type="text" class="form-control" placeholder="Sidebar menu filter..." data-sidebar-search="true" />
 			</div>
 			<?php endif; ?>			
-			<div class="menu-header">Navigation</div>
-			<div class="menu-item <?php echo e((empty(Request::segment(2))?'active':'')); ?>">
-				<a href="/roonline" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-pulse bg-gradient-green"></i>
-					</div>
-					<div class="menu-text">Dashboard</div>
-				</a>
-			</div>
-			<div class="menu-item has-sub <?php echo e((in_array(Request::segment(3), ['device', 'inspections', 'line', 'area'])?'active':'')); ?>">
-				<a href="javascript:;" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-list-box bg-gradient-blue"></i>
-					</div>
-					<div class="menu-text">Data Management</div>
-					<div class="menu-caret"></div>
-				</a>
-				<div class="menu-submenu">
-					<div class="menu-item <?php echo e((Request::segment(3) == 'line'?'active':'')); ?>">
-						<a href="<?php echo e(route('roonline.line.index')); ?>" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-clipboard text-theme"></i> 
-								Line
-							</div>
-						</a>
-					</div>
-					<div class="menu-item <?php echo e((Request::segment(3) == 'area'?'active':'')); ?>">
-						<a href="<?php echo e(route('roonline.area.index')); ?>" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-clipboard text-theme"></i> 
-								Area
-							</div>
-						</a>
-					</div>
-					<div class="menu-item <?php echo e((Request::segment(3) == 'device'?'active':'')); ?>">
-						<a href="<?php echo e(route('roonline.device.index')); ?>" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-microchip text-theme"></i> 
-								Devices
-							</div>
-						</a>
-					</div>
-					<div class="menu-item <?php echo e((Request::segment(3) == 'inspections'?'active':'')); ?>">
-						<a href="<?php echo e(route('roonline.manage.inspection')); ?>" class="menu-link">
-							<div class="menu-text">
-								<i class="fa-solid fa-bug text-theme"></i> 
-								Inspections
-							</div>
-						</a>
+			<div class="menu-header">Navigation</div>		
+			<?php
+				$user = Modules\ROonline\Entities\TrUser::where('user_id', Auth::user()->id)->first();
+				$menus = Modules\ROonline\Entities\Menu::with('submenu')
+					->whereIn('intMenu_ID', Modules\ROonline\Entities\LevelMenu::where('intLevel_ID', $user->intLevel_ID)->get(['intMenu_ID'])->toArray())
+					->orderBy('intQueue', 'ASC')->get();
+				$currentUrl = (Request::path() != '/') ? '/'. Request::path() : '/';
+			?>
+			<?php $__currentLoopData = $menus; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+			<?php if(count($item->submenu) > 0): ?>
+			<?php				
+				$submenu = $item->submenu;
+				$active = '';
+				foreach ($submenu as $key => $val) {
+					if ('/'.$val->txtSubmenuUrl == $currentUrl) {
+						$active = 'active';
+						break;
+					} else {
+						$active = '';
+					}
+				}
+			?>
+				<div class="menu-item has-sub <?php echo e($active); ?>">
+					<a href="javascript:;" class="menu-link">
+						<div class="menu-icon">
+							<i class="<?php echo e($item->txtMenuIcon); ?>"></i>
+						</div>
+						<div class="menu-text"><?php echo e($item->txtMenuTitle); ?></div>
+						<div class="menu-caret"></div>
+					</a>
+					<div class="menu-submenu">
+						<?php $__currentLoopData = $item->submenu; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+						<div class="menu-item <?php echo e(Route::currentRouteName() == $sub->txtSubmenuRoute?'active':''); ?>">
+							<a href="<?php echo e('/'.$sub->txtSubmenuUrl); ?>" class="menu-link"><div class="menu-text"><i class="<?php echo e($sub->txtSubmenuIcon); ?> text-theme ms-1"></i> <?php echo e($sub->txtSubmenuTitle); ?></div></a>
+						</div>
+						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 					</div>
 				</div>
-			</div>
-			<div class="menu-item <?php echo e((Request::segment(2) == 'log-history'?'active':'')); ?>">
-				<a href="<?php echo e(route('roonline.log-history.index')); ?>" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-md-clock bg-gradient-purple"></i>
-					</div>
-					<div class="menu-text">Log History</div>
-				</a>
-			</div>
-			<div class="menu-item <?php echo e((Request::segment(2) == 'above-std'?'active':'')); ?>">
-				<a href="<?php echo e(route('roonline.above-std.index')); ?>" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-stats bg-gradient-red"></i>
-					</div>
-					<div class="menu-text">Log RO >2%</div>
-				</a>
-			</div>
-			<div class="menu-item <?php echo e((Request::segment(2) == 'access-control'?'active':'')); ?>">
-				<a href="<?php echo e(route('roonline.access-control.index')); ?>" class="menu-link">
-					<div class="menu-icon">
-						<i class="ion-ios-lock bg-gradient-yellow"></i>
-					</div>
-					<div class="menu-text">Level Access</div>
-				</a>
-			</div>
+				<?php else: ?>
+				<div class="menu-item <?php echo e(Route::currentRouteName() == $item->txtMenuRoute ? 'active':''); ?>">
+					<a href="<?php echo e('/'.$item->txtMenuUrl); ?>" class="menu-link">
+						<div class="menu-icon">
+							<i class="<?php echo e($item->txtMenuIcon); ?>"></i>
+						</div>
+						<div class="menu-text"><?php echo e($item->txtMenuTitle); ?></div>
+					</a>
+				</div>
+				<?php endif; ?>
+			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 			<!-- BEGIN minify-button -->
 			<div class="menu-item d-flex">
 				<a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i class="fa fa-angle-double-left"></i></a>

@@ -12,7 +12,7 @@
 */
 
 Route::name('roonline.')->middleware('canAccess')->group(function () {
-    Route::get('/', 'ROonlineController@index');
+    Route::get('/', 'ROonlineController@index')->name('dashboard');
     Route::post('/postCheckReason', 'ROonlineController@getReasonRO')->name('reason.check');
     Route::get('/ro-chart', 'ROonlineController@ROChart')->name('chart');
     Route::get('/ro-widget', 'ROonlineController@getROWidget')->name('widget');
@@ -39,6 +39,13 @@ Route::name('roonline.')->middleware('canAccess')->group(function () {
         
         //Device
         Route::resource('/device', 'Admin\DeviceController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+
+        //Menu
+        Route::resource('menu', 'Admin\MenuController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+        Route::get('menu/list', 'Admin\MenuController@list')->name('menu.list');
+
+        //Sub Menu
+        Route::resource('submenu', 'Admin\SubmenuController')->only(['index', 'store', 'edit', 'update', 'destroy']);
     });
     //Log History
     Route::get('/log-history', 'LogHistoryController@index')->name('log-history.index');
