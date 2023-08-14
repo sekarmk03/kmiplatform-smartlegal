@@ -27,9 +27,9 @@ class LogController extends Controller
             if ($request->from || $request->to) {
                 $to = Carbon::parse($request->to)->addDay(1)->format('Y-m-d');
 
-                $data = DB::table('standardization.musers as users')->join('faceid.logs as log', 'log.user_id', '=', 'users.id')->whereBetween('waktu', [$request->from, $to]);
+                $data = DB::table('db_standardization.musers as users')->join('faceid.logs as log', 'log.user_id', '=', 'users.id')->whereBetween('waktu', [$request->from, $to]);
             } else {
-                $data = DB::table('standardization.musers as users')->join('faceid.logs as log', 'log.user_id', '=', 'users.id');
+                $data = DB::table('db_standardization.musers as users')->join('faceid.logs as log', 'log.user_id', '=', 'users.id');
             }
 
             return DataTables::query($data)
