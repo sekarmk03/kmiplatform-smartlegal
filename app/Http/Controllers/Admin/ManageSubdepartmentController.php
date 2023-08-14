@@ -33,6 +33,17 @@ class ManageSubdepartmentController extends Controller
             ]);
         }
     }
+    public function list(Request $request){
+        if ($request->id_department) {
+            $data = Subdepartment::where('intDepartment_ID', $request->id_department)->get();
+        } else {
+            $data = Subdepartment::all();
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
+    }
     public function store(Request $request)
     {
         $input = $request->all();

@@ -1,18 +1,19 @@
 <?php
 
-namespace Modules\FTQ\Http\Controllers\Admin;
+namespace Modules\ROonline\Http\Controllers\Admin;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+
 //Model
-use Modules\FTQ\Entities\Menu;
+use Modules\ROonline\Entities\Submenu;
 
 //Package
 use Yajra\DataTables\DataTables;
 
-class MenuController extends Controller
+class SubmenuController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,12 +22,13 @@ class MenuController extends Controller
     public function index(Request $request)
     {
         if ($request->wantsJson()) {
-            $data = Menu::orderBy('intMenu_ID', 'DESC')->get();
+            $data = Submenu::join('mmenu', 'mmenu.intMenu_ID', '=', 'msubmenu.intMenu_ID')
+                ->orderBy('intSubmenu_ID', 'DESC')->get(['msubmenu.*', 'mmenu.txtMenuTitle']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $btn_edit = '<button onclick="edit('.$row->intMenu_ID.')" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button>';
-                    $btn_delete = '<button class="btn btn-sm btn-danger" onclick="destroy('.$row->intMenu_ID.')"><i class="fa-solid fa-trash"></i></button>';
+                    $btn_edit = '<button onclick="edit('.$row->intSubmenu_ID.')" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button>';
+                    $btn_delete = '<button class="btn btn-sm btn-danger" onclick="destroy('.$row->intSubmenu_ID.')"><i class="fa-solid fa-trash"></i></button>';
                     return '<div class="btn-group">'.$btn_edit.' '.$btn_delete.'</div>';
                 })
                 ->editColumn('dtmCreatedAt', function($row){
@@ -35,8 +37,8 @@ class MenuController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            return view('ftq::pages.admin.menu');
-        }        
+            return view('roonline::pages.admin.submenu');
+        }
     }
 
     /**
@@ -45,7 +47,7 @@ class MenuController extends Controller
      */
     public function create()
     {
-        return view('ftq::create');
+        return view('roonline::create');
     }
 
     /**
@@ -55,27 +57,29 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->only(['txtMenuTitle', 'txtMenuIcon', 'txtMenuUrl', 'txtMenuRoute', 'intQueue']);
-        $validator = Validator::make($input, Menu::rules(), [], Menu::attributes());
+        $input = $request->only([
+            'intMenu_ID', 'txtSubmenuTitle', 'txtSubmenuIcon', 'txtSubmenuUrl', 'txtSubmenuRoute'
+        ]);
+        $validator = Validator::make($input, Submenu::rules(), [], Submenu::attributes());
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors()
             ], 400);
         } else {
-            $create = Menu::create($input);
+            $create = Submenu::create($input);
             if ($create) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Menu created Successfully'
+                    'message' => 'Submenu created Successfully'
                 ], 200);
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'internal server error'
+                    'message' => 'Internal server error'
                 ], 500);
-            }            
-        }        
+            }
+        }   
     }
 
     /**
@@ -83,13 +87,9 @@ class MenuController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function list()
+    public function show($id)
     {
-        $data = Menu::all();
-        return response()->json([
-            'status' => 'success',
-            'data' => $data
-        ], 200);
+        return view('roonline::show');
     }
 
     /**
@@ -99,7 +99,7 @@ class MenuController extends Controller
      */
     public function edit($id)
     {
-        $data = Menu::find($id);
+        $data = Submenu::find($id);
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -108,9 +108,9 @@ class MenuController extends Controller
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data Menu not exist'
+                'message' => 'Data Submenu not exist'
             ], 404);
-        }        
+        }
     }
 
     /**
@@ -121,27 +121,29 @@ class MenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $input = $request->only(['txtMenuTitle', 'txtMenuIcon', 'txtMenuUrl', 'txtMenuRoute', 'intQueue']);
-        $validator = Validator::make($input, Menu::rules($id), [], Menu::attributes());
+        $input = $request->only([
+            'intMenu_ID', 'txtSubmenuTitle', 'txtSubmenuIcon', 'txtSubmenuUrl', 'txtSubmenuRoute'
+        ]);
+        $validator = Validator::make($input, Submenu::rules(), [], Submenu::attributes());
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors()
             ], 400);
         } else {
-            $data = Menu::find($id);
+            $data = Submenu::find($id);
             if ($data) {
                 $data->update($input);
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Menu updated Successfully'
+                    'message' => 'Submenu updated Successfully'
                 ], 200);
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Data Menu not exist'
+                    'message' => 'Data Submenu not exist'
                 ], 404);
-            }         
+            }
         }
     }
 
@@ -152,18 +154,18 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
-        $data = Menu::find($id);
+        $data = Submenu::find($id);
         if ($data) {
             $data->delete();
             return response()->json([
                 'status' => 'success',
-                'message' => 'Menu deleted Successfully'
+                'message' => 'Submenu deleted Successfully'
             ], 200);
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data Menu not exist'
+                'message' => 'Data Submenu not exist'
             ], 404);
-        }  
+        }
     }
 }

@@ -45,6 +45,20 @@
         function getMethod(){
             return method;
         }
+        function getSubdepartmentList(iddept){
+            let wrapper = $('#Subdepartment_ID');
+            let opt = '';
+            wrapper.closest('.subdept').css('display', 'block');
+            wrapper.find('option').remove();
+            $.get("{{ route('manage.subdepartment.list') }}", {
+                id_department: iddept
+            }, function(response){
+                $.each(response.data, function(i, val){
+                    opt += '<option value="'+val.intSubdepartment_ID+'">'+val.txtSubdepartmentName+'</option>';
+                })
+                wrapper.append(opt);
+            })
+        }
         function refresh(){
             daTable.ajax.reload(null, false);
         }
@@ -157,6 +171,9 @@
                     search : "Search"
                 }
             });
+            $('select#Department_ID').on('sp-change', function(){
+                getSubdepartmentList($(this).val());
+            })
             $('#modal-level').on('hide.bs.modal', function(){
                 $('.modal-body form')[0].reset();
                 $('select#Department_ID, select#Level_ID').picker('set', '');
@@ -273,11 +290,16 @@
                 <form action="" method="post" id="form-user" data-parsley-validate="true">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label" for="Department_ID" data-parsley-required="true">Department</label>
+                            <label class="form-label" for="Department_ID">Department</label>
                             <select class="select2 form-control" id="Department_ID" name="intDepartment_ID" data-parsley-required="true">
                                 @foreach ($departments as $item)                        
                                     <option value="{{ $item->intDepartment_ID }}">{{ $item->txtDepartmentName }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+                        <div class="subdept mb-3" style="display: none">
+                            <label class="form-label" for="Subdepartment_ID">Sub Department</label>
+                            <select class="select2 form-control" id="Subdepartment_ID" name="intSubdepartment_ID" data-parsley-required="true">
                             </select>
                         </div>
                         <div class="mb-3">
