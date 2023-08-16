@@ -49,10 +49,10 @@ class FaceidController extends Controller
 
         $counthealth = Log::where('status', "Healthy")->whereYear('waktu', $year)->whereMonth('waktu', $month)->count();
         $countnothealth = Log::where('status', "Not Healthy")->whereYear('waktu', $year)->whereMonth('waktu', $month)->count();
-        $userid = DB::table('standardization.musers as users')->pluck('users.id');
+        $userid = DB::table('db_standardization.musers as users')->pluck('users.id');
         foreach ($userid as $id) {
             $temps[] = Log::where('user_id', $id)->whereYear('waktu', $year)->whereMonth('waktu', $month)->latest()->first()->suhu ?? 0;
-            $users[] = DB::table('faceid.logs as logs')->join('standardization.musers as users', 'logs.user_id', '=', 'users.id')->where("logs.user_id", $id)->first()->txtName ?? '-';
+            $users[] = DB::table('faceid.logs as logs')->join('db_standardization.musers as users', 'logs.user_id', '=', 'users.id')->where("logs.user_id", $id)->first()->txtName ?? '-';
         }
 
         return view('faceid::index', compact('counthealth', 'countnothealth', 'dailyhealth', 'dailynothealth', 'dates', 'temps', 'users'));

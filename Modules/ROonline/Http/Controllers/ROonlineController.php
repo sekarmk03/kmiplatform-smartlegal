@@ -172,7 +172,12 @@ class ROonlineController extends Controller
     public function getRHTemp()
     {
         $subQuery = LogRHTemp::selectRaw("MAX(intLog_RhandTemp_ID) AS intLog_RhandTemp_ID")
+<<<<<<< HEAD
             ->groupBy('intModule_ID')
+=======
+            ->where('intArea_ID', '<>', 1)
+            ->groupBy('intModule_ID', 'txtLineProcessName')
+>>>>>>> f6a943434e0c35db56bf2cc62cc0a9f02a5e1703
             ->get();
         $data = LogRHTemp::whereIn('intLog_RhandTemp_ID', $subQuery)->get();
         return response()->json([
