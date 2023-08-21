@@ -5,6 +5,12 @@
             "host": "10.175.13.146",
             "port": 1883,
             "clientId": "vsmqtt_client_3c93"
+        },
+        {
+            "name": "server 67",
+            "host": "10.175.11.67",
+            "port": 1883,
+            "clientId": "vsmqtt_client_c527"
         }
     ]
 }
