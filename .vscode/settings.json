@@ -7,10 +7,10 @@
             "clientId": "vsmqtt_client_3c93"
         },
         {
-            "name": "server 67",
-            "host": "10.175.11.67",
+            "name": "local",
+            "host": "localhost",
             "port": 1883,
-            "clientId": "vsmqtt_client_c527"
+            "clientId": "vsmqtt_client_bde1"
         }
     ]
 }
