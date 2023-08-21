@@ -72,6 +72,7 @@
 <script src="{{ Module::asset('rois:js/line-chart.js') }}"></script>
 <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
 <script src="{{ asset('plugins/select2/dist/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('js/paho.mqtt.js') }}"></script>
     <script>      
         $.ajaxSetup({
             headers: {
@@ -327,6 +328,50 @@
             $('#modal-reason').modal('show');
         })
     }
+    function makeid(length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+        }
+        return result;
+    }
+    function mqttConnect(){
+        client = new Paho.MQTT.Client('localhost', 9001, 'client_id_'+makeid(14));
+        var options = {
+            onSuccess: onConnect
+        };
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+        client.connect(options);
+    }
+    // called when the client connects
+    function onConnect() {
+        // Once a connection has been made, make a subscription and send a message.
+        // console.log("Connected Successfull");
+        client.subscribe("ro/a1");
+        client.subscribe("ro/e1");
+        client.subscribe("ro/j1");
+        client.subscribe("tipping/ab/rhtemp");
+        client.subscribe("tipping/e/rhtemp");
+    }
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:" + responseObject.errorMessage);
+        }
+    }
+
+    // called when a message arrives
+    function onMessageArrived(message) {
+        // console.log("Pesan dari MQTT: " + message.payloadString);
+        widget();
+        chartLine();
+        getRhTemp();
+    }
     $(document).ready(function(){
         $(".datepicker").datetimepicker({
             todayHighlight: true,
@@ -346,13 +391,7 @@
             },
             allowClear: true,
         });
-        setInterval(() => {
-            widget();
-            chartLine();
-        }, 8000);
-        setInterval(() => {
-            getRhTemp();
-        }, 60000);
+        mqttConnect();
         widget();
         chartLine();
         getRhTemp();

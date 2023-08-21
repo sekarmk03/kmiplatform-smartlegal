@@ -104,12 +104,6 @@
             });
             return false;
         }
-        var removeWords = function(txt) {  
-            var excludes = ['txt', 'dtm'];                  
-            var expStr = excludes.join("|");
-            return txt.replace(new RegExp('\\b(' + expStr + ')\\b', 'gi'), ' ')
-                            .replace(/\s{2,}/g, ' ');
-        }
         function view(id){
             let wrapper = $('.modal-body');
             wrapper.find('.mb-3').remove();
@@ -118,12 +112,16 @@
             viewUrl = viewUrl.replace(':id', id);
             $.get(viewUrl, function(response){
                 $('#modal-view').modal('show');
-                let datas = response.data;
-                $.each(datas, function(idx, val){
-                    input += '<div class="mb-3">'+
-                            '<label class="form-label" for="'+idx+'">'+removeWords(idx.replace(/([A-Z])/g, ' $1').trim())+'</label>'+
-                            '<input class="form-control" type="text" name="'+idx+'" id="'+idx+'" value="'+val+'" readonly/>'+
-                        '</div>';
+                $.each(response.data, function(idx, val){
+                    if (idx != 'reason_ro') {
+                        input += '<div class="mb-3">'+
+                            '<label for="'+idx+'">'+idx+'</label><input name="'+idx+'" id="'+idx+'" class="form-control" value="'+val+'" disabled/>'+
+                            '</div>';                        
+                    } else {
+                        input += '<div class="mb-3">'+
+                            '<label for="Reason">Reason</label><textarea row="2" name="txtReason" id="Reason" class="form-control" autocomplete="off"></textarea>'+
+                            '</div>';
+                    }
                 })
                 wrapper.append(input);
             })
@@ -202,7 +200,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         <div class="modal-body">
-          
+            
         </div>
         <div class="modal-footer">
           <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Close</a>
