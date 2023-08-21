@@ -47,7 +47,7 @@ class ROISController extends Controller
             ->orderBy('txtLineProcessName', 'ASC')
             ->groupBy('txtLineProcessName')
             ->get(['txtLineProcessName', 'LineProcess'])->toArray();
-        return view('roonline::pages.dashboard',[
+        return view('rois::pages.dashboard',[
             'lines' => $this->group_by('LineProcess', $data),
             'list_line' => $lines,
             'areas' => Area::all()
