@@ -351,12 +351,12 @@
     // called when the client connects
     function onConnect() {
         // Once a connection has been made, make a subscription and send a message.
-        // console.log("Connected Successfull");
-        client.subscribe("ro/a1");
-        client.subscribe("ro/e1");
-        client.subscribe("ro/j1");
-        client.subscribe("tipping/ab/rhtemp");
-        client.subscribe("tipping/e/rhtemp");
+        console.log("Connected Successfull");
+        client.subscribe('ro/a1');
+        client.subscribe('ro/e1');
+        client.subscribe('ro/j1');
+        client.subscribe('tipping/ab/rhtemp');
+        client.subscribe('tipping/e/rhtemp');
     }
     // called when the client loses its connection
     function onConnectionLost(responseObject) {
@@ -367,7 +367,7 @@
 
     // called when a message arrives
     function onMessageArrived(message) {
-        // console.log("Pesan dari MQTT: " + message.payloadString);
+        console.log("Pesan dari MQTT: " + message.payloadString);
         widget();
         chartLine();
         getRhTemp();
