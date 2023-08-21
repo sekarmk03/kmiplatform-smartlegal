@@ -181,7 +181,7 @@ var chartE = new Highcharts.chart('LineE', {
     }]
 });
 
-var chartJ = new Highcharts.chart('LineJ', {
+var chartD = new Highcharts.chart('LineJ', {
     chart: {
         zoomType: 'x'
     },
