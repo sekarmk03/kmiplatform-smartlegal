@@ -1,22 +1,20 @@
 <?php
 
-namespace Modules\ROonline\Http\Controllers;
+namespace Modules\ROIS\Http\Controllers;
 
-use App\Exports\RhTempHistoryExport;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Excel;
-use App\Exports\RoHistoryExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Modules\ROonline\Entities\LogHistoryModel as LogHistory;
-use Modules\ROonline\Entities\Reason;
-use Modules\ROonline\Entities\Area;
-use Modules\ROonline\Entities\LogRHTemp;
-use VisitLog;
+use Sarfraznawaz2005\VisitLog\Facades\VisitLog;
+use Maatwebsite\Excel\Excel;
+use Modules\ROIS\Entities\LogHistoryModel as LogHistory;
+use Modules\ROIS\Entities\LogRHTemp;
+use Modules\ROIS\Entities\Area;
+use Modules\ROIS\Entities\Reason;
 
-class ROonlineController extends Controller
+class ROISController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,7 +34,7 @@ class ROonlineController extends Controller
         return $result;
     }
     public function index()
-    {        
+    {
         VisitLog::save();
         $lines = [
             'Filling Sachet A1', 'Filling Sachet A2',
@@ -172,15 +170,7 @@ class ROonlineController extends Controller
     public function getRHTemp()
     {
         $subQuery = LogRHTemp::selectRaw("MAX(intLog_RhandTemp_ID) AS intLog_RhandTemp_ID")
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            ->groupBy('intModule_ID')
-=======
-            ->where('intArea_ID', '<>', 1)
->>>>>>> b4c55992835b8f0ae664e69e78b7f039664d14f5
             ->groupBy('intModule_ID', 'txtLineProcessName')
->>>>>>> f6a943434e0c35db56bf2cc62cc0a9f02a5e1703
             ->get();
         $data = LogRHTemp::whereIn('intLog_RhandTemp_ID', $subQuery)->get();
         return response()->json([

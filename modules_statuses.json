@@ -10,5 +10,6 @@
     "FTQ": true,
     "FUI": true,
     "Facerecognition": true,
-    "Faceid": true
+    "Faceid": true,
+    "ROIS": true
 }
