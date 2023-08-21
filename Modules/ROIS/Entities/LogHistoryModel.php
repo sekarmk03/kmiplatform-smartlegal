@@ -14,4 +14,8 @@ class LogHistoryModel extends Model
     protected $primaryKey = 'intLog_History_ID';
 
     protected $fillable = [];
+
+    public function reasonRo(){
+        return $this->hasOne(Reason::class, 'intLog_History_ID');
+    }
 }
