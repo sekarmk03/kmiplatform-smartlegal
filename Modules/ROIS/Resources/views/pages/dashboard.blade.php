@@ -340,7 +340,7 @@
         return result;
     }
     function mqttConnect(){
-        client = new Paho.MQTT.Client('localhost', 9001, 'client_id_'+makeid(14));
+        client = new Paho.MQTT.Client('10.175.13.146', 9001, 'client_id_'+makeid(14));
         var options = {
             onSuccess: onConnect
         };
@@ -351,7 +351,7 @@
     // called when the client connects
     function onConnect() {
         // Once a connection has been made, make a subscription and send a message.
-        console.log("Connected Successfull");
+        // console.log("Connected Successfull");
         client.subscribe('ro/a1');
         client.subscribe('ro/e1');
         client.subscribe('ro/j1');
@@ -367,7 +367,7 @@
 
     // called when a message arrives
     function onMessageArrived(message) {
-        console.log("Pesan dari MQTT: " + message.payloadString);
+        // console.log("Pesan dari MQTT: " + message.payloadString);
         widget();
         chartLine();
         getRhTemp();
