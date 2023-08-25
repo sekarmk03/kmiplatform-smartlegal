@@ -238,12 +238,12 @@
             })
         }
         function filterBtn(){
-            let start = $('input[name="start"]').val();
-            let end = $('input[name="end"]').val();
+            let start = $('input[name="start_ro"]').val();
+            let end = $('input[name="end_ro"]').val();
             chartLine();
         }
         function resetBtn(){
-            $('input[name="start"], input[name="end"]').val('');
+            $('input[name="start_ro"], input[name="end_ro"]').val('');
             chartLine();
         }
         function notification(status, message, bgclass){
@@ -590,9 +590,9 @@
                             <div class="form-group row">
                                 <div class="col">
                                     <div class="input-group input-daterange">
-                                        <input type="text" class="form-control datepicker" name="start" placeholder="Date Time Start" autocomplete="off">
+                                        <input type="text" class="form-control datepicker" name="start_ro" placeholder="Date Time Start" autocomplete="off">
                                         <span class="input-group-text input-group-addon">to</span>
-                                        <input type="text" class="form-control datepicker" name="end" placeholder="Date Time End" autocomplete="off">
+                                        <input type="text" class="form-control datepicker" name="end_ro" placeholder="Date Time End" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
