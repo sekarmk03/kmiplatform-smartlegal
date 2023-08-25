@@ -128,11 +128,8 @@ class ROISController extends Controller
                 'fields' => $validator->errors()
             ], 400);
         } else {
-            $id_log = LogHistory::where('TimeStamp', $input['TimeStamp'])
-                ->where('txtLineProcessName', $input['txtLineProcessName'])
-                ->first()->intLog_History_ID;
             $create = Reason::create([
-                'intLog_History_ID' => $id_log,
+                'intLog_History_ID' => $request->intLog_History_ID,
                 'txtReason' => $input['txtReason'],
                 'txtCreatedBy' => Auth::user()->id
             ]);
@@ -154,7 +151,7 @@ class ROISController extends Controller
         $id_log = LogHistory::where('TimeStamp', $request->waktu)
             ->where('txtLineProcessName', $request->line)
             ->first()->intLog_History_ID;
-        $data = Reason::where('intLog_History_ID', $id_log)->first();
+        $data = LogHistory::with('reason_ro')->find($id_log);
         if ($data) {
             return response()->json([
                 'status' => 'success',

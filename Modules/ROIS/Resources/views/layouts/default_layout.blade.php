@@ -50,6 +50,6 @@
 	
 	@yield('outside-content')
 	
-	@include('rois::includes.page-js')
+	@include('includes.page-js')
 </body>
 </html>

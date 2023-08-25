@@ -65,7 +65,19 @@ class HighRoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->only(['intLog_History_ID', 'txtReason']);
+        $create = Reason::create($input);
+        if ($create) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Reason successfully Inserted'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Reason failed Inserted'
+            ], 400);
+        }
     }
 
     /**
@@ -75,7 +87,7 @@ class HighRoController extends Controller
      */
     public function show($id)
     {
-        $data = LogHistory::with('reasonRo')->find($id)->makeHidden(['intLog_History_ID', 'reason_ro', 'intROModule_ID']);
+        $data = LogHistory::with('reasonRo')->find($id)->makeHidden(['reason_ro', 'intROModule_ID']);
         if ($data) {
             return response()->json([
                 'status' => 'success',
