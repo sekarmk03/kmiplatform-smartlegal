@@ -106,7 +106,7 @@
                     let line = datas[idx];
                     let axisCty = [];
                     $.each(line, function(key, val){
-                        resultVal.push(val.floatValues);
+                        resultVal.push({'tanggal': val.xAxis, 'y': val.floatValues});
                         axisCty.push(val.xAxis);
                     })
                     switch (line[idx].txtLineProcessName) {
@@ -316,8 +316,9 @@
             $('input#LineProcess').val(line);
             $('input#RO').val(ro);
             $('input#TimeStamp').val(tanggal);
-            if (response.data.reasonRo) {                  
-                $('textarea#Reason').val(response.data.reasonRo.txtReason).prop('disabled', true);
+            console.log(response);
+            if (response.data.reason_ro) {                  
+                $('textarea#Reason').val(response.data.reason_ro.txtReason).prop('disabled', true);
                 $('.modal-footer button[type="submit"]').prop('disabled', true);
                 $('.log_id').remove();
             } else {
@@ -398,6 +399,10 @@
         widget();
         chartLine();
         getRhTemp();
+        $('#modal-reason').on('hide.bs.modal', function(){
+                $('.modal-body form')[0].reset();
+                $('.log_id').remove();
+            })
         $('#form-reason').on('submit', function(e){
             e.preventDefault();
             var formData = new FormData($(this)[0]);

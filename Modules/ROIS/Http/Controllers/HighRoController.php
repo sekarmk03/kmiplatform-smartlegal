@@ -25,7 +25,7 @@ class HighRoController extends Controller
                     $query->where('txtLineProcessName', $request->txtLineProcessName);
                 })
                 ->whereBetween('log_history.floatValues', [2.00, 5.00])
-                ->latest()
+                ->orderBy('log_history.TimeStamp', 'DESC')
                 ->get();
             return DataTables::of($data)
                 ->addColumn('action', function($row){
