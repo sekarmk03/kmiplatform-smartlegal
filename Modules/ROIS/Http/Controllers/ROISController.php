@@ -148,8 +148,8 @@ class ROISController extends Controller
     }
     public function getReasonRO(Request $request)
     {
-        $id_log = LogHistory::where('TimeStamp', $request->waktu)
-            ->where('txtLineProcessName', $request->line)
+        $id_log = LogHistory::where(['TimeStamp' => $request->waktu, 
+        'txtLineProcessName' => $request->line])
             ->first()->intLog_History_ID;
         $data = LogHistory::with('reason_ro')->find($id_log);
         if ($data) {
