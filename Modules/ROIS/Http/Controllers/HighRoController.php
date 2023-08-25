@@ -24,6 +24,7 @@ class HighRoController extends Controller
                 ->when(($request->txtLineProcessName != 'noFilter'), function($query) use ($request){
                     $query->where('txtLineProcessName', $request->txtLineProcessName);
                 })
+                ->where('txtStatus', 'Measuring')
                 ->whereBetween('log_history.floatValues', [2.00, 5.00])
                 ->orderBy('log_history.TimeStamp', 'DESC')
                 ->get();

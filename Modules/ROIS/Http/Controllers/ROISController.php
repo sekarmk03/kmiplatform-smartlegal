@@ -84,7 +84,7 @@ class ROISController extends Controller
         if ($request->end != '') {
             $to = date('Y-m-d H:i:s', strtotime($request->end));
         } else {
-            $to = LogHistory::orderBy('intLog_History_ID', 'DESC')->first(['TimeStamp'])->TimeStamp;
+            $to = date('Y-m-d H:i:s');
         }
         $datas = LogHistory::selectRaw("`TimeStamp` AS xAxis, floatValues, txtLineProcessName, txtBatchOrder, txtProductionCode")
             ->whereBetween('TimeStamp', [$from, $to])
