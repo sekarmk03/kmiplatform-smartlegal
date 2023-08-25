@@ -151,11 +151,7 @@ class ROISController extends Controller
         $id_log = LogHistory::where(['TimeStamp' => $request->waktu, 
         'txtLineProcessName' => $request->line])
             ->first()->intLog_History_ID;
-<<<<<<< HEAD
-        $data = LogHistory::with('reason_ro')->find($id_log);
-=======
         $data = LogHistory::with('reasonRo')->find($id_log);
->>>>>>> 5a1a2b1befaeea9b297e75d7743e207a071122ef
         if ($data) {
             return response()->json([
                 'status' => 'success',
