@@ -85,7 +85,8 @@
                 {data: 'floatValues', name: 'floatValues'},
                 {data: 'txtReason', name: 'txtReason'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
+            ],
+            ordering: false
         });
         function getUrl(){
             return url;
