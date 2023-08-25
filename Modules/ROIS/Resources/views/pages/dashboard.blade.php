@@ -96,8 +96,8 @@
         }
         function chartLine(){
             $.get("{{ route('rois.chart') }}", {
-                start: $('input[name="start"]').val(),
-                end: $('input[name="end"]').val()
+                start: $('input[name="start_ro"]').val(),
+                end: $('input[name="end_ro"]').val()
             }, function(response){
                 let xAxisCat = [];
                 let datas = groupArray(response.data);
