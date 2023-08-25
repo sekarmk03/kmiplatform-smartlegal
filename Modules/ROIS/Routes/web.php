@@ -23,7 +23,7 @@ Route::name('rois.')->middleware('canAccess')->group(function () {
     Route::post('reason', 'ROISController@storeReason')->name('reason.store');
 
     //>2% RO Value
-    Route::resource('above-std', 'HighRoController')->only(['index', 'show']);
+    Route::resource('above-std', 'HighRoController')->only(['index', 'store', 'show']);
 
     //Log History
     Route::resource('log-history', 'LogHistoryController')->only(['index', 'show']);

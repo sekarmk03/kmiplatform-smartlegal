@@ -113,20 +113,57 @@
             $.get(viewUrl, function(response){
                 $('#modal-view').modal('show');
                 $.each(response.data, function(idx, val){
-                    if (idx != 'reason_ro') {
+                    if (idx != 'reason_ro' && idx != 'intLog_History_ID') {
                         input += '<div class="mb-3">'+
-                            '<label for="'+idx+'">'+idx+'</label><input name="'+idx+'" id="'+idx+'" class="form-control" value="'+val+'" disabled/>'+
+                            '<label for="'+idx+'">'+idx+'</label><input type="text" name="'+idx+'" id="'+idx+'" class="form-control" value="'+val+'" disabled/>'+
                             '</div>';                        
-                    } else {
-                        input += '<div class="mb-3">'+
-                            '<label for="Reason">Reason</label><textarea row="2" name="txtReason" id="Reason" class="form-control" autocomplete="off"></textarea>'+
+                    } else if(idx == 'intLog_History_ID'){
+                        input += '<div class="mb-3" style="display:none;">'+
+                            '<label for="'+idx+'">'+idx+'</label><input type="hidden" name="'+idx+'" id="'+idx+'" class="form-control" value="'+val+'"/>'+
                             '</div>';
                     }
                 })
+                if (response.data.reason_ro) {                            
+                    input += '<div class="mb-3">'+
+                        '<label for="Reason">Reason</label><textarea row="2" name="txtReason" id="Reason" class="form-control" autocomplete="off" disabled>'+response.data.reason_ro.txtReason+'</textarea>'+
+                        '</div>';
+                } else {                            
+                    input += '<div class="mb-3">'+
+                        '<label for="Reason">Reason</label><textarea row="2" name="txtReason" id="Reason" class="form-control" autocomplete="off"></textarea>'+
+                        '</div>';
+                }
+                if (response.data.reason_ro) {                    
+                    $('button[type="submit"]').addClass('disabled');
+                } else {
+                    $('button[type="submit"]').removeClass('disabled');
+                }
                 wrapper.append(input);
             })
         }
         $(document).ready(function(){
+            $('#form-view').on('submit', function(e){
+                e.preventDefault();
+                var formData = new FormData($(this)[0]);
+                $.ajax({
+                    url: "{{ route('rois.above-std.store') }}",
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    success: function(response){
+                        $('#modal-view').modal('hide');
+                        refresh();
+                        notification(response.status, response.message,'bg-success');
+                    },
+                    error: function(response){
+                        let fields = response.responseJSON.fields;
+                        $.each(fields, function(i, val){
+                            notification(response.status, val[0],'bg-danger');
+                        })
+                    }
+                })
+            })
         })
     </script>
 @endpush
@@ -199,12 +236,14 @@
           <h4 class="modal-title">Penyebab RO >2%</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
-        <div class="modal-body">
-            
+        <form action="" method="post" id="form-view">
+        <div class="modal-body">            
         </div>
         <div class="modal-footer">
-          <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Close</a>
+            <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Close</a>
+            <button type="submit" class="btn btn-success">Save <i class="fa-solid fa-floppy-disk"></i></button>
         </div>
+        </form>
       </div>
     </div>
 </div>

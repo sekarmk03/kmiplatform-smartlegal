@@ -316,16 +316,19 @@
             $('input#LineProcess').val(line);
             $('input#RO').val(ro);
             $('input#TimeStamp').val(tanggal);
-            $('textarea#Reason').val(response.data.txtReason).prop('disabled', true);
-            $('.modal-footer button[type="submit"]').prop('disabled', true);
+            if (response.data.reason_ro) {                  
+                $('textarea#Reason').val(response.data.txtReason).prop('disabled', true);
+                $('.modal-footer button[type="submit"]').prop('disabled', true);
+                $('.log_id').remove();
+            } else {
+                $('.modal-body form').append('<div class="mb-3 log_id">'+
+                    '<input type="text" name="intLog_History_ID" class="form-control" value="'+response.data.intLog_History_ID+'"/>'+
+                '</div>');
+                $('textarea#Reason').val('').prop('disabled', false);
+                $('.modal-footer button[type="submit"]').prop('disabled', false);
+            }
             $('#modal-reason').modal('show');
         }).fail((response) => {
-            $('input#LineProcess').val(line);
-            $('input#RO').val(ro);
-            $('input#TimeStamp').val(tanggal);
-            $('textarea#Reason').val('').prop('disabled', false);
-            $('.modal-footer button[type="submit"]').prop('disabled', false);
-            $('#modal-reason').modal('show');
         })
     }
     function makeid(length) {
@@ -433,7 +436,7 @@
 	<!-- END page-header -->
     <div class="row">
         <div class="col-12 ui-sortable">
-            <div class="panel panel-inverse">
+            <div class="panel">
                 <div class="panel-body">
                     <div id="widget" class="row">
                         <!-- Over 2% = #fd97ff -->
