@@ -150,7 +150,7 @@ class ROISController extends Controller
     {
         $id_log = LogHistory::where(['floatValues' => $request->ro, 
         'txtLineProcessName' => $request->line])
-            ->latest()->first()->intLog_History_ID;
+            ->orderBy('intLog_History_ID', 'DESC')->first()->intLog_History_ID;
         $data = LogHistory::with('reasonRo')->find($id_log);
         if ($data) {
             return response()->json([
