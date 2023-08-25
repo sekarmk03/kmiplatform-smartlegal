@@ -25,7 +25,8 @@ class HighRoController extends Controller
                     $query->where('txtLineProcessName', $request->txtLineProcessName);
                 })
                 ->whereBetween('log_history.floatValues', [2.00, 5.00])
-                ->latest();
+                ->latest()
+                ->get();
             return DataTables::of($data)
                 ->addColumn('action', function($row){
                     $btn_view = '<button class="btn btn-sm btn-info" onclick="view('.$row->intLog_History_ID.')"><i class="fa-solid fa-eye"></i></button>';
