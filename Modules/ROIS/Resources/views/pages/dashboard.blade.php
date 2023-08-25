@@ -316,8 +316,8 @@
             $('input#LineProcess').val(line);
             $('input#RO').val(ro);
             $('input#TimeStamp').val(tanggal);
-            if (response.data.reason_ro) {                  
-                $('textarea#Reason').val(response.data.txtReason).prop('disabled', true);
+            if (response.data.reasonRo) {                  
+                $('textarea#Reason').val(response.data.reasonRo.txtReason).prop('disabled', true);
                 $('.modal-footer button[type="submit"]').prop('disabled', true);
                 $('.log_id').remove();
             } else {
