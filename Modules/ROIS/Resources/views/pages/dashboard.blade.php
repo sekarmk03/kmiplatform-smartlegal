@@ -321,7 +321,7 @@
                 $('.modal-footer button[type="submit"]').prop('disabled', true);
                 $('.log_id').remove();
             } else {
-                $('.modal-body form').append('<div class="mb-3 log_id">'+
+                $('.modal-body form').append('<div class="mb-3 log_id" style="display: none;">'+
                     '<input type="text" name="intLog_History_ID" class="form-control" value="'+response.data.intLog_History_ID+'"/>'+
                 '</div>');
                 $('textarea#Reason').val('').prop('disabled', false);
