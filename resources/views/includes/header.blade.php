@@ -61,6 +61,7 @@
 	
 	<!-- BEGIN header-nav -->
 	<div class="navbar-nav">
+		<a type="button" onclick="openFullscreen()" class="mr-3"><i class="fa-solid fa-expand"></i></a>
 		<div class="navbar-item dropdown">
 <<<<<<< HEAD
 			<a onclick="onReadNotif()" href="#" data-bs-toggle="dropdown" class="navbar-link dropdown-toggle icon notif-icon">

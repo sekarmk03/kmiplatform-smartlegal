@@ -312,7 +312,7 @@
         }
     function reasonModal(line, tanggal, ro){
         let checkUrl = "{{ route('rois.reason.check') }}";
-        $.post(checkUrl,{'line': line, 'waktu':tanggal}, function(response){
+        $.post(checkUrl,{'line': line, 'waktu':tanggal, 'ro': ro}, function(response){
             $('input#LineProcess').val(line);
             $('input#RO').val(ro);
             $('input#TimeStamp').val(tanggal);
