@@ -77,7 +77,6 @@
                 },
             ],
             columns: [
-                {data: 'intLog_History_ID', name: 'intLog_History_ID'},
                 {data: 'TimeStamp', name: 'TimeStamp'},
                 {data: 'txtLineProcessName', name: 'txtLineProcessName'},
                 {data: 'txtBatchOrder', name: 'txtBatchOrder'},
@@ -210,7 +209,6 @@
                             <table id="daTable" class="table table-striped table-bordered align-middle">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
                                     <TH>DATE CREATED</TH>
                                     <th>LINE PROCESS</th>
                                     <th>OKP</th>
