@@ -132,7 +132,7 @@
                             break;
                         case 'Filling Sachet D2':
                             chartD.series[1].setData(resultVal);
-                            chartD.xAxis[0].setCategories(axisCty);                            
+                            // chartD.xAxis[0].setCategories(axisCty);                            
                             break;
                     }
                 }
@@ -344,7 +344,7 @@
         return result;
     }
     function mqttConnect(){
-        client = new Paho.MQTT.Client('10.175.13.146', 9001, 'client_id_'+makeid(14));
+        client = new Paho.MQTT.Client('10.175.13.146', 9001, 'client_id_'+makeid(22));
         var options = {
             onSuccess: onConnect
         };
