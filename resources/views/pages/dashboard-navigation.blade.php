@@ -142,7 +142,7 @@
                     <div class="card qa-card" style="display: none">
                         <div class="card-body">
                             @foreach ($qas as $item)
-                                <a type="button" class="btn btn-outline-warning" onclick="loginModal('{{ $item->txtModuleName }}')">
+                                <a class="btn btn-outline-warning" href="/{{ strtolower($item->txtModuleName) }}">
                                     <i class="fa-solid fa-desktop"></i> {{ $item->txtModuleName }}
                                 </a>
                             @endforeach
