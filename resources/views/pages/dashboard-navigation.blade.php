@@ -112,14 +112,14 @@
 @endpush
 @push('scripts')
     <script>
-        function showApp(that){
-            if ($(that).next().css('display') == "none") {
-                $.get("", )
-                $(that).next().css('display', 'block');
+        $('.qa').on('click', function(e){
+            e.preventDefault();
+            if ($('.qa-card').css('display') == "none") {
+                $('.qa-card').css('display', 'block');
             } else {            
-                $(that).next().css('display', 'none');
+                $('.qa-card').css('display', 'none');
             }
-        }
+        })
     </script>
 @endpush
 @section('content')
@@ -138,11 +138,11 @@
                     <h4 class="panel-title">Dashboard Navigation</h4>
                 </div>
                 <div class="panel-body">
-                    <button onclick="showApp(this)" class="btn btn-success qa"><i class="fa-solid fa-microscope"></i> QA Dept</button>
+                    <button class="btn btn-success qa"><i class="fa-solid fa-microscope"></i> QA Dept</button>
                     <div class="card qa-card" style="display: none">
                         <div class="card-body">
                             @foreach ($qas as $item)
-                                <a href="{{ url('/'.strtolower($item->txtModuleName)) }}" type="button" class="btn btn-outline-warning">
+                                <a type="button" class="btn btn-outline-warning" onclick="loginModal('{{ $item->txtModuleName }}')">
                                     <i class="fa-solid fa-desktop"></i> {{ $item->txtModuleName }}
                                 </a>
                             @endforeach
