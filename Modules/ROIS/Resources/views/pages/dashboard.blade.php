@@ -106,7 +106,7 @@
                     let line = datas[idx];
                     let axisCty = [];
                     $.each(line, function(key, val){
-                        resultVal.push({'tanggal': val.xAxis, 'y': val.floatValues});
+                        resultVal.push([val.xAxis, val.floatValues]);
                         axisCty.push(val.xAxis);
                     })
                     switch (line[idx].txtLineProcessName) {
@@ -116,7 +116,7 @@
                             break;
                         case 'Filling Sachet A2':
                             chartA.series[1].setData(resultVal);
-                            chartA.xAxis[0].setCategories(axisCty);                            
+                            // chartA.xAxis[0].setCategories(axisCty);                            
                             break;
                         case 'Filling Sachet E1':
                             chartE.series[0].setData(resultVal);
@@ -124,7 +124,7 @@
                             break;
                         case 'Filling Sachet E2':
                             chartE.series[1].setData(resultVal);
-                            chartE.xAxis[0].setCategories(axisCty);                            
+                            // chartE.xAxis[0].setCategories(axisCty);                            
                             break;
                         case 'Filling Sachet D1':
                             chartD.series[0].setData(resultVal);
