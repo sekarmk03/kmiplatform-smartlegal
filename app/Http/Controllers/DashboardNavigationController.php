@@ -10,7 +10,7 @@ class DashboardNavigationController extends Controller
     public function getIndex()
     {
         $qa = Modules::whereHas('user', function($query){
-            $query->where('intDepartment_ID', 7);
+            $query->where('intDepartment_ID', 8);
         })->get();
         return view('pages.dashboard-navigation', [
             'qas' => $qa
