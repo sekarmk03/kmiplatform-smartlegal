@@ -116,7 +116,7 @@
                             break;
                         case 'Filling Sachet A2':
                             chartA.series[1].setData(resultVal);
-                            // chartA.xAxis[0].setCategories(axisCty);                            
+                            chartA.xAxis[0].setCategories(axisCty);                            
                             break;
                         case 'Filling Sachet E1':
                             chartE.series[0].setData(resultVal);
@@ -124,7 +124,7 @@
                             break;
                         case 'Filling Sachet E2':
                             chartE.series[1].setData(resultVal);
-                            // chartE.xAxis[0].setCategories(axisCty);                            
+                            chartE.xAxis[0].setCategories(axisCty);                            
                             break;
                         case 'Filling Sachet D1':
                             chartD.series[0].setData(resultVal);
@@ -132,7 +132,7 @@
                             break;
                         case 'Filling Sachet D2':
                             chartD.series[1].setData(resultVal);
-                            // chartD.xAxis[0].setCategories(axisCty);                            
+                            chartD.xAxis[0].setCategories(axisCty);                            
                             break;
                     }
                 }
