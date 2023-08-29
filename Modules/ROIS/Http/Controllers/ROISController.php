@@ -86,12 +86,13 @@ class ROISController extends Controller
         } else {
             $to = date('Y-m-d H:i:s');
         }
-        $datas = LogHistory::selectRaw("`TimeStamp` AS xAxis, floatValues, txtLineProcessName, txtBatchOrder, txtProductionCode")
+        $datas = LogHistory::selectRaw("intLog_History_ID, `TimeStamp` AS xAxis, floatValues, txtLineProcessName, txtBatchOrder, txtProductionCode")
             ->whereBetween('TimeStamp', [$from, $to])
             ->where('txtLineProcessName', '<>', 'undefined')
             ->where('txtStatus', 'Measuring')
             ->where('floatValues', '<', 5)
             ->orderBy('txtLineProcessName', 'ASC')
+            ->orderBy('TimeStamp', 'ASC')
             ->get();
         return response()->json([
             'status' => 'success',
