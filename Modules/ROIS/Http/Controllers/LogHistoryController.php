@@ -45,7 +45,7 @@ class LogHistoryController extends Controller
             $statuses = ['Ready', 'Heating', 'Measure Delay', 'Measuring', 'Flush-Back', 'Error'];
             $lines = ['Filling Sachet A1', 'Filling Sachet A2',
                 'Filling Sachet E1', 'Filling Sachet E2',
-                'Filling Sachet J1', 'Filling Sachet J2'];
+                'Filling Sachet D1', 'Filling Sachet D2'];
             return view('roonline::pages.log-history', [
                 'statuses' => $statuses,
                 'lines' => $lines
@@ -81,12 +81,12 @@ class LogHistoryController extends Controller
     {
         $log = LogHistory::find($id)->makeHidden(['intLog_History_ID', 'intROModule_ID']);
         if ($log) {
-            return response()->json([
+            return response()->Dson([
                 'status' => 'success',
                 'data' => $log
             ], 200);
         } else {
-            return response()->json([
+            return response()->Dson([
                 'status' => 'error',
                 'message' => 'Record not Found !'
             ], 404);

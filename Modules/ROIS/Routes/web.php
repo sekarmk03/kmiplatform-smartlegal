@@ -15,6 +15,7 @@ Route::name('rois.')->middleware('canAccess')->group(function () {
     Route::get('/', 'ROISController@index')->name('dashboard');
     Route::post('postCheckReason', 'ROISController@getReasonRO')->name('reason.check');
     Route::get('ro-chart', 'ROISController@ROChart')->name('chart');
+    Route::get('roischart', 'ROISController@RoisChart')->name('chart.new');
     Route::get('ro-widget', 'ROISController@getROWidget')->name('widget');
     Route::get('ro-maxavg', 'ROISController@getMaxAvg')->name('maxAvg');
     Route::get('rhtemp', 'ROISController@getRHTemp')->name('rhtemp');
