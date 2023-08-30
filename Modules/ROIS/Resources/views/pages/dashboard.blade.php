@@ -118,7 +118,6 @@
                     xAxisD.push(val.xAxis);
                 })
                 chartA.xAxis[0].setCategories(xAxisA);
-                console.log(xAxisA);
                 chartE.xAxis[0].setCategories(xAxisE);
                 chartD.xAxis[0].setCategories(xAxisD);
                 $.each(response.data.FillingSachetA1, function(i, val){
@@ -325,7 +324,6 @@
             $('input#LineProcess').val(line);
             $('input#RO').val(ro);
             $('input#TimeStamp').val(tanggal);
-            console.log(response);
             if (response.data.reason_ro) {                  
                 $('textarea#Reason').val(response.data.reason_ro.txtReason).prop('disabled', true);
                 $('.modal-footer button[type="submit"]').prop('disabled', true);

@@ -74,12 +74,21 @@ class ROISController extends Controller
     }
 
     public function RoisChart(Request $request){
-        $from = LogHistory::selectRaw("DATE_SUB(`TimeStamp`, INTERVAL 1 HOUR) AS `from`")
+        if ($request->start == '' || empty($request->start)) {
+            $from = LogHistory::selectRaw("DATE_SUB(`TimeStamp`, INTERVAL 1 HOUR) AS `from`")
                 ->orderBy('intLog_History_ID', 'DESC')
                 ->take(1)
                 ->first()->from;
+        } else {
+            $from = date('Y-m-d H:i:s', strtotime($request->start));
+        }                
+        if ($request->end == '' || empty($request->end)) {
+            $to = date('Y-m-d H:i:s');
+        } else {
+            $to = date('Y-m-d H:i:s', strtotime($request->end));
+        }                
         $categories = LogHistory::selectRaw("DISTINCT REPLACE(LEFT(txtLineProcessName, CHAR_LENGTH(txtLineProcessName) - 1), ' ', '') AS line, `TimeStamp` AS xAxis")
-            ->whereBetween('TimeStamp', [$from, date('Y-m-d H:i:s')])
+            ->whereBetween('TimeStamp', [$from, $to])
             ->where('txtLineProcessName', '<>', 'undefined')
             ->where('txtStatus', 'Measuring')
             ->where('floatValues', '<', 5)
@@ -87,7 +96,7 @@ class ROISController extends Controller
             ->get()->toArray();
         $data = LogHistory::selectRaw("intLog_History_ID, REPLACE(txtLineProcessName,' ','') AS txtLineProcessName,
         floatValues as yAxis, `TimeStamp` as xAxis")
-            ->whereBetween('TimeStamp', [$from, date('Y-m-d H:i:s')])
+            ->whereBetween('TimeStamp', [$from, $to])
             ->where('txtLineProcessName', '<>', 'undefined')
             ->where('txtStatus', 'Measuring')
             ->where('floatValues', '<', 5)
