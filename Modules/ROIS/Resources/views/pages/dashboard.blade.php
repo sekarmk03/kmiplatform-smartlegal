@@ -353,7 +353,7 @@
         return result;
     }
     function mqttConnect(){
-        client = new Paho.MQTT.Client('localhost', 9001, 'client_id_'+makeid(22));
+        client = new Paho.MQTT.Client('10.175.13.146', 9001, 'client_id_'+makeid(22));
         var options = {
             onSuccess: onConnect
         };
