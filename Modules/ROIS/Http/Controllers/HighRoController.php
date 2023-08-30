@@ -26,7 +26,7 @@ class HighRoController extends Controller
                 })
                 ->where('txtStatus', 'Measuring')
                 ->where('txtLineProcessName', '<>', 'undefined')
-                ->whereBetween('log_history.floatValues', [2.00, 5.00])
+                ->whereBetween('log_history.floatValues', [2.01, 5.00])
                 ->orderBy('log_history.TimeStamp', 'DESC')
                 ->get();
             return DataTables::of($data)
