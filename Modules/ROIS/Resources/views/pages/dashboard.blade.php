@@ -95,47 +95,56 @@
             return grouped;
         }
         function chartLine(){
-            $.get("{{ route('rois.chart') }}", {
+            $.get("{{ route('rois.chart.new') }}", {
                 start: $('input[name="start_ro"]').val(),
                 end: $('input[name="end_ro"]').val()
             }, function(response){
-                let xAxisCat = [];
-                let datas = groupArray(response.data);
-                for (let idx = 0; idx < datas.length; idx++) {
-                    let resultVal = [];
-                    let line = datas[idx];
-                    let axisCty = [];
-                    $.each(line, function(key, val){
-                        resultVal.push([val.xAxis, val.floatValues]);
-                        axisCty.push(val.xAxis);
-                    })
-                    switch (line[idx].txtLineProcessName) {
-                        case 'Filling Sachet A1':
-                            chartA.series[0].setData(resultVal);
-                            chartA.xAxis[0].setCategories(axisCty);
-                            break;
-                        case 'Filling Sachet A2':
-                            chartA.series[1].setData(resultVal);
-                            chartA.xAxis[0].setCategories(axisCty);                            
-                            break;
-                        case 'Filling Sachet E1':
-                            chartE.series[0].setData(resultVal);
-                            chartE.xAxis[0].setCategories(axisCty);                            
-                            break;
-                        case 'Filling Sachet E2':
-                            chartE.series[1].setData(resultVal);
-                            chartE.xAxis[0].setCategories(axisCty);                            
-                            break;
-                        case 'Filling Sachet D1':
-                            chartD.series[0].setData(resultVal);
-                            chartD.xAxis[0].setCategories(axisCty);                            
-                            break;
-                        case 'Filling Sachet D2':
-                            chartD.series[1].setData(resultVal);
-                            chartD.xAxis[0].setCategories(axisCty);                            
-                            break;
-                    }
-                }
+                let xAxisA = [];
+                let yAxisA1 = [];
+                let yAxisA2 = [];
+                let xAxisE = [];
+                let yAxisE1 = [];
+                let yAxisE2 = [];
+                let xAxisD = [];
+                let yAxisD1 = [];
+                let yAxisD2 = [];
+                $.each(response.categories.FillingSachetA, function(i, val){
+                    xAxisA.push(val.xAxis);
+                })
+                $.each(response.categories.FillingSachetE, function(i, val){
+                    xAxisE.push(val.xAxis);
+                })
+                $.each(response.categories.FillingSachetD, function(i, val){
+                    xAxisD.push(val.xAxis);
+                })
+                chartA.xAxis[0].setCategories(xAxisA);
+                console.log(xAxisA);
+                chartE.xAxis[0].setCategories(xAxisE);
+                chartD.xAxis[0].setCategories(xAxisD);
+                $.each(response.data.FillingSachetA1, function(i, val){
+                    yAxisA1.push([val.xAxis, val.yAxis]);
+                })
+                $.each(response.data.FillingSachetA2, function(i, val){
+                    yAxisA2.push([val.xAxis, val.yAxis]);
+                })
+                chartA.series[0].setData(yAxisA1);
+                chartA.series[1].setData(yAxisA2);
+                $.each(response.data.FillingSachetE1, function(i, val){
+                    yAxisE1.push([val.xAxis, val.yAxis]);
+                })
+                $.each(response.data.FillingSachetE2, function(i, val){
+                    yAxisE2.push([val.xAxis, val.yAxis]);
+                })
+                chartE.series[0].setData(yAxisE1);
+                chartE.series[1].setData(yAxisE2);
+                $.each(response.data.FillingSachetD1, function(i, val){
+                    yAxisD1.push([val.xAxis, val.yAxis]);
+                })
+                $.each(response.data.FillingSachetD2, function(i, val){
+                    yAxisD2.push([val.xAxis, val.yAxis]);
+                })
+                chartD.series[0].setData(yAxisD1);
+                chartD.series[1].setData(yAxisD2);
                 chartA.update({
                     legend: {
                         labelFormatter: function() {
@@ -344,7 +353,7 @@
         return result;
     }
     function mqttConnect(){
-        client = new Paho.MQTT.Client('10.175.13.146', 9001, 'client_id_'+makeid(22));
+        client = new Paho.MQTT.Client('localhost', 9001, 'client_id_'+makeid(22));
         var options = {
             onSuccess: onConnect
         };

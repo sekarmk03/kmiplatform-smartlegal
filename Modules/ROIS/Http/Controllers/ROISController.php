@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Sarfraznawaz2005\VisitLog\Facades\VisitLog;
 use Maatwebsite\Excel\Excel;
@@ -69,6 +70,33 @@ class ROISController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $datas
+        ], 200);
+    }
+
+    public function RoisChart(Request $request){
+        $from = LogHistory::selectRaw("DATE_SUB(`TimeStamp`, INTERVAL 1 HOUR) AS `from`")
+                ->orderBy('intLog_History_ID', 'DESC')
+                ->take(1)
+                ->first()->from;
+        $categories = LogHistory::selectRaw("DISTINCT REPLACE(LEFT(txtLineProcessName, CHAR_LENGTH(txtLineProcessName) - 1), ' ', '') AS line, `TimeStamp` AS xAxis")
+            ->whereBetween('TimeStamp', [$from, date('Y-m-d H:i:s')])
+            ->where('txtLineProcessName', '<>', 'undefined')
+            ->where('txtStatus', 'Measuring')
+            ->where('floatValues', '<', 5)
+            ->orderBy('intLog_History_ID', 'ASC')
+            ->get()->toArray();
+        $data = LogHistory::selectRaw("intLog_History_ID, REPLACE(txtLineProcessName,' ','') AS txtLineProcessName,
+        floatValues as yAxis, `TimeStamp` as xAxis")
+            ->whereBetween('TimeStamp', [$from, date('Y-m-d H:i:s')])
+            ->where('txtLineProcessName', '<>', 'undefined')
+            ->where('txtStatus', 'Measuring')
+            ->where('floatValues', '<', 5)
+            ->orderBy('intLog_History_ID', 'ASC')
+            ->get()->toArray();
+        return response()->json([
+            'status' => 'success',
+            'data' => $this->group_by('txtLineProcessName', $data),
+            'categories' => $this->group_by('line', $categories)
         ], 200);
     }
 
