@@ -26,7 +26,7 @@
     <script>
         let url = '';
         let method = '';
-        let exportColumns = [1, 2, 3, 4, 5, 6];
+        let exportColumns = [0, 1, 2, 3, 4, 5];
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
