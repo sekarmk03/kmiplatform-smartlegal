@@ -348,7 +348,10 @@
             });
             $('#TypeID').select2({
                 allowClear: true,
-                placeholder: 'Select Document Type',
+                placeholder: {
+                    id: '-1',
+                    text: 'Select Document Type'
+                },
                 dropdownParent: $('#modal-form')
             });
             $('#PICDepartment').select2({
