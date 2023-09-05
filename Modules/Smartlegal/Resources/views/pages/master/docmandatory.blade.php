@@ -117,7 +117,6 @@
                     <div class="mb-3">
                         <label class="form-label" for="TypeID">Type</label>
                         <select class="select2 form-select" name="intTypeID" id="TypeID" required>
-                            <option value=""></option>
                             @foreach ($types as $item)
                             <option value="{{ $item->intTypeID }}">{{ $item->txtTypeName }}</option>
                             @endforeach
@@ -126,16 +125,20 @@
                     <div class="mb-3">
                         <label class="form-label" for="PICUser">PIC Document</label>
                         <div class="input-group">
-                            <select class="select2 form-select" name="intDepartment_ID" id="PICDepartment" required>
-                                @foreach ($departments as $item)
-                                <option value="{{ $item->intDepartment_ID }}">{{ $item->txtInitial }} - {{ $item->txtDepartmentName }}</option>
-                                @endforeach
-                            </select>
-                            <select class="select2 form-select" name="intUserID" id="PICUser" required>
-                                @foreach ($users as $item)
-                                <option value="{{ $item->intUserID }}">{{ $item->txtInitial }} - {{ $item->txtName }}</option>
-                                @endforeach
-                            </select>
+                            <div class="col-5">
+                                <select class="select2 form-select" name="intDepartment_ID" id="PICDepartment" required>
+                                    @foreach ($departments as $item)
+                                    <option value="{{ $item->intDepartment_ID }}">{{ $item->txtInitial }} - {{ $item->txtDepartmentName }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col">
+                                <select class="select2 form-select" name="intUserID" id="PICUser" required>
+                                    @foreach ($users as $item)
+                                    <option value="{{ $item->intUserID }}">{{ $item->txtInitial }} - {{ $item->txtName }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -337,6 +340,7 @@
                 $('#TypeID').val(null).trigger('change');
                 $('input#File').val('');
                 $('input[name="_method"]').remove();
+                $('select#TypeID').val(null).trigger('change');
             });
             $("#PublishDate").datepicker({
                 todayHighlight: true,
@@ -356,7 +360,18 @@
             });
             $('#PICDepartment').select2({
                 allowClear: true,
-                placeholder: 'Select PIC Department',
+                placeholder: {
+                    id: '-1',
+                    text: 'Select PIC Department'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('#PICUser').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select PIC User'
+                },
                 dropdownParent: $('#modal-form')
             });
             $('.modal-body form').on('submit', (e) => {
