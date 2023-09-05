@@ -1,0 +1,13 @@
+{
+    "name": "Smartlegal",
+    "alias": "smartlegal",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Smartlegal\\Providers\\SmartlegalServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
