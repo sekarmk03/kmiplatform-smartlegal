@@ -2,6 +2,8 @@
 
 namespace Modules\ROIS\Http\Controllers;
 
+use App\Exports\RhTempHistoryExport;
+use App\Exports\RoHistoryExport;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Sarfraznawaz2005\VisitLog\Facades\VisitLog;
-use Maatwebsite\Excel\Excel;
+use Excel;
 use Modules\ROIS\Entities\LogHistoryModel as LogHistory;
 use Modules\ROIS\Entities\LogRHTemp;
 use Modules\ROIS\Entities\Area;
