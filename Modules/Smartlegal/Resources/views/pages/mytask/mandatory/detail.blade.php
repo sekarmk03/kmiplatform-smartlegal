@@ -21,7 +21,7 @@
         <div class="col ui-sortable me-1">
             <div class="panel panel-inverse">
                 <div class="panel-body">
-                    <div class="row px-3">
+                    <div class="row px-3 pb-4">
                         <div class="text-center mb-1">
                             <h3>No. {{ $mandatory['request_number'] }}</h3>
                             <p class="fw-bolder">Requested at {{ $mandatory['created_at'] }}</p>
@@ -114,21 +114,34 @@
                                 <td>{{ $mandatory['termination_note'] }}</td>
                             </tr>
                         </table>
-                        <div class="mt-4 px-5 mb-5">
+                        @if ($mandatory['status'] == 'Requested')
+                        <div class="mt-4 px-5 mb-3">
                             <div class="btn-group w-100 fs-4">
-                                <button type="button" class="btn btn-green">
-                                    <i class="fas fa-check"></i>
-                                    Approve
-                                </button>
-                                <button type="button" class="btn btn-primary">
+                                <button type="button" class="btn btn-primary" onclick="addNote({{ $mandatory['doc_id'] }}, 1)">
                                     <i class="fas fa-pencil-alt"></i>
                                     Revise
                                 </button>
-                                <button type="button" class="btn btn-danger">
+                                <button type="button" class="btn btn-green" onclick="addNote({{ $mandatory['doc_id'] }}, 2)">
+                                    <i class="fas fa-check"></i>
+                                    Approve
+                                </button>
+                                <button type="button" class="btn btn-danger" onclick="addNote({{ $mandatory['doc_id'] }}, 3)">
                                     <i class="fas fa-reply"></i>
                                     Reject
                                 </button>
                             </div>
+                        </div>
+                        @endif
+                        <div>
+                            <form action="" method="" id="formNote">
+                                @csrf
+                                <div class="mb-2">
+                                    <label class="form-label" for="Note">Catatan</label>
+                                    <input type="text" hidden id="noteType" name="noteType">
+                                    <textarea name="txtNote" id="Note" cols="30" rows="5" class="form-control" placeholder="Masukkan catatan"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -145,3 +158,82 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('/plugins/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
+    <script>
+        let url = '';
+        let method = '';
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        
+        let daTable = $('#daTable').DataTable({
+            processing: true,
+            serverSide: true,
+            autoWidth: true,
+            responsive: true,
+            ajax: "{{ route('smartlegal.master.file.index') }}",
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center'},
+                {data: 'dtmCreatedAt', name: 'dtmCreatedAt', className: 'text-center'},
+                {data: 'txtFilename', name: 'txtFilename', className: 'text-center'},
+                {data: 'txtPath', name: 'txtPath', className: 'text-center'},
+                {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
+            ]
+        });
+        
+        const getUrl = () => url;
+        const getMethod = () => method;
+        const refresh = () => location.reload();
+
+        const addNote = ( id, action ) => {
+            $('#formNote').show();
+            const actionList = {
+                1: 'revise',
+                2: 'approve',
+                3: 'reject'
+            };
+            if (action != 0 && action in actionList) {
+                $('#noteType').val(action + 1);
+                $('textarea#Note').attr('placeholder', `Masukkan catatan ${actionList[action]}`);
+                url = "{{ route('smartlegal.mytask.mandatory.approve', ':id') }}";
+                url = url.replace(':id', id);
+                method = "PUT";
+            }
+        }
+
+        $(document).ready(() => {
+            $('#formNote').hide();
+            $('#formNote').on('submit', (e) => {
+                e.preventDefault();
+                $.ajax({
+                    url: getUrl(),
+                    method: getMethod(),
+                    data: $('#formNote').serialize(),
+                    dataType: "JSON",
+                    success: (response) => {
+                        refresh();
+                        notification(response.status, response.message,'bg-success');
+                        conn.send(['success', 'issuer']);
+                    },
+                    error: (response) => {
+                        let fields = response.responseJSON.fields;
+                        $.each(fields, (i, val) => {
+                            $.each(val, (ind, value) => {
+                                notification(response.responseJSON.status, val[ind],'bg-danger');
+                            });
+                        });
+                    }
+                });
+            })
+        });
+    </script>
+@endpush

@@ -34,9 +34,10 @@ Route::name('smartlegal.')->group(function () {
         Route::get('menu', 'MenuController@index')->name('menu.index');
     });
 
-    Route::prefix('mytask')->group(function () {
-        Route::get('mandatories', 'MyTaskMandatoryController@index')->name('mytask.mandatory.index');
-        Route::get('mandatories/{id}', 'MyTaskMandatoryController@show')->name('mytask.mandatory.show');
+    Route::prefix('mytask')->name('mytask.')->group(function () {
+        Route::get('mandatory', 'MyTaskMandatoryController@index')->name('mandatory.index');
+        Route::get('mandatory/{id}', 'MyTaskMandatoryController@show')->name('mandatory.show');
+        Route::put('mandatory/{id}/approve', 'MyTaskMandatoryController@approve')->name('mandatory.approve');
     });
 
     Route::prefix('request')->group(function () {

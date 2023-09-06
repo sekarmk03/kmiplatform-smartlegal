@@ -7,6 +7,9 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Modules\Smartlegal\Entities\Document;
+use Modules\Smartlegal\Entities\Mandatory;
 use Modules\Smartlegal\Helpers\CurrencyFormatter;
 use Modules\Smartlegal\Helpers\PeriodFormatter;
 use Yajra\DataTables\DataTables;
@@ -65,7 +68,7 @@ class MyTaskMandatoryController extends Controller
             return DataTables::of($transformedData)
                 ->addIndexColumn()
                 ->addColumn('action', function($row) {
-                    return '<div class="btn-group"><button onclick="open('.$row["file_id"].')" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Open"><i class="fas fa-eye"></i></button> <button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-location-arrow"></i></button></div>';
+                    return '<div class="btn-group"><button onclick="preview('.$row["file_id"].')" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Open"><i class="fas fa-eye"></i></button> <button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-location-arrow"></i></button></div>';
                 })
                 ->editColumn('created_at', function($row) {
                     return date('Y-m-d H:i', strtotime($row["created_at"]));
@@ -220,5 +223,27 @@ class MyTaskMandatoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Renderable
+     */
+    public function approve(Request $request, $id)
+    {
+        $document = Document::where('intDocID', $id)->update(['intRequestStatus' => $request['noteType']]);
+        if ($document) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document updated successfully'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Document failed to update'
+            ], 500);
+        }
     }
 }
