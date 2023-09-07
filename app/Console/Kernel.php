@@ -25,8 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->command('Ftq:okp')->hourly();
+        $schedule->command('user:synchron')->everyMinute();
     }
 
     /**
