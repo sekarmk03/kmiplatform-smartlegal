@@ -20,8 +20,8 @@ class User extends Authenticatable
     const UPDATED_AT = 'dtmUpdated';
     protected $table = 'musers';
     protected $fillable = [
-        'txtName', 'txtNik', 'txtUsername', 'txtEmail', 'intDepartment_ID', 'txtInitial',
-        'txtPassword', 'txtPhoto', 'intLevel_ID', 'txtCreatedBy', 'txtUpdatedBy'
+        'txtName', 'txtNik', 'txtUsername', 'txtEmail', 'intDepartment_ID', 'intSubdepartment_ID', 'intCg_ID',
+        'intJabatan_ID', 'txtInitial', 'txtPassword', 'txtPhoto', 'intLevel_ID', 'txtCreatedBy', 'txtUpdatedBy'
     ];
     public function modules(): HasMany 
     {
