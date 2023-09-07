@@ -5,7 +5,7 @@
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
-    <link href="{{ asset('plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -15,10 +15,11 @@
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
     <script src="{{ asset('/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
-    <script src="{{ asset('plugins/select-picker/dist/picker.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/dist/js/select2.min.js') }}"></script>
     <script>
         let url = '';
         let method = '';
+        let subdept_id, jabatan_id;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -48,8 +49,7 @@
         function getSubdepartmentList(iddept){
             let wrapper = $('#Subdepartment_ID');
             let opt = '';
-            wrapper.closest('.subdept').css('display', 'block');
-            wrapper.find('option').remove();
+            wrapper.empty();
             $.get("{{ route('manage.subdepartment.list') }}", {
                 id_department: iddept
             }, function(response){
@@ -57,6 +57,25 @@
                     opt += '<option value="'+val.intSubdepartment_ID+'">'+val.txtSubdepartmentName+'</option>';
                 })
                 wrapper.append(opt);
+                if (subdept_id) {
+                    wrapper.val(subdept_id).trigger('change');
+                }
+            })
+        }
+        function getJobpositionList(iddept){
+            let wrapper = $('select#Jobposition_ID');
+            let opt = '';
+            wrapper.empty();
+            $.get("{{ route('manage.jobposition.list') }}", {
+                id_department: iddept
+            }, function(response){
+                $.each(response.data, function(i, val){
+                    opt += '<option value="'+val.intJabatan_ID+'">'+val.txtNamaJabatan+'</option>';
+                })
+                wrapper.append(opt);
+                if (jabatan_id) {
+                    wrapper.val(jabatan_id).trigger('change');
+                }
             })
         }
         function refresh(){
@@ -70,11 +89,9 @@
             method = "POST";
         }
         function edit(id){
-            let editUrl = "{{ route('manage.user.edit',':id') }}";
-            editUrl = editUrl.replace(':id', id);
+            let editUrl = replaceUrl("{{ route('manage.user.edit',':id') }}", id);
             $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
-            url = "{{ route('manage.user.update', ':id') }}";
-            url = url.replace(':id', id);
+            url = replaceUrl("{{ route('manage.user.update', ':id') }}", id);
             method = "POST";
             $.get(editUrl, function(response){
                 $('.modal-header h4').html('Edit User '+response.user.txtNik);
@@ -84,8 +101,11 @@
                 $('input#Initial').val(response.user.txtInitial);
                 $('input#UserName').val(response.user.txtUsername);
                 $('input#Email').val(response.user.txtEmail);
-                $('select#Level_ID').picker('set', response.user.intLevel_ID);
-                $('select#Department_ID').picker('set', response.user.intDepartment_ID);
+                $('select#Level_ID').val(response.user.intLevel_ID).trigger('change');
+                $('select#Cg_ID').val(response.user.intCg_ID).trigger('change');
+                $('select#Department_ID').val(response.user.intDepartment_ID).trigger('change');
+                subdept_id = response.user.intSubdepartment_ID;
+                jabatan_id = response.user.intJabatan_ID;
                 $('#preview-photo').attr('src', "{{ asset('img/user') }}/"+response.user.txtPhoto);
                 $('.input-password').css('display', 'none');
             });
@@ -154,29 +174,43 @@
             });
             return false;
         }
+        function replaceUrl(param, id){
+            return param.replace(':id', id);
+        }
         $(document).ready(function(){
-            $('select#Department_ID').picker({
-                search: true,
-                'texts': {
-                    trigger : "Select Department", 
-                    noResult : "No results", 
-                    search : "Search"
-                }
+            $('select#Department_ID').select2({
+                placeholder: "SELECT DEPARTMENT",
+                allowClear: true,
+                dropdownParent: $('#modal-level')
             });
-            $('select#Level_ID').picker({
-                search: true,
-                'texts': {
-                    trigger : "Select Level", 
-                    noResult : "No results", 
-                    search : "Search"
-                }
+            $('select#Subdepartment_ID').select2({
+                placeholder: "SELECT SUB DEPARTMENT",
+                allowClear: true,
+                dropdownParent: $('#modal-level')
             });
-            $('select#Department_ID').on('sp-change', function(){
+            $('select#Level_ID').select2({
+                placeholder: "SELECT LEVEL",
+                allowClear: true,
+                dropdownParent: $('#modal-level')
+            });
+            $('select#Cg_ID').select2({
+                placeholder: "SELECT CG",
+                allowClear: true,
+                dropdownParent: $('#modal-level')
+            });
+            $('select#Jobposition_ID').select2({
+                placeholder: "SELECT JOB POSITION",
+                allowClear: true,
+                dropdownParent: $('#modal-level')
+            });
+            $('select#Department_ID').on('change', function(){
                 getSubdepartmentList($(this).val());
+                getJobpositionList($(this).val());
             })
             $('#modal-level').on('hide.bs.modal', function(){
                 $('.modal-body form')[0].reset();
-                $('select#Department_ID, select#Level_ID').picker('set', '');
+                $('select#Jobposition_ID, select#Subdepartment_ID').empty();
+                $('select#Department_ID, select#Level_ID, select#Subdepartment_ID, select#Cg_ID, select#Jobposition_ID').val('').trigger('change');
                 $('#preview-photo').attr('src', "{{ asset('img/user/default.png') }}");
                 $('input[name="_method"]').remove();
             })
@@ -290,56 +324,72 @@
                 <form action="" method="post" id="form-user" data-parsley-validate="true">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label" for="Department_ID">Department</label>
-                            <select class="select2 form-control" id="Department_ID" name="intDepartment_ID" data-parsley-required="true">
-                                @foreach ($departments as $item)                        
-                                    <option value="{{ $item->intDepartment_ID }}">{{ $item->txtDepartmentName }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="subdept mb-3" style="display: none">
-                            <label class="form-label" for="Subdepartment_ID">Sub Department</label>
-                            <select class="select2 form-control" id="Subdepartment_ID" name="intSubdepartment_ID" data-parsley-required="true">
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="NIK">NIK</label>
-                            <input class="form-control" type="text" name="txtNik" id="NIK" placeholder="NIK" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true"/>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Name">Name</label>
-                            <input class="form-control" type="text" name="txtName" id="Name" placeholder="Name" oninput="this.value = this.value.toUpperCase()" data-parsley-required="true" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Initial">Initial</label>
-                            <input class="form-control" type="text" name="txtInitial" id="Initial" placeholder="Initial Name" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="UserName">User Name</label>
-                            <input class="form-control" type="text" name="txtUsername" id="UserName" placeholder="User Name" oninput="this.value = this.value.toLowerCase()" onkeypress="return event.charCode != 32" data-parsley-required="true" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Email">Email</label>
-                            <input class="form-control" type="text" name="txtEmail" id="Email" placeholder="user@email.com" data-parsley-required="true" data-parsley-type="email" onkeypress="return event.charCode != 32"/>
-                        </div>
-                        <div class="mb-3 input-password">
-                            <label class="form-label" id="Password">Password</label>
-                            <div class="input-group">
-                                <input type="password" id="Password" class="form-control" name="txtPassword" placeholder="******" onkeypress="return event.charCode != 32" required/>
-                                <button type="button" class="btn btn-default" onclick="showPassword(this)"><div class="fas fa-eye"></div></button>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Level_ID">Level</label>
+                            <label class="form-label" for="Level_ID">LEVEL*</label>
                             <select class="select2 form-control" id="Level_ID" name="intLevel_ID" data-parsley-required="true" >
+                                <option value=""></option>
                                 @foreach ($levels as $item)                        
                                     <option value="{{ $item->intLevel_ID }}">{{ $item->txtLevelName }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label" for="Department_ID">DEPARTMENT*</label>
+                            <select class="select2 form-control" id="Department_ID" name="intDepartment_ID" data-parsley-required="true">
+                                <option value=""></option>
+                                @foreach ($departments as $item)                        
+                                    <option value="{{ $item->intDepartment_ID }}">{{ $item->txtDepartmentName }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="Subdepartment_ID">SUB DEPARTMENT*</label>
+                            <select class="select2 form-control" id="Subdepartment_ID" name="intSubdepartment_ID" data-parsley-required="true">
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="Jobposition_ID">JOB POSITION*</label>
+                            <select class="select2 form-control" id="Jobposition_ID" name="intJabatan_ID" data-parsley-required="true">
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="Cg_ID">CG*</label>
+                            <select class="select2 form-control" id="Cg_ID" name="intCg_ID" data-parsley-required="true">
+                                <option value=""></option>
+                                @foreach ($cgs as $item)
+                                    <option value="{{ $item->intCg_ID }}">{{ $item->txtCgName }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="NIK">NIK*</label>
+                            <input class="form-control" type="text" name="txtNik" id="NIK" placeholder="NIK" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="Name">NAME*</label>
+                            <input class="form-control" type="text" name="txtName" id="Name" placeholder="Name" oninput="this.value = this.value.toUpperCase()" data-parsley-required="true" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="Initial">INITIAL*</label>
+                            <input class="form-control" type="text" name="txtInitial" id="Initial" placeholder="Initial Name" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="UserName">USERNAME*</label>
+                            <input class="form-control" type="text" name="txtUsername" id="UserName" placeholder="User Name" oninput="this.value = this.value.toLowerCase()" onkeypress="return event.charCode != 32" data-parsley-required="true" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="Email">EMAIL*</label>
+                            <input class="form-control" type="text" name="txtEmail" id="Email" placeholder="user@email.com" data-parsley-required="true" data-parsley-type="email" onkeypress="return event.charCode != 32"/>
+                        </div>
+                        <div class="mb-3 input-password">
+                            <label class="form-label" id="Password">PASSWORD*</label>
+                            <div class="input-group">
+                                <input type="password" id="Password" class="form-control" name="txtPassword" placeholder="******" onkeypress="return event.charCode != 32" required/>
+                                <button type="button" class="btn btn-default" onclick="showPassword(this)"><div class="fas fa-eye"></div></button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <!-- file -->
-                            <label for="Photo" class="form-label">Photo Profile</label>
+                            <label for="Photo" class="form-label">PHOTO PROFILE</label>
                             <input type="file" class="form-control" name="txtPhoto" id="Photo" onchange="document.getElementById('preview-photo').src = window.URL.createObjectURL(this.files[0])"/>
                         </div>
                         <div class="mb-3">

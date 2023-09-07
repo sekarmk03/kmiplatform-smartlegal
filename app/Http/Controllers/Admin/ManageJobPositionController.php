@@ -33,6 +33,17 @@ class ManageJobPositionController extends Controller
             ]);
         }
     }
+    public function list(Request $request){
+        if ($request->id_department) {
+            $data = JobPosition::where('intDepartment_ID', $request->id_department)->get();
+        } else {
+            $data = JobPosition::all();
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
+    }
     public function store(Request $request)
     {
         $input = $request->only(['intDepartment_ID', 'txtNamaJabatan', 'txtCreatedBy', 'txtUpdatedBy']);

@@ -45,6 +45,7 @@ use App\Http\Controllers\Admin\ManageSubdepartmentController;
 
         //Prefix: Manage Job positions
         Route::resource('jobposition', ManageJobPositionController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
+        Route::get('jobposition/list', [ManageJobPositionController::class, 'list'])->name('jobposition.list');
 
         //Prefix: Manage CG
         Route::resource('cg', ManageCgController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
