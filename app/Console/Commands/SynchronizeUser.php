@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
 class SynchronizeUser extends Command
@@ -51,8 +52,25 @@ class SynchronizeUser extends Command
         $result = json_decode($response->getBody()->getContents(), true);
         $datas = collect($result['data'])->all();
         foreach ($datas as $key => $val) {
-            if (empty(User::where('txtNik', $val['nik'])->first())) {
-                printf($val['nik'].":".$val['nama']."\n");
+            if (empty(User::where('txtNik', $val['nik'])->first()) && $val['nik'] != '4dm1n') {
+                User::create([
+                    'intLevel_ID' => 3,
+                    'intDepartment_ID' => $val['relationships']['departemen']['intiddepartemen'],
+                    'intSubdepartment_ID' => $val['relationships']['subdepartemen']['intidsubdepartemen'],
+                    'intCg_ID' => $val['relationships']['cg']['intidcg'],
+                    'intJabatan_ID' => $val['relationships']['jabatan']['intidjabatan'],
+                    'txtName' => $val['nama'],
+                    'txtNik' => $val['nik'],
+                    'txtUsername' => $val['username'],
+                    'txtInitial' => $val['inisial'],
+                    'txtEmail' => $val['email'],
+                    'txtExt' => $val['ext'],
+                    'txtPassword' => Hash::make('kalbemorinaga'),
+                    'intActive' => 1,
+                    'txtCreatedBy' => 'SYNCRONIZER',
+                    'txtUpdatedBy' => 'SYNCRONIZER',
+                ]);
+                printf($val['nik'].":".$val['nama']." - ".$val['relationships']['departemen']['namadepartemen']."\n");
             }
         }
     }
