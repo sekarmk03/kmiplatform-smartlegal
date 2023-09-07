@@ -130,6 +130,12 @@
                                     Reject
                                 </button>
                             </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary" onclick="edit({{ $mandatory['doc_id'] }})">
+                                    <i class="fas fa-pencil-alt"></i>
+                                    Edit Request
+                                </button>
+                            </div>
                         </div>
                         @endif
                         <div>
