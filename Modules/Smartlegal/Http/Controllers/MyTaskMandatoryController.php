@@ -2,15 +2,19 @@
 
 namespace Modules\Smartlegal\Http\Controllers;
 
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Modules\Smartlegal\Entities\DocApproval;
 use Modules\Smartlegal\Entities\Document;
 use Modules\Smartlegal\Entities\Mandatory;
 use Modules\Smartlegal\Helpers\CurrencyFormatter;
+use Modules\Smartlegal\Helpers\LeadTimeCalculator;
 use Modules\Smartlegal\Helpers\PeriodFormatter;
 use Yajra\DataTables\DataTables;
 
@@ -233,16 +237,26 @@ class MyTaskMandatoryController extends Controller
      */
     public function approve(Request $request, $id)
     {
+        $input = $request->only(['txtNote']);
+        $input['intDocID'] = $id;
+        $input['intUserID'] = Auth::user()->id;
+        $prevLog = DocApproval::where('intDocID', $id)->orderBy('intApprovalID')->first();
+        if (!$prevLog) $prevLog = Document::where('intDocID', $id)->first();
+        $prevTime = $prevLog->dtmUpdatedAt->format('Y-m-d H:i:s');
+        $now = new DateTime();
+        $now = $now->format('Y-m-d H:i:s');
+        $input['txtLeadTime'] = PeriodFormatter::date($prevTime, $now, 'min');
         $document = Document::where('intDocID', $id)->update(['intRequestStatus' => $request['noteType']]);
-        if ($document) {
+        $log = DocApproval::create($input);
+        if ($document && $log) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Document updated successfully'
+                'message' => 'Document updated successfully',
             ], 200);
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Document failed to update'
+                'message' => 'Document failed to update',
             ], 500);
         }
     }

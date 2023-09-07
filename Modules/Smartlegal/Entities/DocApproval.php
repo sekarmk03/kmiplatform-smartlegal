@@ -15,7 +15,20 @@ class DocApproval extends Model
     const CREATED_AT = 'dtmCreatedAt';
     const UPDATED_AT = 'dtmUpdatedAt';
     protected $primaryKey = 'intApprovalID';
-    protected $fillable = ['intDocID', 'intUserID', 'txtNotes', 'intLeadTime'];
+    protected $fillable = ['intDocID', 'intUserID', 'txtNote', 'txtLeadTime'];
+
+    public static function rules()
+    {
+        return [
+            'txtNote' => 'nullable|max:1000'
+        ];
+    }
+
+    public static function attributes(){
+        return [
+            'txtNote' => 'Approval Note'
+        ];
+    }
     
     public function document() {
         return $this->belongsTo(Document::class, 'intDocID', 'intDocID');

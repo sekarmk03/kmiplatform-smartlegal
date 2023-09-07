@@ -114,7 +114,7 @@
                                 <td>{{ $mandatory['termination_note'] }}</td>
                             </tr>
                         </table>
-                        @if ($mandatory['status'] == 'Requested')
+                        @if ($mandatory['status'] == 'Requested' || $mandatory['status'] == 'Revised')
                         <div class="mt-4 px-5 mb-3">
                             <div class="btn-group w-100 fs-4">
                                 <button type="button" class="btn btn-primary" onclick="addNote({{ $mandatory['doc_id'] }}, 1)">
@@ -220,7 +220,6 @@
                     data: $('#formNote').serialize(),
                     dataType: "JSON",
                     success: (response) => {
-                        refresh();
                         notification(response.status, response.message,'bg-success');
                         conn.send(['success', 'issuer']);
                     },

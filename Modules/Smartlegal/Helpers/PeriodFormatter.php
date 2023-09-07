@@ -4,6 +4,7 @@ namespace Modules\Smartlegal\Helpers;
 use DateTime;
 
 class PeriodFormatter {
+    // type = day, min
     public static function date($start, $end, $type) {
         $start_date = new DateTime($start);
         $end_date = new DateTime($end);
