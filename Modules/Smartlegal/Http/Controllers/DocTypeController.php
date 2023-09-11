@@ -35,6 +35,14 @@ class DocTypeController extends Controller
         }
     }
 
+    public function getAllTypes() {
+        $data = DocType::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable

@@ -15,15 +15,27 @@ Route::name('smartlegal.')->group(function () {
     Route::get('/', 'SmartlegalController@index');
 
     Route::get('admin', 'Admin\TestController@index')->name('test');
+    Route::get('departments', 'DepartmentController@getAllDepartments')->name('departments');
+    Route::get('users', 'UserController@getAllUsers')->name('users');
+    Route::get('users/{id}', 'UserController@getUsersByDepartment')->name('users.department');
 
     Route::prefix('master')->name('master.')->group(function () {
         Route::resource('docstatus', 'DocStatusController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+
         Route::resource('doctype', 'DocTypeController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+        Route::get('doctypes', 'DocTypeController@getAllTypes')->name('doctypes');
+
         Route::resource('docvariant', 'DocVariantController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+
         Route::resource('issuer', 'IssuerController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+        Route::get('issuers', 'IssuerController@getAllIssuers')->name('issuers');
+
         Route::resource('permission', 'PermissionController')->only(['index', 'edit', 'update']);
+
         Route::resource('role', 'RoleController')->only(['index', 'edit', 'update']);
+
         Route::resource('userrole', 'UserRoleController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+
         Route::resource('department', 'DepartmentController')->only(['index', 'edit', 'update']);
 
         Route::resource('file', 'FileController')->only(['index', 'store', 'edit', 'update', 'destroy']);

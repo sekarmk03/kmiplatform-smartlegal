@@ -2,6 +2,7 @@
 
 namespace Modules\Smartlegal\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,6 +16,22 @@ class UserController extends Controller
     public function index()
     {
         return view('smartlegal::index');
+    }
+
+    public function getAllUsers() {
+        $data = User::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
+    }
+
+    public function getUsersByDepartment($departmentID) {
+        $data = User::where('intDepartment_ID', $departmentID)->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
     }
 
     /**

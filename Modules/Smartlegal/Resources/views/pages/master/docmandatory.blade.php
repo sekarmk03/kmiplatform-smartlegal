@@ -116,28 +116,16 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="TypeID">Type</label>
-                        <select class="select2 form-select" name="intTypeID" id="TypeID" required>
-                            @foreach ($types as $item)
-                            <option value="{{ $item->intTypeID }}">{{ $item->txtTypeName }}</option>
-                            @endforeach
-                        </select>
+                        <select class="select2 form-select" name="intTypeID" id="TypeID" required></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="PICUser">PIC Document</label>
                         <div class="input-group">
-                            <div class="col-5">
-                                <select class="select2 form-select" name="intDepartment_ID" id="PICDepartment" required>
-                                    @foreach ($departments as $item)
-                                    <option value="{{ $item->intDepartment_ID }}">{{ $item->txtInitial }} - {{ $item->txtDepartmentName }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-4">
+                                <select class="select2 form-select" name="intDepartment_ID" id="PICDepartment" required></select>
                             </div>
                             <div class="col">
-                                <select class="select2 form-select" name="intUserID" id="PICUser" required>
-                                    @foreach ($users as $item)
-                                    <option value="{{ $item->intUserID }}">{{ $item->txtInitial }} - {{ $item->txtName }}</option>
-                                    @endforeach
-                                </select>
+                                <select class="select2 form-select" name="intUserID" id="PICUser" required></select>
                             </div>
                         </div>
                     </div>
@@ -146,18 +134,18 @@
                         <div>
                             @foreach ($variants as $item)
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="intVariantID" id="VariantID" value="{{ $item->intVariantID }}">
+                                <input class="form-check-input" type="radio" name="intVariantID" id="VariantID_{{ $item->intDocVariantID }}" value="{{ $item->intDocVariantID }}">
                                 <label class="form-check-label" for="VariantID">{{ $item->txtVariantName }}</label>
                             </div>
                             @endforeach
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 renewal">
                         <label class="form-label" for="ExpirationPeriod">Expiration Period</label>
                         <div class="input-group">
-                            <input class="form-control" type="number" name="intExpirationPeriod" id="ExpirationPeriod" placeholder="Enter expiration period (day format).." required/>
+                            <input class="form-control" type="number" name="intExpirationPeriod" id="ExpirationPeriod" placeholder="Enter expiration period (day format).."/>
                             <div class="col-3">
-                                <select class="select2 form-select" name="intPeriodUnit" id="PeriodUnit" required>
+                                <select class="select2 form-select" name="intPeriodUnit" id="ExpPeriodUnit">
                                     <option value="tahun">Tahun</option>
                                     <option value="bulan">Bulan</option>
                                     <option value="minggu">Minggu</option>
@@ -168,37 +156,37 @@
                     <div class="mb-3">
                         <label class="form-label" for="PublishDate">Publish Date</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." required/>
+                            <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." data-date-format="yyyy-mm-dd" required/>
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 renewal">
                         <label class="form-label" for="ExpireDate">Expire Date</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" name="dtmExpireDate" id="ExpireDate" placeholder="Enter document expire date.." required/>
+                            <input class="form-control" type="text" name="dtmExpireDate" id="ExpireDate" placeholder="Enter document expire date.."/>
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="IssuerID">Issuer</label>
-                        <select class="select2 form-select" name="intIssuerID" id="IssuerID" required>
-                            @foreach ($issuers as $item)
-                            <option value="{{ $item->intIssuerID }}">{{ $item->txtIssuerName }}</option>
-                            @endforeach
-                        </select>
+                        <select class="select2 form-select" name="intIssuerID" id="IssuerID" required></select>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 renewal">
                         <label class="form-label" for="ReminderPeriod">Reminder Period</label>
                         <div class="input-group">
-                            <input class="form-control" type="number" name="intReminderPeriod" id="ReminderPeriod" placeholder="Enter reminder period (day format).." required/>
+                            <input class="form-control" type="number" name="intReminderPeriod" id="ReminderPeriod" placeholder="Enter reminder period (day format).."/>
                             <div class="col-3">
-                                <select class="select2 form-select" name="intPeriodUnit" id="PeriodUnit" required>
+                                <select class="select2 form-select" name="intPeriodUnit" id="RemPeriodUnit">
                                     <option value="tahun">Tahun</option>
                                     <option value="bulan">Bulan</option>
                                     <option value="minggu">Minggu</option>
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3 renewal">
+                        <label class="form-label" for="PICReminder">PIC Reminder</label>
+                        <select class="select2 form-select" name="picreminders[]" id="PICReminder" multiple></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="LocationFilling">Location Filling</label>
@@ -224,9 +212,6 @@
                     <div class="mb-3">
                         <label for="CostCenter" class="form-label">Cost Center</label>
                         <select class="select2 form-select" name="intDepartment_ID" id="CostCenter" required>
-                            @foreach ($departments as $item)
-                            <option value="{{ $item->intDepartment_ID }}">{{ $item->txtInitial }} - {{ $item->txtDepartmentName }}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
@@ -318,6 +303,73 @@
         const getMethod = () => method;
         const refresh = () => daTable.ajax.reload(null, false);
 
+        const getAllDepartments = ( wrapperID, id = false ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.departments') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.intDepartment_ID}">${val.txtInitial} - ${val.txtDepartmentName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const getAllUsers = ( wrapperID, id = [] ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.users') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.id}">${val.txtInitial} - ${val.txtName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const getUsersByDepartments = ( wrapperID, id = false, deptID ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            let getUrl = "{{ route('smartlegal.users.department', ':id') }}";
+            getUrl = getUrl.replace(':id', deptID);
+            $.get(getUrl, (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.id}">${val.txtInitial} - ${val.txtName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const getAllDocTypes = ( wrapperID, id = false ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.master.doctypes') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.intDocTypeID}">${val.txtTypeName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const getAllIssuers = ( wrapperID, id = false ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.master.issuers') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.intIssuerID}">${val.txtCode} - ${val.txtIssuerName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
         const preview = ( id ) => {
             $('.modal-header h4').html('File Preview');
             let previewUrl = "{{ route('smartlegal.master.file.preview', ':id') }}";
@@ -332,6 +384,24 @@
             $('.modal-header h4').html('Add Mandatory Document');
             $('#modal-form').modal('show');
             $("#FrameContainer").hide();
+            getAllDocTypes('TypeID', false);
+            getAllDepartments('PICDepartment', false);
+            $('select#PICDepartment').change(() => {
+                let selectedOpt = $('select#PICDepartment').val();
+                getUsersByDepartments('PICUser', false, selectedOpt);
+            });
+            getAllDepartments('CostCenter', false);
+            $('input[name="intVariantID"]').change(() => {
+                let selectedVal = $('input[name="intVariantID"]:checked').val();
+
+                if (selectedVal == 1) {
+                    $('div.renewal').hide();
+                } else if (selectedVal == 2) {
+                    $('div.renewal').show();
+                }
+            });
+            getAllIssuers('IssuerID', false);
+            getAllUsers('PICReminder', []);
         }
 
         $(document).ready(() => {
@@ -339,8 +409,8 @@
             $('#modal-form').on('hide.bs.modal', () => {
                 $('#TypeID').val(null).trigger('change');
                 $('input#File').val('');
+                $('#modal-form form')[0].reset();
                 $('input[name="_method"]').remove();
-                $('select#TypeID').val(null).trigger('change');
             });
             $("#PublishDate").datepicker({
                 todayHighlight: true,
@@ -349,6 +419,9 @@
             $("#ExpireDate").datepicker({
                 todayHighlight: true,
                 autoclose: true
+            });
+            $(document).on('select2:open', () => {
+                document.querySelector('.select2-search__field').focus();
             });
             $('#TypeID').select2({
                 allowClear: true,
@@ -371,6 +444,30 @@
                 placeholder: {
                     id: '-1',
                     text: 'Select PIC User'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('#IssuerID').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select Document Issuer'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('#CostCenter').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select Cost Center Department'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('#PICReminder').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select PIC Reminder'
                 },
                 dropdownParent: $('#modal-form')
             });

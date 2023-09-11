@@ -96,9 +96,6 @@ class DocMandatoryController extends Controller
                 ->make(true);
         } else {
             return view('smartlegal::pages.master.docmandatory', [
-                'types' => DocType::get(['intDocTypeID', 'txtTypeName']),
-                'users' => User::get(['id', 'txtName', 'txtInitial']),
-                'departments' => DepartmentModel::get(['intDepartment_ID', 'txtDepartmentName', 'txtInitial']),
                 'variants' => DocVariant::get(['intDocVariantID', 'txtVariantName']),
                 'issuers' => Issuer::get(['intIssuerID', 'txtIssuerName'])
             ]);
