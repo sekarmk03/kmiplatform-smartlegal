@@ -72,7 +72,7 @@ class MyTaskMandatoryController extends Controller
             return DataTables::of($transformedData)
                 ->addIndexColumn()
                 ->addColumn('action', function($row) {
-                    return '<div class="btn-group"><button onclick="preview('.$row["file_id"].')" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Open"><i class="fas fa-eye"></i></button> <button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-location-arrow"></i></button></div>';
+                    return '<div class="btn-group"><button onclick="preview('.$row["file_id"].')" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Open"><i class="fas fa-link"></i></button> <button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-location-arrow"></i></button></div>';
                 })
                 ->editColumn('created_at', function($row) {
                     return date('Y-m-d H:i', strtotime($row["created_at"]));

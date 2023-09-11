@@ -1,5 +1,5 @@
 @extends('smartlegal::layouts.default_layout')
-@section('title', 'Request | Mandatory')
+@section('title', 'Library | Mandatory')
 @push('css')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
@@ -10,24 +10,24 @@
     <!-- BEGIN breadcrumb -->
 	<ol class="breadcrumb float-xl-end">
 		<li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
-		<li class="breadcrumb-item active">Request Mandatory</li>
+		<li class="breadcrumb-item active">Library Mandatory</li>
 	</ol>
 	<!-- END breadcrumb -->
 	<!-- BEGIN page-header -->
-	<h1 class="page-header">Request Mandatory</h1>
+	<h1 class="page-header">Library Mandatory</h1>
 	<!-- END page-header -->
     <div class="row">
         <div class="col-12 ui-sortable">
             <div class="panel panel-inverse">
-                <div class="panel-body">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <button type="button" class="btn btn-primary">
-                                <i class="fas fa-plus"></i>
-                                Create New
-                            </button>
-                        </div>
+                <div class="panel-heading">
+                    <h4 class="panel-title">Library Table</h4>
+                    <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a type="button" onclick="refresh()" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i class="fa fa-redo"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
                     </div>
+                </div>
+                <div class="panel-body">
                     <div class="row">
                         <div class="col">
                             <div class="table-responsive">
@@ -76,6 +76,7 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center'},
                 {data: 'doc_number', name: 'doc_number', className: 'text-center'},
+                {data: 'status', name: 'status', className: 'text-center'},
                 {data: 'doc_name', name: 'doc_name', className: 'text-center'},
                 {data: 'publish_date', name: 'publish_date', className: 'text-center'},
                 {data: 'exp_date', name: 'exp_date', className: 'text-center'},
