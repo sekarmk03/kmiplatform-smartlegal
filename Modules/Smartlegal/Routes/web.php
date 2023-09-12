@@ -21,6 +21,7 @@ Route::name('smartlegal.')->group(function () {
 
     Route::prefix('master')->name('master.')->group(function () {
         Route::resource('docstatus', 'DocStatusController')->only(['index', 'store', 'edit', 'update', 'destroy']);
+        Route::get('docstatuses', 'DocStatusController@getAllStatuses')->name('docstatuses');
 
         Route::resource('doctype', 'DocTypeController')->only(['index', 'store', 'edit', 'update', 'destroy']);
         Route::get('doctypes', 'DocTypeController@getAllTypes')->name('doctypes');
@@ -42,7 +43,9 @@ Route::name('smartlegal.')->group(function () {
         Route::get('file/{id}/preview', 'FileController@preview')->name('file.preview');
         Route::get('file/{id}/download', 'FileController@download')->name('file.download');
         
-        Route::get('mandatory', 'DocMandatoryController@index')->name('mandatory.index');
+        Route::resource('mandatory', 'DocMandatoryController')->only(['index', 'store']);
+
+        
         Route::get('menu', 'MenuController@index')->name('menu.index');
     });
 

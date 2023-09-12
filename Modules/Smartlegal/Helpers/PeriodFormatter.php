@@ -1,6 +1,7 @@
 <?php 
 namespace Modules\Smartlegal\Helpers;
 
+use Carbon\Carbon;
 use DateTime;
 
 class PeriodFormatter {
@@ -14,6 +15,30 @@ class PeriodFormatter {
         } else if ($type == 'min') {
             $result = $dd->format('%a day(s) %h hour(s) %i minute(s)');
         }
+        return $result;
+    }
+
+    public static function dayCounter($start, $end) {
+        $date1 = Carbon::parse($start);
+        $date2 = Carbon::parse($end);
+
+        $diffInDays = $date1->diffInDays($date2);
+        return $diffInDays;
+    }
+
+    public static function readablePeriod($start, $end) {
+        $date1 = Carbon::parse($start);
+        $date2 = Carbon::parse($end);
+
+        $diff = $date1->diffForHumans($date2);
+        return $diff;
+    }
+
+    public static function countInputToDay($n, $unit) {
+        $result = 0;
+        if ($unit == 'tahun') $result = $n * 365;
+        else if ($unit == 'bulan') $result = $n * 31;
+        else if ($unit == 'minggu') $result = $n * 7;
         return $result;
     }
 }

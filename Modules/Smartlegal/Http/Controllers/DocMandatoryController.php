@@ -7,11 +7,17 @@ use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Modules\Smartlegal\Entities\DocApproval;
 use Modules\Smartlegal\Entities\DocType;
+use Modules\Smartlegal\Entities\Document;
 use Modules\Smartlegal\Entities\DocVariant;
+use Modules\Smartlegal\Entities\File;
 use Modules\Smartlegal\Entities\Issuer;
+use Modules\Smartlegal\Entities\Mandatory;
+use Modules\Smartlegal\Entities\PICReminder;
 use Modules\Smartlegal\Helpers\CurrencyFormatter;
 use Modules\Smartlegal\Helpers\PeriodFormatter;
 use Yajra\DataTables\DataTables;
@@ -123,8 +129,74 @@ class DocMandatoryController extends Controller
         $inputDocument = [];
         $inputMandatory = [];
         $inputPICReminder = [];
+        $inputLog = [];
 
+        if ($request->hasFile('txtFile')) {
+            $file = $request->file('txtFile');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move('upload/documents', $fileName);
+            $inputFile['txtFilename'] = $fileName;
+            $inputFile['txtPath'] = '/upload/documents/' . $fileName;
+        }
+
+        $inputDocument['txtRequestNumber'] = $request['txtRequestNumber'];
+        $inputDocument['txtDocNumber'] = $request['txtDocNumber'];
+        $inputDocument['txtDocName'] = $request['txtDocName'];
+        $inputDocument['intRequestedBy'] = Auth::user()->id;
+        $inputDocument['intRequestStatus'] = $request['intRequestStatus'] ?: 1;
+
+        $inputMandatory['intTypeID'] = $request['intTypeID'];
+        $inputMandatory['intPICDeptID'] = $request['intPICDeptID'];
+        $inputMandatory['intPICUserID'] = $request['intPICUserID'];
+        $inputMandatory['intVariantID'] = $request['intVariantID'];
+        $inputMandatory['dtmPublishDate'] = $request['dtmPublishDate'];
+        $inputMandatory['dtmExpireDate'] = $request['dtmExpireDate'] ?: null;
+        $inputMandatory['intExpirationPeriod'] = $inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : null;
+        $inputMandatory['intIssuerID'] = $request['intIssuerID'];
+        $inputMandatory['intReminderPeriod'] = $request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : null;
+        $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
+        $inputMandatory['intRenewalCost'] = $request['intRenewalCost'];
+        $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
+        $inputMandatory['txtNote'] = $request['txtNote'];
+        $inputMandatory['txtTerminationNote'] = $request['txtTerminationNote'];
+        $inputMandatory['intDeleted'] = 0;
+        $inputMandatory['intCreatedBy'] = Auth::user()->id;
+
+        $inputLog['intState'] = $request['intDocStatusID'];
+        $inputLog['intUserID'] = Auth::user()->id;
+        $inputLog['txtNote'] = $request['txtNote'];
+        $inputLog['txtLeadTime'] = null;
         
+        try {
+            DB::beginTransaction();
+            $createFile = File::create($inputFile);
+            $createDocument = Document::create($inputDocument);
+            $inputMandatory['intFileID'] = $createFile->intFileID;
+            $inputMandatory['intDocID'] = $createDocument->intDocID;
+            $createMandatory = Mandatory::create($inputMandatory);
+            $inputLog['intDocID'] = $createDocument->intDocID;
+            
+            foreach ($request['picReminders'] as $pr) {
+                $inputPICReminder['intUserID'] = $pr;
+                $inputPICReminder['intMandatoryID'] = $createMandatory->intMandatoryID;
+                $createPICReminder = PICReminder::create($inputPICReminder);
+            }
+
+            $createLog = DocApproval::create($inputLog);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'File Created Successfully'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**

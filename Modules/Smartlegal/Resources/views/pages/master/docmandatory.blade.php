@@ -94,7 +94,7 @@
     </div>
     <!-- #modal-dialog-form -->
     <div class="modal fade" id="modal-form">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
             <h4 class="modal-title">Modal Dialog</h4>
@@ -116,6 +116,10 @@
                         <input class="form-control" type="text" name="txtDocName" id="DocName" placeholder="Enter document name.." required/>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="StatusID">Status</label>
+                        <select class="select2 form-select" name="intDocStatusID" id="StatusID"></select>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label" for="TypeID">Type</label>
                         <select class="select2 form-select" name="intTypeID" id="TypeID" required></select>
                     </div>
@@ -123,10 +127,10 @@
                         <label class="form-label" for="PICUser">PIC Document</label>
                         <div class="input-group">
                             <div class="col-4">
-                                <select class="select2 form-select" name="intDepartment_ID" id="PICDepartment" required></select>
+                                <select class="select2 form-select" name="intPICDeptID" id="PICDepartment" required></select>
                             </div>
                             <div class="col">
-                                <select class="select2 form-select" name="intUserID" id="PICUser" required></select>
+                                <select class="select2 form-select" name="intPICUserID" id="PICUser" required></select>
                             </div>
                         </div>
                     </div>
@@ -146,7 +150,7 @@
                         <div class="input-group">
                             <input class="form-control" type="number" name="intExpirationPeriod" id="ExpirationPeriod" placeholder="Enter expiration period (day format).."/>
                             <div class="col-3">
-                                <select class="select2 form-select" name="intPeriodUnit" id="ExpPeriodUnit">
+                                <select class="select2 form-select" name="expPeriodUnit" id="ExpPeriodUnit">
                                     <option value="tahun">Tahun</option>
                                     <option value="bulan">Bulan</option>
                                     <option value="minggu">Minggu</option>
@@ -157,14 +161,14 @@
                     <div class="mb-3">
                         <label class="form-label" for="PublishDate">Publish Date</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." required/>
+                            <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." data-date-format="yyyy-mm-dd" required/>
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
                     <div class="mb-3 renewal">
                         <label class="form-label" for="ExpireDate">Expire Date</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" name="dtmExpireDate" id="ExpireDate" placeholder="Enter document expire date.."/>
+                            <input class="form-control" type="text" name="dtmExpireDate" id="ExpireDate" placeholder="Enter document expire date.." data-date-format="yyyy-mm-dd"/>
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
@@ -177,7 +181,7 @@
                         <div class="input-group">
                             <input class="form-control" type="number" name="intReminderPeriod" id="ReminderPeriod" placeholder="Enter reminder period (day format).."/>
                             <div class="col-3">
-                                <select class="select2 form-select" name="intPeriodUnit" id="RemPeriodUnit">
+                                <select class="select2 form-select" name="remPeriodUnit" id="RemPeriodUnit">
                                     <option value="tahun">Tahun</option>
                                     <option value="bulan">Bulan</option>
                                     <option value="minggu">Minggu</option>
@@ -187,7 +191,7 @@
                     </div>
                     <div class="mb-3 renewal">
                         <label class="form-label" for="PICReminder">PIC Reminder</label>
-                        <select class="selectpicker form-select" name="picreminders[]" id="PICReminder" multiple></select>
+                        <select class="selectpicker form-select" name="picReminders[]" id="PICReminder" multiple></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="LocationFilling">Location Filling</label>
@@ -212,7 +216,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="CostCenter" class="form-label">Cost Center</label>
-                        <select class="select2 form-select" name="intDepartment_ID" id="CostCenter" required>
+                        <select class="select2 form-select" name="intCostCenterID" id="CostCenter" required>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -354,6 +358,19 @@
             });
         }
 
+        const getAllDocStatuses = ( wrapperID, id = false ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.master.docstatuses') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.intDocStatusID}">${val.txtStatusName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
         const getAllDocTypes = ( wrapperID, id = false ) => {
             let wrapper = $('select#' + wrapperID);
             let option = '';
@@ -394,6 +411,7 @@
             $('.modal-header h4').html('Add Mandatory Document');
             $('#modal-form').modal('show');
             $("#FrameContainer").hide();
+            getAllDocStatuses('StatusID', false);
             getAllDocTypes('TypeID', false);
             getAllDepartments('PICDepartment', false);
             $('select#PICDepartment').change(() => {
@@ -430,6 +448,14 @@
             });
             $(document).on('select2:open', () => {
                 document.querySelector('.select2-search__field').focus();
+            });
+            $('select#StatusID').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select Document Status'
+                },
+                dropdownParent: $('#modal-form')
             });
             $('select#TypeID').select2({
                 allowClear: true,

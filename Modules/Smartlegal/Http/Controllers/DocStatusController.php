@@ -36,6 +36,14 @@ class DocStatusController extends Controller
         }
     }
 
+    public function getAllStatuses() {
+        $data = DocStatus::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable
