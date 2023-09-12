@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Modules\Smartlegal\Entities\DocType;
 use Modules\Smartlegal\Entities\DocVariant;
 use Modules\Smartlegal\Entities\Issuer;
@@ -118,7 +119,7 @@ class DocMandatoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

@@ -7,6 +7,7 @@
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet">
 @endpush
 @section('content')
     <!-- BEGIN breadcrumb -->
@@ -130,12 +131,12 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="VariantID">Variant</label>
+                        <label class="form-label" for="">Variant</label>
                         <div>
                             @foreach ($variants as $item)
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="intVariantID" id="VariantID_{{ $item->intDocVariantID }}" value="{{ $item->intDocVariantID }}">
-                                <label class="form-check-label" for="VariantID">{{ $item->txtVariantName }}</label>
+                                <label class="form-check-label" for="VariantID_{{ $item->intDocVariantID }}">{{ $item->txtVariantName }}</label>
                             </div>
                             @endforeach
                         </div>
@@ -156,7 +157,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="PublishDate">Publish Date</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." data-date-format="yyyy-mm-dd" required/>
+                            <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." required/>
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
@@ -186,7 +187,7 @@
                     </div>
                     <div class="mb-3 renewal">
                         <label class="form-label" for="PICReminder">PIC Reminder</label>
-                        <select class="select2 form-select" name="picreminders[]" id="PICReminder" multiple></select>
+                        <select class="selectpicker form-select" name="picreminders[]" id="PICReminder" multiple></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="LocationFilling">Location Filling</label>
@@ -240,6 +241,7 @@
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
     <script src="{{ asset('/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('/plugins/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('/plugins/select-picker/dist/picker.min.js') }}"></script>
     <script>
         let url = '';
         let method = '';
@@ -325,7 +327,15 @@
                     option += `<option value="${val.id}">${val.txtInitial} - ${val.txtName}</option>`;
                 });
                 wrapper.append(option);
-                wrapper.val(id).trigger('change');
+                wrapper.picker({
+                search: true,
+                searchAutofocus: true,
+                texts: {
+                    trigger: 'Select PIC Reminder',
+                    noResult : "No results",
+                    search : "Search"
+                }
+            });
             });
         }
 
@@ -406,24 +416,20 @@
 
         $(document).ready(() => {
             $('.notif-icon').find('span').text();
-            $('#modal-form').on('hide.bs.modal', () => {
+            $('#modal-form').on('hidden.bs.modal', () => {
                 $('#TypeID').val(null).trigger('change');
                 $('input#File').val('');
                 $('#modal-form form')[0].reset();
                 $('input[name="_method"]').remove();
             });
-            $("#PublishDate").datepicker({
-                todayHighlight: true,
-                autoclose: true
-            });
-            $("#ExpireDate").datepicker({
+            $("input#PublishDate, input#ExpireDate").datepicker({
                 todayHighlight: true,
                 autoclose: true
             });
             $(document).on('select2:open', () => {
                 document.querySelector('.select2-search__field').focus();
             });
-            $('#TypeID').select2({
+            $('select#TypeID').select2({
                 allowClear: true,
                 placeholder: {
                     id: '-1',
@@ -431,7 +437,7 @@
                 },
                 dropdownParent: $('#modal-form')
             });
-            $('#PICDepartment').select2({
+            $('select#PICDepartment').select2({
                 allowClear: true,
                 placeholder: {
                     id: '-1',
@@ -439,7 +445,7 @@
                 },
                 dropdownParent: $('#modal-form')
             });
-            $('#PICUser').select2({
+            $('select#PICUser').select2({
                 allowClear: true,
                 placeholder: {
                     id: '-1',
@@ -447,7 +453,7 @@
                 },
                 dropdownParent: $('#modal-form')
             });
-            $('#IssuerID').select2({
+            $('select#IssuerID').select2({
                 allowClear: true,
                 placeholder: {
                     id: '-1',
@@ -455,19 +461,11 @@
                 },
                 dropdownParent: $('#modal-form')
             });
-            $('#CostCenter').select2({
+            $('select#CostCenter').select2({
                 allowClear: true,
                 placeholder: {
                     id: '-1',
                     text: 'Select Cost Center Department'
-                },
-                dropdownParent: $('#modal-form')
-            });
-            $('#PICReminder').select2({
-                allowClear: true,
-                placeholder: {
-                    id: '-1',
-                    text: 'Select PIC Reminder'
                 },
                 dropdownParent: $('#modal-form')
             });
