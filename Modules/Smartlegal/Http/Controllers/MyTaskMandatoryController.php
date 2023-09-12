@@ -122,9 +122,9 @@ class MyTaskMandatoryController extends Controller
         ->leftJoin('kmi_smartlegal_2023.mfiles AS f', 'f.intFileID', 'm.intFileID')
         ->leftJoin('db_standardization.mdepartments AS e2', 'e2.intDepartment_ID', '=', 'm.intCostCenterID')
         ->select([
-            'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName',
+            'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName', 'd.dtmCreatedAt', 'd.dtmUpdatedAt',
             'ds.txtStatusName as txtDocStatus',
-            'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.intDeleted', 'm.dtmCreatedAt',
+            'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.intDeleted',
             'u.txtName AS txtReqByName', 'u.txtInitial AS txtReqByInitial',
             't.txtTypeName',
             'u2.txtName AS txtPICName', 'u2.txtInitial AS txtPICInitial',
@@ -148,6 +148,7 @@ class MyTaskMandatoryController extends Controller
         $mandatory = [
             'doc_id' => $data->intDocID,
             'created_at' => $data->dtmCreatedAt,
+            'updated_at' => $data->dtmUpdatedAt,
             'requested_by' => $data->txtReqByName,
             'request_number' => $data->txtRequestNumber,
             'doc_number' => $data->txtDocNumber,
@@ -237,17 +238,24 @@ class MyTaskMandatoryController extends Controller
      */
     public function approve(Request $request, $id)
     {
+        $prevLog = DocApproval::where('intDocID', $id)->orderBy('intApprovalID')->first();
+        $document = Document::where('intDocID', $id)->first();
+        if (!$prevLog) $prevLog = $document;
+
         $input = $request->only(['txtNote']);
         $input['intDocID'] = $id;
         $input['intUserID'] = Auth::user()->id;
-        $prevLog = DocApproval::where('intDocID', $id)->orderBy('intApprovalID')->first();
-        if (!$prevLog) $prevLog = Document::where('intDocID', $id)->first();
-        $prevTime = $prevLog->dtmUpdatedAt->format('Y-m-d H:i:s');
+        $input['intState'] = $request['noteType'];
+
+        $prevTime = $prevLog->dtmCreatedAt->format('Y-m-d H:i:s');
         $now = new DateTime();
         $now = $now->format('Y-m-d H:i:s');
         $input['txtLeadTime'] = PeriodFormatter::date($prevTime, $now, 'min');
-        $document = Document::where('intDocID', $id)->update(['intRequestStatus' => $request['noteType']]);
+
+        // $document = Document::where('intDocID', $id)->update(['intRequestStatus' => $request['noteType']]);
+        $document->update(['intRequestStatus' => $request['noteType']]);
         $log = DocApproval::create($input);
+
         if ($document && $log) {
             return response()->json([
                 'status' => 'success',

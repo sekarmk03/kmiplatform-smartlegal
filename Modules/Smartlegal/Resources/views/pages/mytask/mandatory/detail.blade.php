@@ -24,7 +24,8 @@
                     <div class="row px-3 pb-4">
                         <div class="text-center mb-1">
                             <h3>No. {{ $mandatory['request_number'] }}</h3>
-                            <p class="fw-bolder">Requested at {{ $mandatory['created_at'] }}</p>
+                            <p class="fst-italic mb-0">Diajukan pada {{ $mandatory['created_at'] }}</p>
+                            <p class="fst-italic mt-0">Terakhir diubah {{ $mandatory['updated_at'] }}</p>
                         </div>
                         <hr>
                         <table class="fs-5">
@@ -226,6 +227,7 @@
                     data: $('#formNote').serialize(),
                     dataType: "JSON",
                     success: (response) => {
+                        refresh();
                         notification(response.status, response.message,'bg-success');
                         conn.send(['success', 'issuer']);
                     },

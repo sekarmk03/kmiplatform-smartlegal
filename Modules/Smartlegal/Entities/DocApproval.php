@@ -15,7 +15,7 @@ class DocApproval extends Model
     const CREATED_AT = 'dtmCreatedAt';
     const UPDATED_AT = 'dtmUpdatedAt';
     protected $primaryKey = 'intApprovalID';
-    protected $fillable = ['intDocID', 'intUserID', 'txtNote', 'txtLeadTime'];
+    protected $fillable = ['intDocID', 'intState', 'intUserID', 'txtNote', 'txtLeadTime'];
 
     public static function rules()
     {

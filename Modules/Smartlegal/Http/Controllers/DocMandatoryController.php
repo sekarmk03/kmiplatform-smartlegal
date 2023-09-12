@@ -119,6 +119,11 @@ class DocMandatoryController extends Controller
      */
     public function store(Request $request)
     {
+        $inputFile = [];
+        $inputDocument = [];
+        $inputMandatory = [];
+        $inputPICReminder = [];
+
         
     }
 

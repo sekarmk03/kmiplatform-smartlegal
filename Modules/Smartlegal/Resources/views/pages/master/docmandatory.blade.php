@@ -412,6 +412,8 @@
             });
             getAllIssuers('IssuerID', false);
             getAllUsers('PICReminder', []);
+            url = "{{ route('smartlegal.master.mandatory.store') }}";
+            method = "POST";
         }
 
         $(document).ready(() => {
