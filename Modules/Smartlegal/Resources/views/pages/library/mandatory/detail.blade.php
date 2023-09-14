@@ -26,8 +26,7 @@
                     'Requested' => '',
                     'Revised' => '',
                     'Rejected' => '',
-                    'Approved' => '',
-                    'Active' => 'green',
+                    'Approved/Active' => 'green',
                     'Warning' => 'yellow',
                     'Expired' => 'red',
                     'Terminated' => 'black'

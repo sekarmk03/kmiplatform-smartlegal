@@ -38,7 +38,7 @@ class LibraryMandatoryController extends Controller
                     ->from('mdocuments')
                     ->groupBy(DB::raw('substring(txtDocNumber, 1, 11)'));
             })
-            ->whereIn('mdocuments.intRequestStatus', [5, 6, 7, 8])
+            ->whereIn('mdocuments.intRequestStatus', [3, 5, 6, 7])
             ->get();
     
             $transformedData = $data->map(function ($row) {

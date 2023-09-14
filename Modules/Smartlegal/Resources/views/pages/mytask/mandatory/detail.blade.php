@@ -118,15 +118,15 @@
                         @if ($mandatory['status'] == 'Requested' || $mandatory['status'] == 'Revised')
                         <div class="mt-4 px-5 mb-3">
                             <div class="btn-group w-100 fs-4">
-                                <button type="button" class="btn btn-primary" onclick="addNote({{ $mandatory['doc_id'] }}, 1)">
+                                <button type="button" class="btn btn-primary" onclick="addNote({{ $mandatory['doc_id'] }}, 2)">
                                     <i class="fas fa-pencil-alt"></i>
                                     Revise
                                 </button>
-                                <button type="button" class="btn btn-green" onclick="addNote({{ $mandatory['doc_id'] }}, 2)">
+                                <button type="button" class="btn btn-green" onclick="addNote({{ $mandatory['doc_id'] }}, 3)">
                                     <i class="fas fa-check"></i>
                                     Approve
                                 </button>
-                                <button type="button" class="btn btn-danger" onclick="addNote({{ $mandatory['doc_id'] }}, 3)">
+                                <button type="button" class="btn btn-danger" onclick="addNote({{ $mandatory['doc_id'] }}, 4)">
                                     <i class="fas fa-reply"></i>
                                     Reject
                                 </button>
@@ -204,12 +204,12 @@
         const addNote = ( id, action ) => {
             $('#formNote').show();
             const actionList = {
-                1: 'revise',
-                2: 'approve',
-                3: 'reject'
+                2: 'revise',
+                3: 'approve',
+                4: 'reject'
             };
             if (action != 0 && action in actionList) {
-                $('#noteType').val(action + 1);
+                $('#noteType').val(action);
                 $('textarea#Note').attr('placeholder', `Masukkan catatan ${actionList[action]}`);
                 url = "{{ route('smartlegal.mytask.mandatory.approve', ':id') }}";
                 url = url.replace(':id', id);

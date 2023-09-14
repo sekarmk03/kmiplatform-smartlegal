@@ -143,6 +143,12 @@ class MyTaskMandatoryController extends Controller
             $period = '-';
         }
 
+        if ($data->intReminderPeriod) {
+            $remPeriod = PeriodFormatter::convertDaysToReadable($data->intReminderPeriod);
+        } else {
+            $remPeriod = '-';
+        }
+
         $renewalCost = CurrencyFormatter::formatIDR($data->intRenewalCost);
 
         $mandatory = [
@@ -161,7 +167,7 @@ class MyTaskMandatoryController extends Controller
             'publish_date' => $data->dtmPublishDate,
             'exp_date' => $data->dtmExpireDate ?: '-',
             'issuer' => $data->txtIssuerName,
-            'rem_period' => $data->intReminderPeriod ?: '-',
+            'rem_period' => $remPeriod,
             'location' => $data->txtLocationFilling,
             'renewal_cost' => $renewalCost,
             'cost_center' => $data->txtCostCenterInitial,
