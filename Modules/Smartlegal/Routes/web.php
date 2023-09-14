@@ -59,7 +59,7 @@ Route::name('smartlegal.')->group(function () {
         Route::get('mandatories', 'RequestMandatoryController@index')->name('request.mandatory.index');
     });
 
-    Route::prefix('library')->group(function () {
-        Route::get('mandatories', 'LibraryMandatoryController@index')->name('library.mandatory.index');
+    Route::prefix('library')->name('library.')->group(function () {
+        Route::resource('mandatory', 'LibraryMandatoryController')->only('index', 'show');
     });
 });

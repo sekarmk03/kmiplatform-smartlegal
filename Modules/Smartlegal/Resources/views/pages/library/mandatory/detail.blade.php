@@ -1,5 +1,5 @@
 @extends('smartlegal::layouts.default_layout')
-@section('title', 'Detail Request')
+@section('title', 'Library Detail')
 @push('css')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
@@ -10,154 +10,144 @@
     <!-- BEGIN breadcrumb -->
 	<ol class="breadcrumb float-xl-end">
 		<li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">My Task</a></li>
+		<li class="breadcrumb-item"><a href="javascript:;">Library</a></li>
 		<li class="breadcrumb-item active">Detail</li>
 	</ol>
 	<!-- END breadcrumb -->
 	<!-- BEGIN page-header -->
-	<h1 class="page-header">Detail Request</h1>
+	<h1 class="page-header">Library Detail</h1>
 	<!-- END page-header -->
-    <div class="row">
-        <div class="col ui-sortable me-1">
-            <div class="panel panel-inverse">
-                <div class="panel-body">
-                    <div class="row px-3 pb-4">
-                        <div class="text-center mb-1">
-                            <h3>No. {{ $mandatory['request_number'] }}</h3>
-                            <p class="fw-bolder">Requested at {{ $mandatory['created_at'] }}</p>
-                        </div>
-                        <hr>
-                        <table class="fs-5">
+    <div class="row mt-4 pe-3">
+        <div class="col">
+            <h3>No. {{ substr($mandatory['doc_number'], 0, 11) }}</h3>
+            <p class="fst-italic my-0">Terakhir diperbarui {{ $mandatory['updated_at'] }}</p>
+            <?php 
+                $color = [
+                    'Requested' => '',
+                    'Revised' => '',
+                    'Rejected' => '',
+                    'Approved' => '',
+                    'Active' => 'green',
+                    'Warning' => 'yellow',
+                    'Expired' => 'red',
+                    'Terminated' => 'black'
+                ];
+            ?>
+            <p class="mt-0 fw-bolder"><span><i class="fas fa-circle" style="color: {{ $color[$mandatory['status']] }}"></i></span>&nbsp;{{ $mandatory['status'] }}</p>
+        </div>
+        <div class="card mx-2 me-5 fs-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <table>
                             <tr>
                                 <td>No. Request</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['request_number'] }}</td>
                             </tr>
                             <tr>
                                 <td>No. Perizinan</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['doc_number'] }}</td>
                             </tr>
                             <tr>
-                                <td>Nama Dokumen</td>
-                                <td>:</td>
+                                <td>Nama Perizinan</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['doc_name'] }}</td>
                             </tr>
                             <tr>
-                                <td>Status</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['status'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Tipe Perizinan</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['type'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>PIC Dokumen</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['pic'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Jenis Dokumen</td>
-                                <td>:</td>
+                                <td>Jenis Perizinan</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['variant'] }}</td>
                             </tr>
                             <tr>
-                                <td>Masa Berlaku</td>
-                                <td>:</td>
+                                <td>Nama PIC</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
+                                <td>{{ $mandatory['pic'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>Tipe Dokumen</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
+                                <td>{{ $mandatory['type'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>Instansi Penerbit</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
+                                <td>{{ $mandatory['issuer'] }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <table>
+                            <tr>
+                                <td>Periode Berlaku</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['exp_period'] }}</td>
                             </tr>
                             <tr>
-                                <td>Tanggal Awal</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['publish_date'] }}</td>
+                                <td>Tanggal berlaku</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
+                                <td>{{ $mandatory['date'] }}</td>
                             </tr>
                             <tr>
-                                <td>Tanggal Akhir</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['exp_date'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Penerbit Dokumen</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['issuer'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Periode Reminder</td>
-                                <td>:</td>
+                                <td>Reminder pembaruan</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['rem_period'] }}</td>
                             </tr>
                             <tr>
-                                <td>Location Filling Hardcopy</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['location'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Biaya Renewal</td>
-                                <td>:</td>
+                                <td>Biaya pembaruan</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['renewal_cost'] }}</td>
                             </tr>
                             <tr>
+                                <td>PIC Reminder</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
+                                <td><?php 
+                                for ($i=0; $i < count($mandatory['picReminder']); $i++) { 
+                                    echo $mandatory['picReminder'][$i];
+                                    if ($i != count($mandatory['picReminder']) - 1) echo ' | ';
+                                }
+                                ?></td>
+                            </tr>
+                            <tr>
+                                <td>Location filling hardcopy</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
+                                <td>{{ $mandatory['location'] }}</td>
+                            </tr>
+                            <tr>
                                 <td>Cost Center</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['cost_center'] }}</td>
                             </tr>
-                            <tr>
-                                <td>Catatan</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['note'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Catatan Termination</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['termination_note'] }}</td>
-                            </tr>
                         </table>
-                        @if ($mandatory['status'] == 'Requested' || $mandatory['status'] == 'Revised')
-                        <div class="mt-4 px-5 mb-3">
-                            <div class="btn-group w-100 fs-4">
-                                <button type="button" class="btn btn-primary" onclick="addNote({{ $mandatory['doc_id'] }}, 1)">
-                                    <i class="fas fa-pencil-alt"></i>
-                                    Revise
-                                </button>
-                                <button type="button" class="btn btn-green" onclick="addNote({{ $mandatory['doc_id'] }}, 2)">
-                                    <i class="fas fa-check"></i>
-                                    Approve
-                                </button>
-                                <button type="button" class="btn btn-danger" onclick="addNote({{ $mandatory['doc_id'] }}, 3)">
-                                    <i class="fas fa-reply"></i>
-                                    Reject
-                                </button>
-                            </div>
-                            <div class="text-center">
-                                <button type="button" class="btn btn-primary" onclick="edit({{ $mandatory['doc_id'] }})">
-                                    <i class="fas fa-pencil-alt"></i>
-                                    Edit Request
-                                </button>
-                            </div>
-                        </div>
-                        @endif
-                        <div>
-                            <form action="" method="" id="formNote">
-                                @csrf
-                                <div class="mb-2">
-                                    <label class="form-label" for="Note">Catatan</label>
-                                    <input type="text" hidden id="noteType" name="noteType">
-                                    <textarea name="txtNote" id="Note" cols="30" rows="5" class="form-control" placeholder="Masukkan catatan"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col ui-sortable">
-            <div class="panel panel-inverse">
-                <div class="panel-body">
-                    <div class="row embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive embed-responsive-16by9" src="{{ asset($mandatory['file_path']) }}" frameborder="0" width="100%" height="600px"></iframe>
+    </div>
+    <div class="row mt-2 pe-3">
+        <div class="card mx-2 me-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table id="daTable" class="table table-striped table-bordered align-middle">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">No.</th>
+                                    <th class="text-center">Kode Perizinan</th>
+                                    <th class="text-center">Tanggal</th>
+                                    <th class="text-center">Nama Perizinan</th>
+                                    <th class="text-center">Penerbit</th>
+                                    <th class="text-center">Nama File</th>
+                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Attachment</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -172,5 +162,30 @@
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }); 
+        var daTable = $('#daTable').DataTable({
+            processing: true,
+            serverSide: true,
+            autoWidth: true,
+            responsive: true,
+            ajax: "{{ route('smartlegal.library.mandatory.show', $mandatory['doc_id']) }}",
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center'},
+                {data: 'doc_number', name: 'doc_number', className: 'text-center'},
+                {data: 'date', name: 'date', className: 'text-center'},
+                {data: 'doc_name', name: 'doc_name', className: 'text-center'},
+                {data: 'issuer_name', name: 'issuer_name', className: 'text-center'},
+                {data: 'file_name', name: 'file_name', className: 'text-center'},
+                {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
+                {data: 'attachment', name: 'attachment', orderable: false, searchable: false, className: 'text-center'},
+            ]
+        });
+        function refresh(){
+            daTable.ajax.reload(null, false);
+        }
     </script>
 @endpush

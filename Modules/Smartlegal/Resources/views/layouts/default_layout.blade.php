@@ -30,7 +30,7 @@
 	
 	<div id="app" class="app app-sidebar-fixed {{ $appClass }}">
 		
-		@includeWhen(!$appHeaderHide, 'includes.header')
+		@includeWhen(!$appHeaderHide, 'smartlegal::includes.header')
 		
 		@includeWhen($appTopMenu, 'includes.top-menu')
 		

@@ -252,19 +252,21 @@ class MyTaskMandatoryController extends Controller
         $now = $now->format('Y-m-d H:i:s');
         $input['txtLeadTime'] = PeriodFormatter::date($prevTime, $now, 'min');
 
-        // $document = Document::where('intDocID', $id)->update(['intRequestStatus' => $request['noteType']]);
-        $document->update(['intRequestStatus' => $request['noteType']]);
-        $log = DocApproval::create($input);
+        try {
+            DB::beginTransaction();
+            $document->update(['intRequestStatus' => $request['noteType']]);
+            $log = DocApproval::create($input);
+            DB::commit();
 
-        if ($document && $log) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Document updated successfully',
             ], 200);
-        } else {
+        } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
-                'message' => 'Document failed to update',
+                'message' => $th->getMessage(),
             ], 500);
         }
     }
