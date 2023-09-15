@@ -51,13 +51,14 @@
                                         <th class="text-center">DOCUMENT NAME</th>
                                         <th class="text-center">STATUS</th>
                                         <th class="text-center">TYPE</th>
-                                        <th class="text-center">PIC</th>
+                                        <th class="text-center">PIC DOCUMENT</th>
                                         <th class="text-center">VARIANT</th>
                                         <th class="text-center">EXP PERIOD</th>
                                         <th class="text-center">PUBLISH DATE</th>
-                                        <th class="text-center">EXPIRE DATE</th>
+                                        <th class="text-center">EXPIRED DATE</th>
                                         <th class="text-center">ISSUER</th>
                                         <th class="text-center">REMINDER PERIOD</th>
+                                        <th class="text-center">PIC REMINDER</th>
                                         <th class="text-center">LOCATION FILLING</th>
                                         <th class="text-center">RENEWAL COST</th>
                                         <th class="text-center">COST CENTER</th>
@@ -271,35 +272,26 @@
                 {data: 'doc_name', name: 'doc_name', className: 'text-center'},
                 {data: 'status', name: 'status', className: 'text-center'},
                 {data: 'type', name: 'type', className: 'text-center'},
-                {data: 'pic', name: 'pic', className: 'text-center'},
+                {data: 'pic', name: 'pic', className: 'text-center', width: '10%'},
                 {data: 'variant', name: 'variant', className: 'text-center'},
                 {data: 'exp_period', name: 'exp_period', className: 'text-center'},
                 {data: 'publish_date', name: 'publish_date', className: 'text-center'},
                 {data: 'exp_date', name: 'exp_date', className: 'text-center'},
                 {data: 'issuer', name: 'issuer', className: 'text-center'},
                 {data: 'rem_period', name: 'rem_period', className: 'text-center'},
+                {data: 'pic_reminder', name: 'pic_reminder', className: 'text-center'},
                 {data: 'location', name: 'location', className: 'text-center'},
                 {data: 'renewal_cost', name: 'renewal_cost', className: 'text-center'},
                 {data: 'cost_center', name: 'cost_center', className: 'text-center'},
                 {
                     data: 'note',
                     name: 'note',
-                    render: (data, type, row) => {
-                        if (type === 'display') {
-                            return '<div style="word-wrap: break-word; max-width: 700px;">' + data + '</div>';
-                        }
-                        return data;
-                    }
+                    width: '30%'
                 },
                 {
                     data: 'termination_note',
                     name: 'termination_note',
-                    render: (data, type, row) => {
-                        if (type === 'display') {
-                            return '<div style="word-wrap: break-word; max-width: 700px;">' + data + '</div>';
-                        }
-                        return data;
-                    }
+                    width: '30%'
                 },
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]

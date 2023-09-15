@@ -1,5 +1,5 @@
 @extends('smartlegal::layouts.default_layout')
-@section('title', 'Permissions')
+@section('title', 'Roles')
 @push('css')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
@@ -11,11 +11,11 @@
     <!-- BEGIN breadcrumb -->
 	<ol class="breadcrumb float-xl-end">
 		<li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
-		<li class="breadcrumb-item active">Permissions</li>
+		<li class="breadcrumb-item active">Roles</li>
 	</ol>
 	<!-- END breadcrumb -->
 	<!-- BEGIN page-header -->
-	<h1 class="page-header">Permissions</h1>
+	<h1 class="page-header">Roles</h1>
 	<!-- END page-header -->
     <div class="row">
         <div class="col-12 ui-sortable">
@@ -134,12 +134,7 @@
                 {
                     data: 'desc',
                     name: 'desc',
-                    render: (data, type, row) => {
-                        if (type === 'display') {
-                            return '<div style="word-wrap: break-word; max-width: 700px;">' + data + '</div>';
-                        }
-                        return data;
-                    },
+                    width: '40%'
                 },
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]

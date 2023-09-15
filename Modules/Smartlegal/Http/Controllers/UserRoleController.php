@@ -29,7 +29,7 @@ class UserRoleController extends Controller
             ->select([
                 'ur.intUserRoleID', 'ur.intUserID', 'ur.intRoleID', 'ur.txtCreatedBy', 'ur.dtmCreatedAt',
                 'u.txtName', 'u.txtInitial',
-                'd.txtDepartmentName',
+                'd.txtDepartmentName', 'd.txtInitial AS txtDeptInitial',
                 'r.txtRoleName', 'r.txtDesc'
             ])
             ->get();
@@ -38,9 +38,8 @@ class UserRoleController extends Controller
                 return [
                     'userrole_id' => $row->intUserRoleID,
                     'created_at' => $row->dtmCreatedAt,
-                    'name' => $row->txtName,
-                    'initial' => $row->txtInitial,
-                    'department' => $row->txtDepartmentName,
+                    'name' => $row->txtName . ' (' . $row->txtInitial . ')',
+                    'department' => $row->txtDeptInitial,
                     'role_name' => $row->txtRoleName,
                     'role_desc' => $row->txtDesc,
                     'created_by' => $row->txtCreatedBy,

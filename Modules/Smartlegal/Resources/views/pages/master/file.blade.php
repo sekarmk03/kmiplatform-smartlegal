@@ -129,7 +129,7 @@
             ajax: "{{ route('smartlegal.master.file.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center'},
-                {data: 'dtmCreatedAt', name: 'dtmCreatedAt', className: 'text-center'},
+                {data: 'dtmCreatedAt', name: 'dtmCreatedAt', className: 'text-center', width: '12%'},
                 {data: 'txtFilename', name: 'txtFilename', className: 'text-center'},
                 {data: 'txtPath', name: 'txtPath', className: 'text-center'},
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},

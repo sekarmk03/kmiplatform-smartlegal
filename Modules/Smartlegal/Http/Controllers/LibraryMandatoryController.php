@@ -212,7 +212,7 @@ class LibraryMandatoryController extends Controller
                 'file_id' => $data->intFileID,
                 'file_path' => $data->txtPath,
                 'file_name' => $data->txtFilename,
-                'picReminder' => $picReminder
+                'pic_reminder' => count($picReminder) > 0 ? implode(", ", $picReminder) : '-'
             ];
     
             return view('smartlegal::pages.library.mandatory.detail', [

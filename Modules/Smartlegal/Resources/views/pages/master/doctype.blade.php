@@ -115,12 +115,7 @@
                 {
                     data: 'txtDesc',
                     name: 'txtDesc',
-                    render: (data, type, row) => {
-                        if (type === 'display') {
-                            return '<div style="word-wrap: break-word; max-width: 700px;">' + data + '</div>';
-                        }
-                        return data;
-                    }
+                    width: '60%'
                 },
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]

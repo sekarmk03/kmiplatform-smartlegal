@@ -45,7 +45,7 @@ class DocMandatoryController extends Controller
             ->select([
                 'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName',
                 'ds.txtStatusName as txtDocStatus',
-                'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.intDeleted', 'm.dtmCreatedAt',
+                'm.intMandatoryID', 'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.intDeleted', 'm.dtmCreatedAt',
                 'u.txtName AS txtReqByName', 'u.txtInitial AS txtReqByInitial',
                 't.txtTypeName',
                 'u2.txtName AS txtPICName', 'u2.txtInitial AS txtPICInitial',
@@ -58,10 +58,27 @@ class DocMandatoryController extends Controller
             ->get();
     
             $transformedData = $data->map(function ($row) {
+                $picData = DB::table('kmi_smartlegal_2023.mpicreminders AS p')
+                ->leftJoin('db_standardization.musers AS u', 'p.intUserID', '=', 'u.id')
+                ->select('u.txtInitial')
+                ->where('p.intMandatoryID', '=', $row->intMandatoryID)
+                ->get();
+
+                $picReminder = [];
+                foreach ($picData as $pic) {
+                    array_push($picReminder, $pic->txtInitial);
+                }
+
                 if ($row->dtmExpireDate) {
                     $period = PeriodFormatter::date($row->dtmPublishDate, $row->dtmExpireDate, 'day');
                 } else {
                     $period = '-';
+                }
+
+                if ($row->intReminderPeriod) {
+                    $remPeriod = PeriodFormatter::convertDaysToReadable($row->intReminderPeriod);
+                } else {
+                    $remPeriod = '-';
                 }
 
                 $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost);
@@ -70,19 +87,20 @@ class DocMandatoryController extends Controller
                     'doc_id' => $row->intDocID,
                     'file_id' => $row->intFileID,
                     'created_at' => $row->dtmCreatedAt,
-                    'requested_by' => $row->txtReqByName,
+                    'requested_by' => $row->txtReqByInitial,
                     'request_number' => $row->txtRequestNumber,
                     'doc_number' => $row->txtDocNumber,
                     'doc_name' => $row->txtDocName,
                     'status' => $row->txtDocStatus,
                     'type' => $row->txtTypeName,
-                    'pic' => $row->txtPICDeptInitial . ' - ' . $row->txtPICName,
+                    'pic' => $row->txtPICDeptInitial . ' - ' . $row->txtPICInitial,
                     'variant' => $row->txtVariantName,
                     'exp_period' => $period ?: '-',
                     'publish_date' => $row->dtmPublishDate,
                     'exp_date' => $row->dtmExpireDate ?: '-',
                     'issuer' => $row->txtIssuerName,
-                    'rem_period' => $row->intReminderPeriod ?: '-',
+                    'rem_period' => $remPeriod,
+                    'pic_reminder' => count($picReminder) > 0 ? implode(", ", $picReminder) : '-',
                     'location' => $row->txtLocationFilling,
                     'renewal_cost' => $renewalCost,
                     'cost_center' => $row->txtCostCenterInitial,

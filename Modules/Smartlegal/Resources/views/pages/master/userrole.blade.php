@@ -44,7 +44,6 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">CREATED AT</th>
                                         <th class="text-center">NAME</th>
-                                        <th class="text-center">INITIAL</th>
                                         <th class="text-center">DEPARTMENT</th>
                                         <th class="text-center">ROLE</th>
                                         <th class="text-center">DESCRIPTION</th>
@@ -127,12 +126,11 @@
             ajax: "{{ route('smartlegal.master.userrole.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center'},
-                {data: 'created_at', name: 'created_at', className: 'text-center'},
+                {data: 'created_at', name: 'created_at', className: 'text-center', width: '12%'},
                 {data: 'name', name: 'name', className: 'text-center'},
-                {data: 'initial', name: 'initial', className: 'text-center'},
                 {data: 'department', name: 'department', className: 'text-center'},
                 {data: 'role_name', name: 'role_name', className: 'text-center'},
-                {data: 'role_desc', name: 'role_desc'},
+                {data: 'role_desc', name: 'role_desc', width: '20%'},
                 {data: 'created_by', name: 'created_by', className: 'text-center'},
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]

@@ -101,12 +101,7 @@
                             <tr>
                                 <td>PIC Reminder</td>
                                 <td>&nbsp;&nbsp;:&nbsp;</td>
-                                <td><?php 
-                                for ($i=0; $i < count($mandatory['picReminder']); $i++) { 
-                                    echo $mandatory['picReminder'][$i];
-                                    if ($i != count($mandatory['picReminder']) - 1) echo ' | ';
-                                }
-                                ?></td>
+                                <td>{{ $mandatory['pic_reminder'] }}</td>
                             </tr>
                             <tr>
                                 <td>Location filling hardcopy</td>
