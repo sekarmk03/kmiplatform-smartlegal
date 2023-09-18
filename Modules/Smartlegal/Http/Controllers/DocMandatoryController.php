@@ -45,7 +45,7 @@ class DocMandatoryController extends Controller
             ->select([
                 'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName',
                 'ds.txtStatusName as txtDocStatus',
-                'm.intMandatoryID', 'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.intDeleted', 'm.dtmCreatedAt',
+                'm.intMandatoryID', 'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.dtmCreatedAt',
                 'u.txtName AS txtReqByName', 'u.txtInitial AS txtReqByInitial',
                 't.txtTypeName',
                 'u2.txtName AS txtPICName', 'u2.txtInitial AS txtPICInitial',
@@ -55,7 +55,6 @@ class DocMandatoryController extends Controller
                 'f.intFileID', 'f.txtFilename', 'f.txtPath',
                 'e2.txtDepartmentName AS txtCostCenterName', 'e2.txtInitial AS txtCostCenterInitial'
             ])
-            ->where('m.intDeleted', 0)
             ->get();
     
             $transformedData = $data->map(function ($row) {
@@ -177,7 +176,6 @@ class DocMandatoryController extends Controller
         $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
         $inputMandatory['txtNote'] = $request['txtNote'];
         $inputMandatory['txtTerminationNote'] = $request['txtTerminationNote'];
-        $inputMandatory['intDeleted'] = 0;
         $inputMandatory['intCreatedBy'] = Auth::user()->id;
 
         $inputLog['intState'] = $request['intDocStatusID'];
@@ -328,7 +326,6 @@ class DocMandatoryController extends Controller
         $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
         $inputMandatory['txtNote'] = $request['txtNote'];
         $inputMandatory['txtTerminationNote'] = $request['txtTerminationNote'];
-        $inputMandatory['intDeleted'] = 0;
         $inputMandatory['intCreatedBy'] = Auth::user()->id;
         $inputMandatory['intFileID'] = $mandatory->intFileID;
         $inputMandatory['intDocID'] = $document->intDocID;

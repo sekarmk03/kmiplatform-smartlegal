@@ -150,7 +150,7 @@ class LibraryMandatoryController extends Controller
             ->select([
                 'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName', 'd.dtmCreatedAt', 'd.dtmUpdatedAt',
                 'ds.txtStatusName as txtDocStatus',
-                'm.intMandatoryID', 'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.intDeleted',
+                'm.intMandatoryID', 'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote',
                 'u.txtName AS txtReqByName', 'u.txtInitial AS txtReqByInitial',
                 't.txtTypeName',
                 'u2.txtName AS txtPICName', 'u2.txtInitial AS txtPICInitial',
