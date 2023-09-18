@@ -222,7 +222,7 @@
                         success: (response) => {
                             refresh();
                             notification(response.status, response.message,'bg-success');
-                            conn.send(['success', 'issuer']);
+                            conn.send(['success', 'file']);
                         }
                     });
                 }

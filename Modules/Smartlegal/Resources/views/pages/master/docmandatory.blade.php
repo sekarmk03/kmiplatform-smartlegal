@@ -234,6 +234,7 @@
     <script src="{{ asset('/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('/plugins/select2/dist/js/select2.min.js') }}"></script>
     <script src="{{ asset('/plugins/select-picker/dist/picker.min.js') }}"></script>
+    <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script>
         let url = '';
         let method = '';
@@ -456,7 +457,51 @@
         }
 
         const destroy = ( id ) => {
+            let deleteUrl = "{{ route('smartlegal.master.mandatory.destroy', ':id') }}";
+            deleteUrl = deleteUrl.replace(':id', id);
+            swal({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this data!',
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: 'Cancel',
+                        value: null,
+                        visible: true,
+                        className: 'btn btn-default',
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: 'Delete',
+                        value: true,
+                        visible: true,
+                        className: 'btn btn-danger',
+                        closeModal: true
+                    }
+                }
+            }).then((isConfirm) => {
+                if (isConfirm) {
+                    $.ajax({
+                        url: deleteUrl,
+                        method: "DELETE",
+                        dataType: "JSON",
+                        success: (response) => {
+                            refresh();
+                            notification(response.status, response.message,'bg-success');
+                            conn.send(['success', 'mandatory']);
+                        }
+                    });
+                }
+            });
+        }
 
+        const notification = (status, message, bgclass) => {
+            $.gritter.add({
+                title: status,
+                text: `<p class="text-light">${message}</p>`,
+                class_name: bgclass
+            });
+            return false;
         }
 
         $(document).ready(() => {
@@ -536,7 +581,7 @@
                         $('#modal-form').modal('hide');
                         refresh();
                         notification(response.status, response.message,'bg-success');
-                        conn.send(['success', 'file']);
+                        conn.send(['success', 'mandatory']);
                     },
                     error: (response) => {
                         let fields = response.responseJSON.fields;

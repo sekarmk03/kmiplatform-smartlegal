@@ -285,7 +285,7 @@ class DocMandatoryController extends Controller
         $document = Document::where('intDocID', $id)->first();
         $mandatory = Mandatory::where('intDocID', $id)->first();
         $file = File::where('intFileID', $mandatory->intFileID)->first();
-        $picReminder = PICReminder::where('intMandatoryID', $mandatory->intMandatoryID)->get();
+        $picReminders = PICReminder::where('intMandatoryID', $mandatory->intMandatoryID)->get();
 
         // construct request
         $inputFile = [];
@@ -342,8 +342,8 @@ class DocMandatoryController extends Controller
             $document->update($inputDocument);
             $mandatory->update($inputMandatory);
             
-            if ($request['intVariantID'] == 2 || $picReminder) {
-                foreach ($picReminder as $pic) {
+            if ($request['intVariantID'] == 2 || $picReminders) {
+                foreach ($picReminders as $pic) {
                     $pic->delete();
                 }
                 foreach ($request['picReminders'] as $pr) {
@@ -365,8 +365,7 @@ class DocMandatoryController extends Controller
             DB::rollBack();
             return response()->json([
                 'status' => 'error',
-                'message' => $th->getMessage(),
-                'data' => $inputMandatory
+                'message' => $th->getMessage()
             ], 500);
         }
     }
@@ -378,6 +377,41 @@ class DocMandatoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $document = Document::where('intDocID', $id)->first();
+        $mandatory = Mandatory::where('intDocID', $id)->first();
+        $file = File::where('intFileID', $mandatory->intFileID)->first();
+        $picReminders = PICReminder::where('intMandatoryID', $mandatory->intMandatoryID)->get();
+        $logs = DocApproval::where('intDocID', $id)->get();
+        try {
+            DB::beginTransaction();
+            if ($file) {
+                if($file->txtFilename != 'default.pdf') {
+                    $destroy = public_path($file->txtPath);
+                    unlink($destroy);
+                }
+            }
+            foreach ($logs as $log) {
+                $log->delete();
+            }
+            foreach ($picReminders as $pic) {
+                $pic->delete();
+            }
+            $mandatory->delete();
+            $file->delete();
+            $document->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document Deleted Successfully'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 }
