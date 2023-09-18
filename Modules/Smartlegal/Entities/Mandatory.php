@@ -17,7 +17,7 @@ class Mandatory extends Model
     const UPDATED_AT = 'dtmUpdatedAt';
     const DELETED_AT = 'dtmDeletedAt';
     protected $primaryKey = 'intMandatoryID';
-    protected $fillable = ['intDocID', 'intTypeID', 'intPICDeptID', 'intPICUserID', 'intVariantID', 'intExpirationPeriod', 'dtmPublishDate', 'dtmExpireDate', 'intIssuerID', 'intReminderPeriod', 'txtLocationFilling', 'intFileID', 'intRenewalCost', 'intCostCenterID', 'txtNote', 'txtTerminationNote', 'intDeleted', 'intCreatedBy'];
+    protected $fillable = ['intDocID', 'intTypeID', 'intPICDeptID', 'intPICUserID', 'intVariantID', 'dtmPublishDate', 'dtmExpireDate', 'intIssuerID', 'intReminderPeriod', 'txtLocationFilling', 'intFileID', 'intRenewalCost', 'intCostCenterID', 'txtNote', 'txtTerminationNote', 'intDeleted', 'intCreatedBy'];
 
     public static function rules()
     {
@@ -26,7 +26,6 @@ class Mandatory extends Model
             'intPICDeptID' => 'required|numeric',
             'intPICUserID' => 'required|numeric',
             'intVariantID' => 'required|numeric',
-            'intExpirationPeriod' => 'nullable|numeric',
             'dtmPublishDate' => 'required',
             'dtmExpireDate' => 'nullable',
             'intIssuerID' => 'required|numeric',
@@ -46,7 +45,6 @@ class Mandatory extends Model
             'intPICDeptID' => 'PIC Department',
             'intPICUserID' => 'PIC Name',
             'intVariantID' => 'Document Variant',
-            'intExpirationPeriod' => 'Expiration Period',
             'dtmPublishDate' => 'Publish Date',
             'dtmExpireDate' => 'Expire Date',
             'intIssuerID' => 'Document Issuer',

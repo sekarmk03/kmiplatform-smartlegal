@@ -60,9 +60,27 @@ class PeriodFormatter {
         return "$days day" . ($days > 1 ? 's' : '');
     }
 
-    // public static function countDayToUnit($n) {
-    //     if ($n <= 31) $unit = ''
-    // }
+    public static function countDayToUnit($days) {
+        $result = [];
+        $number = 0;
+        $unit = '';
+        if ($days >= 365) {
+            $number = floor($days / 365);
+            $unit = 'tahun';
+        } elseif ($days >= 30) {
+            $number = floor($days / 30);
+            $unit = 'bulan';
+        } elseif ($days >= 7) {
+            $number = floor($days / 7);
+            $unit = 'minggu';
+        } else {
+            $number = $days;
+            $unit = 'hari';
+        }
+        $result['number'] = $number;
+        $result['unit'] = $unit;
+        return $result;
+    }
 }
 
 ?>

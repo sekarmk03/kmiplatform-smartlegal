@@ -114,11 +114,16 @@ class FileController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $oldFile = File::find($id);
         $input = [
             'txtFilename' => '',
             'txtPath' => ''
         ];
         if ($request->hasFile('txtFile')) {
+            if($oldFile->txtFilename != 'default.pdf') {
+                $destroy = public_path($oldFile->txtPath);
+                unlink($destroy);
+            }
             $file = $request->file('txtFile');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $file->move('upload/documents', $fileName);

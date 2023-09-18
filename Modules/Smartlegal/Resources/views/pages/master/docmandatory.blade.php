@@ -146,19 +146,6 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="mb-3 renewal">
-                        <label class="form-label" for="ExpirationPeriod">Expiration Period</label>
-                        <div class="input-group">
-                            <input class="form-control" type="number" name="intExpirationPeriod" id="ExpirationPeriod" placeholder="Enter expiration period (day format).."/>
-                            <div class="col-3">
-                                <select class="select2 form-select" name="expPeriodUnit" id="ExpPeriodUnit">
-                                    <option value="tahun">Tahun</option>
-                                    <option value="bulan">Bulan</option>
-                                    <option value="minggu">Minggu</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                     <div class="mb-3">
                         <label class="form-label" for="PublishDate">Publish Date</label>
                         <div class="input-group">
@@ -208,11 +195,11 @@
                             <iframe class="embed-responsive embed-responsive-16by9" src="" frameborder="0" width="100%" height="300px" id="FileFrame"></iframe>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 renewal">
                         <label class="form-label" for="RenewalCost">Renewal Cost</label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">Rp</span>
-                            <input class="form-control" type="number" name="intRenewalCost" id="RenewalCost" placeholder="Enter renewal cost (e.g. 250000).." required/>
+                            <input class="form-control" type="number" name="intRenewalCost" id="RenewalCost" placeholder="Enter renewal cost (e.g. 250000).."/>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -437,7 +424,8 @@
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.mandatory.update', ':id') }}";
             url = url.replace(':id', id);
-            method = "PUT";
+            $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
+            method = "POST";
             $.get(editUrl, (response) => {
                 $('#modal-form').modal('show');
                 $('input#RequestNumber').val(response.data.txtRequestNumber);
@@ -450,16 +438,12 @@
                     let selectedOpt = $('select#PICDepartment').val();
                     getUsersByDepartments('PICUser', response.data.intPICUserID, selectedOpt);
                 });
-                // getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
-                // getAllUsers('PICUser', response.data.intPICUserID);
                 $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
-                // expiration period -> n & unit
-                $('input#ExpirationPeriod').val(response.data.intExpirationPeriod);
                 $('input#PublishDate').val(response.data.dtmPublishDate);
                 $('input#ExpireDate').val(response.data.dtmExpireDate);
                 getAllIssuers('IssuerID', response.data.intIssuerID);
-                // reminder period -> n & unit
                 $('input#ReminderPeriod').val(response.data.intReminderPeriod);
+                $('select#RemPeriodUnit').val(response.data.remPeriodUnit);
                 getAllUsers('PICReminder', response.data.picReminders);
                 $('input#LocationFilling').val(response.data.txtLocationFilling);
                 $("#FileNameLabel").html(response.data.txtFilename);
