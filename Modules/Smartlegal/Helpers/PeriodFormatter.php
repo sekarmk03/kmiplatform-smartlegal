@@ -59,6 +59,10 @@ class PeriodFormatter {
 
         return "$days day" . ($days > 1 ? 's' : '');
     }
+
+    // public static function countDayToUnit($n) {
+    //     if ($n <= 31) $unit = ''
+    // }
 }
 
 ?>

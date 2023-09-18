@@ -55,6 +55,7 @@ class DocMandatoryController extends Controller
                 'f.intFileID', 'f.txtFilename', 'f.txtPath',
                 'e2.txtDepartmentName AS txtCostCenterName', 'e2.txtInitial AS txtCostCenterInitial'
             ])
+            ->where('m.intDeleted', 0)
             ->get();
     
             $transformedData = $data->map(function ($row) {
@@ -81,7 +82,7 @@ class DocMandatoryController extends Controller
                     $remPeriod = '-';
                 }
 
-                $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost);
+                $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost, 'Rp');
     
                 return [
                     'doc_id' => $row->intDocID,
@@ -121,8 +122,7 @@ class DocMandatoryController extends Controller
                 ->make(true);
         } else {
             return view('smartlegal::pages.master.docmandatory', [
-                'variants' => DocVariant::get(['intDocVariantID', 'txtVariantName']),
-                'issuers' => Issuer::get(['intIssuerID', 'txtIssuerName'])
+                'variants' => DocVariant::get(['intDocVariantID', 'txtVariantName'])
             ]);
         }
     }
@@ -234,7 +234,39 @@ class DocMandatoryController extends Controller
      */
     public function edit($id)
     {
-        return view('smartlegal::edit');
+        $data = DB::table('kmi_smartlegal_2023.mdocuments AS d')
+        ->leftJoin('db_standardization.musers AS u', 'u.id', '=', 'd.intRequestedBy')
+        ->leftJoin('kmi_smartlegal_2023.mmandatories AS m', 'd.intDocID', '=', 'm.intDocID')
+        ->leftJoin('kmi_smartlegal_2023.mfiles AS f', 'f.intFileID', 'm.intFileID')
+        ->select([
+            'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName', 'd.intRequestStatus AS intStatusID',
+            'm.intMandatoryID', 'm.intTypeID', 'm.intPICDeptID', 'm.intPICUserID', 'm.intVariantID', 'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intIssuerID', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote', 'm.intCostCenterID',
+            'f.intFileID', 'f.txtPath', 'f.txtFilename',
+        ])
+        ->where('d.intDocID', $id)
+        ->first();
+    
+        $picData = DB::table('kmi_smartlegal_2023.mpicreminders AS p')
+        ->leftJoin('db_standardization.musers AS u', 'p.intUserID', '=', 'u.id')
+        ->where('p.intMandatoryID', '=', $data->intMandatoryID)
+        ->get();
+        
+        $data->picReminders = [];
+        foreach ($picData as $pic) {
+            array_push($data->picReminders, $pic->id);
+        }
+
+        if ($data) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Not Found'
+            ], 404);
+        }
     }
 
     /**

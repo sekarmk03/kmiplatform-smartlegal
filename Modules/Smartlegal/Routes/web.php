@@ -43,7 +43,7 @@ Route::name('smartlegal.')->group(function () {
         Route::get('file/{id}/preview', 'FileController@preview')->name('file.preview');
         Route::get('file/{id}/download', 'FileController@download')->name('file.download');
         
-        Route::resource('mandatory', 'DocMandatoryController')->only(['index', 'store']);
+        Route::resource('mandatory', 'DocMandatoryController')->only(['index', 'store', 'edit', 'update', 'destroy']);
 
         
         Route::get('menu', 'MenuController@index')->name('menu.index');

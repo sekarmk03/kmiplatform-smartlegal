@@ -37,7 +37,7 @@ class RequestMandatoryController extends Controller
             ->get();
     
             $transformedData = $data->map(function ($row) {
-                $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost);
+                $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost, 'Rp');
                 return [
                     'doc_id' => $row->intDocID,
                     'request_number' => $row->txtRequestNumber,

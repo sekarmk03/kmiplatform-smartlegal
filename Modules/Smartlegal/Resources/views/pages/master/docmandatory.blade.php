@@ -323,15 +323,19 @@
                     option += `<option value="${val.id}">${val.txtInitial} - ${val.txtName}</option>`;
                 });
                 wrapper.append(option);
+                wrapper.attr('multiple', true);
                 wrapper.picker({
-                search: true,
-                searchAutofocus: true,
-                texts: {
-                    trigger: 'Select PIC Reminder',
-                    noResult : "No results",
-                    search : "Search"
-                }
-            });
+                    search: true,
+                    searchAutofocus: true,
+                    texts: {
+                        trigger: 'Select PIC Reminder',
+                        noResult : "No results",
+                        search : "Search"
+                    }
+                });
+                $.each(id, (i, val) => {
+                    wrapper.picker('set', val);
+                });
             });
         }
 
@@ -424,6 +428,51 @@
             getAllUsers('PICReminder', []);
             url = "{{ route('smartlegal.master.mandatory.store') }}";
             method = "POST";
+        }
+
+        const edit = ( id ) => {
+            // id document
+            $('.modal-header h4').html('Edit Mandatory Document');
+            let editUrl = "{{ route('smartlegal.master.mandatory.edit', ':id') }}";
+            editUrl = editUrl.replace(':id', id);
+            url = "{{ route('smartlegal.master.mandatory.update', ':id') }}";
+            url = url.replace(':id', id);
+            method = "PUT";
+            $.get(editUrl, (response) => {
+                $('#modal-form').modal('show');
+                $('input#RequestNumber').val(response.data.txtRequestNumber);
+                $('input#DocNumber').val(response.data.txtDocNumber);
+                $('input#DocName').val(response.data.txtDocName);
+                getAllDocStatuses('StatusID', response.data.intStatusID);
+                getAllDocTypes('TypeID', response.data.intTypeID);
+                getAllDepartments('PICDepartment', response.data.intPICDeptID);
+                $('select#PICDepartment').change(() => {
+                    let selectedOpt = $('select#PICDepartment').val();
+                    getUsersByDepartments('PICUser', response.data.intPICUserID, selectedOpt);
+                });
+                // getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
+                // getAllUsers('PICUser', response.data.intPICUserID);
+                $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
+                // expiration period -> n & unit
+                $('input#ExpirationPeriod').val(response.data.intExpirationPeriod);
+                $('input#PublishDate').val(response.data.dtmPublishDate);
+                $('input#ExpireDate').val(response.data.dtmExpireDate);
+                getAllIssuers('IssuerID', response.data.intIssuerID);
+                // reminder period -> n & unit
+                $('input#ReminderPeriod').val(response.data.intReminderPeriod);
+                getAllUsers('PICReminder', response.data.picReminders);
+                $('input#LocationFilling').val(response.data.txtLocationFilling);
+                $("#FileNameLabel").html(response.data.txtFilename);
+                $('iframe#FileFrame').attr('src', response.data.txtPath);
+                $('input#RenewalCost').val(response.data.intRenewalCost);
+                getAllDepartments('CostCenter', response.data.intCostCenterID);
+                $('textarea#Notes').val(response.data.txtNote);
+                $('textarea#TerminationNotes').val(response.data.txtTerminationNote);
+            });
+        }
+
+        const destroy = ( id ) => {
+
         }
 
         $(document).ready(() => {

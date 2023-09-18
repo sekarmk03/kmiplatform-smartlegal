@@ -42,7 +42,7 @@ class LibraryMandatoryController extends Controller
             ->get();
     
             $transformedData = $data->map(function ($row) {
-                $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost);
+                $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost, 'Rp');
                 return [
                     'doc_id' => $row->intDocID,
                     'request_number' => $row->txtRequestNumber,
@@ -186,7 +186,7 @@ class LibraryMandatoryController extends Controller
                 $remPeriod = '-';
             }
     
-            $renewalCost = CurrencyFormatter::formatIDR($data->intRenewalCost);
+            $renewalCost = CurrencyFormatter::formatIDR($data->intRenewalCost, 'Rp');
     
             $mandatory = [
                 'doc_id' => $data->intDocID,
