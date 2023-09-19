@@ -20,7 +20,10 @@
         <div class="col-12 ui-sortable">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
-                    <h4 class="panel-title">My Task Table</h4>
+                    <h4 class="panel-title">
+                        <span class="badge rounded-pill bg-danger">{{ $active_task }}</span>
+                        &nbsp; My Task Table
+                    </h4>
                     <div class="panel-heading-btn">
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
                         <a type="button" onclick="refresh()" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i class="fa fa-redo"></i></a>

@@ -83,7 +83,9 @@ class MyTaskMandatoryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            return view('smartlegal::pages.mytask.mandatory.index');
+            return view('smartlegal::pages.mytask.mandatory.index', [
+                'active_task' => Document::where('intRequestStatus', 1)->count(),
+            ]);
         }
     }
 
