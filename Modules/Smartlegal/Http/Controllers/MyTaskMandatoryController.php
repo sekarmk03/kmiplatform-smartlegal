@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Modules\Smartlegal\Entities\DocApproval;
 use Modules\Smartlegal\Entities\Document;
+use Modules\Smartlegal\Entities\DocVariant;
 use Modules\Smartlegal\Entities\Mandatory;
 use Modules\Smartlegal\Helpers\CurrencyFormatter;
 use Modules\Smartlegal\Helpers\LeadTimeCalculator;
@@ -72,7 +73,7 @@ class MyTaskMandatoryController extends Controller
             return DataTables::of($transformedData)
                 ->addIndexColumn()
                 ->addColumn('action', function($row) {
-                    return '<div class="btn-group"><button onclick="preview('.$row["file_id"].')" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Open"><i class="fas fa-link"></i></button> <button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-location-arrow"></i></button></div>';
+                    return '<div class="btn-group"><button onclick="preview('.$row["file_id"].')" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Open"><i class="fas fa-eye"></i></button> <button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-link"></i></button></div>';
                 })
                 ->editColumn('created_at', function($row) {
                     return date('Y-m-d H:i', strtotime($row["created_at"]));
@@ -190,7 +191,8 @@ class MyTaskMandatoryController extends Controller
         }
 
         return view('smartlegal::pages.mytask.mandatory.detail', [
-            'mandatory' => $mandatory
+            'mandatory' => $mandatory,
+            'variants' => DocVariant::get(['intDocVariantID', 'txtVariantName'])
         ]);
     }
 
@@ -212,7 +214,43 @@ class MyTaskMandatoryController extends Controller
      */
     public function edit($id)
     {
-        return view('smartlegal::edit');
+        $data = DB::table('kmi_smartlegal_2023.mdocuments AS d')
+        ->leftJoin('db_standardization.musers AS u', 'u.id', '=', 'd.intRequestedBy')
+        ->leftJoin('kmi_smartlegal_2023.mmandatories AS m', 'd.intDocID', '=', 'm.intDocID')
+        ->leftJoin('kmi_smartlegal_2023.mfiles AS f', 'f.intFileID', 'm.intFileID')
+        ->select([
+            'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName',
+            'm.intMandatoryID', 'm.intTypeID', 'm.intPICDeptID', 'm.intPICUserID', 'm.intVariantID', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intIssuerID', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.intCostCenterID',
+            'f.intFileID', 'f.txtPath', 'f.txtFilename',
+        ])
+        ->where('d.intDocID', $id)
+        ->first();
+    
+        $picData = DB::table('kmi_smartlegal_2023.mpicreminders AS p')
+        ->leftJoin('db_standardization.musers AS u', 'p.intUserID', '=', 'u.id')
+        ->where('p.intMandatoryID', '=', $data->intMandatoryID)
+        ->get();
+        
+        $data->picReminders = [];
+        foreach ($picData as $pic) {
+            array_push($data->picReminders, $pic->id);
+        }
+
+        $remData = PeriodFormatter::countDayToUnit($data->intReminderPeriod);
+        $data->intReminderPeriod = $remData['number'];
+        $data->remPeriodUnit = $remData['unit'];
+
+        if ($data) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Not Found'
+            ], 404);
+        }
     }
 
     /**

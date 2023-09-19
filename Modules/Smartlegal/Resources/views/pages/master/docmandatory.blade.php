@@ -187,7 +187,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="File" class="form-label">Pilih File</label>
-                        <input class="form-control" type="file" id="File" name="txtFile" required>
+                        <input class="form-control" type="file" id="File" name="txtFile">
                     </div>
                     <div class="mb-3" id="FrameContainer">
                         <label for="FileFrame" class="form-label" id="FileNameLabel"></label>
@@ -323,6 +323,10 @@
                 });
                 $.each(id, (i, val) => {
                     wrapper.picker('set', val);
+                });
+                wrapper.on('sp-change', () => {
+                    let selectedValue = wrapper.val();
+                    wrapper.val(selectedValue).picker();
                 });
             });
         }
@@ -580,6 +584,7 @@
                     success: (response) => {
                         $('#modal-form').modal('hide');
                         refresh();
+                        location.reload();
                         notification(response.status, response.message,'bg-success');
                         conn.send(['success', 'mandatory']);
                     },

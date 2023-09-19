@@ -342,14 +342,18 @@ class DocMandatoryController extends Controller
             $document->update($inputDocument);
             $mandatory->update($inputMandatory);
             
-            if ($request['intVariantID'] == 2 || $picReminders) {
-                foreach ($picReminders as $pic) {
-                    $pic->delete();
+            if ($request['intVariantID'] == 2) {
+                if (count($picReminders) > 0) {
+                    foreach ($picReminders as $pic) {
+                        $pic->delete();
+                    }
                 }
-                foreach ($request['picReminders'] as $pr) {
-                    $inputPICReminder['intUserID'] = $pr;
-                    $inputPICReminder['intMandatoryID'] = $mandatory->intMandatoryID;
-                    $createPICReminder = PICReminder::create($inputPICReminder);
+                if (count($request['picReminders']) > 0) {
+                    foreach ($request['picReminders'] as $pr) {
+                        $inputPICReminder['intUserID'] = $pr;
+                        $inputPICReminder['intMandatoryID'] = $mandatory->intMandatoryID;
+                        $createPICReminder = PICReminder::create($inputPICReminder);
+                    }
                 }
             }
 

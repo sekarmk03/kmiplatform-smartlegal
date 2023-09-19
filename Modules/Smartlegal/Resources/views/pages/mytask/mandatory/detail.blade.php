@@ -5,6 +5,9 @@
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet">
 @endpush
 @section('content')
     <!-- BEGIN breadcrumb -->
@@ -196,6 +199,129 @@
             </div>
         </div>
     </div>
+    <!-- #modal-dialog-form -->
+    <div class="modal fade" id="modal-form">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Modal Dialog</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label" for="RequestNumber">Request Number</label>
+                        <input class="form-control" type="text" name="txtRequestNumber" id="RequestNumber" placeholder="YYYY/Reg-[No.Type]/[Dept]/xxxx" disabled/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="DocNumber">Document Number</label>
+                        <input class="form-control" type="text" name="txtDocNumber" id="DocNumber" placeholder="[Category][No.Type][Dept]xxxx-xx" disabled/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="DocName">Document Name</label>
+                        <input class="form-control" type="text" name="txtDocName" id="DocName" placeholder="Enter document name.."/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="TypeID">Type</label>
+                        <select class="select2 form-select" name="intTypeID" id="TypeID" disabled></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">PIC Document</label>
+                        <div class="input-group">
+                            <div class="col-4">
+                                <select class="select2 form-select" name="intPICDeptID" id="PICDepartment" disabled></select>
+                            </div>
+                            <div class="col">
+                                <select class="select2 form-select" name="intPICUserID" id="PICUser"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="">Variant</label>
+                        <div>
+                            @foreach ($variants as $item)
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="intVariantID" id="VariantID_{{ $item->intDocVariantID }}" value="{{ $item->intDocVariantID }}">
+                                <label class="form-check-label" for="VariantID_{{ $item->intDocVariantID }}">{{ $item->txtVariantName }}</label>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="PublishDate">Publish Date</label>
+                        <div class="input-group">
+                            <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." data-date-format="yyyy-mm-dd"/>
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    <div class="mb-3 renewal">
+                        <label class="form-label" for="ExpireDate">Expire Date</label>
+                        <div class="input-group">
+                            <input class="form-control" type="text" name="dtmExpireDate" id="ExpireDate" placeholder="Enter document expire date.." data-date-format="yyyy-mm-dd"/>
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="IssuerID">Issuer</label>
+                        <select class="select2 form-select" name="intIssuerID" id="IssuerID"></select>
+                    </div>
+                    <div class="mb-3 renewal">
+                        <label class="form-label" for="ReminderPeriod">Reminder Period</label>
+                        <div class="input-group">
+                            <input class="form-control" type="number" name="intReminderPeriod" id="ReminderPeriod" placeholder="Enter reminder period (day format).."/>
+                            <div class="col-3">
+                                <select class="select2 form-select" name="remPeriodUnit" id="RemPeriodUnit">
+                                    <option value="tahun">Tahun</option>
+                                    <option value="bulan">Bulan</option>
+                                    <option value="minggu">Minggu</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 renewal">
+                        <label class="form-label" for="PICReminder">PIC Reminder</label>
+                        <select class="selectpicker form-select" name="picReminders[]" id="PICReminder" multiple></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="LocationFilling">Location Filling</label>
+                        <input class="form-control" type="text" name="txtLocationFilling" id="LocationFilling" placeholder="Enter location filling document.."/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="File" class="form-label">Pilih File</label>
+                        <input class="form-control" type="file" id="File" name="txtFile">
+                    </div>
+                    <div class="mb-3" id="FrameContainer">
+                        <label for="FileFrame" class="form-label" id="FileNameLabel"></label>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive embed-responsive-16by9" src="" frameborder="0" width="100%" height="300px" id="FileFrame"></iframe>
+                        </div>
+                    </div>
+                    <div class="mb-3 renewal">
+                        <label class="form-label" for="RenewalCost">Renewal Cost</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">Rp</span>
+                            <input class="form-control" type="number" name="intRenewalCost" id="RenewalCost" placeholder="Enter renewal cost (e.g. 250000).."/>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="CostCenter" class="form-label">Cost Center</label>
+                        <select class="select2 form-select" name="intCostCenterID" id="CostCenter">
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Notes">Notes</label>
+                        <textarea name="txtNote" id="Notes" cols="30" rows="5" class="form-control" placeholder="Enter Document Notes.."></textarea>
+                    </div>
+            </div>
+            <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Close</a>
+            <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
 @endsection
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -204,6 +330,9 @@
     <script src="{{ asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
+    <script src="{{ asset('/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('/plugins/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('/plugins/select-picker/dist/picker.min.js') }}"></script>
     <script>
         let url = '';
         let method = '';
@@ -250,6 +379,119 @@
             }
         }
 
+        const getAllDepartments = ( wrapperID, id = false ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.departments') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.intDepartment_ID}">${val.txtInitial} - ${val.txtDepartmentName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const getAllUsers = ( wrapperID, id = [] ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.users') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.id}">${val.txtInitial} - ${val.txtName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.attr('multiple', true);
+                wrapper.picker({
+                    search: true,
+                    searchAutofocus: true,
+                    texts: {
+                        trigger: 'Select PIC Reminder',
+                        noResult : "No results",
+                        search : "Search"
+                    }
+                });
+                $.each(id, (i, val) => {
+                    wrapper.picker('set', val);
+                });
+            });
+        }
+
+        const getUsersByDepartments = ( wrapperID, id = false, deptID ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            let getUrl = "{{ route('smartlegal.users.department', ':id') }}";
+            getUrl = getUrl.replace(':id', deptID);
+            $.get(getUrl, (response) => {
+                $.each(response.data, (i, val) => {
+                    console.log(val);
+                    option += `<option value="${val.id}">${val.txtInitial} - ${val.txtName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const getAllDocTypes = ( wrapperID, id = false ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.master.doctypes') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.intDocTypeID}">${val.txtTypeName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const getAllIssuers = ( wrapperID, id = false ) => {
+            let wrapper = $('select#' + wrapperID);
+            let option = '';
+            wrapper.empty();
+            $.get("{{ route('smartlegal.master.issuers') }}", (response) => {
+                $.each(response.data, (i, val) => {
+                    option += `<option value="${val.intIssuerID}">${val.txtCode} - ${val.txtIssuerName}</option>`;
+                });
+                wrapper.append(option);
+                wrapper.val(id).trigger('change');
+            });
+        }
+
+        const edit = ( id ) => {
+            // id document
+            $('.modal-header h4').html('Update Document Request');
+            let editUrl = "{{ route('smartlegal.mytask.mandatory.edit', ':id') }}";
+            editUrl = editUrl.replace(':id', id);
+            url = "{{ route('smartlegal.mytask.mandatory.update', ':id') }}";
+            url = url.replace(':id', id);
+            $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
+            method = "POST";
+            $.get(editUrl, (response) => {
+                $('#modal-form').modal('show');
+                getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
+                $('input#RequestNumber').val(response.data.txtRequestNumber);
+                $('input#DocNumber').val(response.data.txtDocNumber);
+                $('input#DocName').val(response.data.txtDocName);
+                getAllDocTypes('TypeID', response.data.intTypeID);
+                getAllDepartments('PICDepartment', response.data.intPICDeptID);
+                $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
+                $('input#PublishDate').val(response.data.dtmPublishDate);
+                $('input#ExpireDate').val(response.data.dtmExpireDate);
+                getAllIssuers('IssuerID', response.data.intIssuerID);
+                $('input#ReminderPeriod').val(response.data.intReminderPeriod);
+                $('select#RemPeriodUnit').val(response.data.remPeriodUnit);
+                getAllUsers('PICReminder', response.data.picReminders);
+                $('input#LocationFilling').val(response.data.txtLocationFilling);
+                $("#FileNameLabel").html(response.data.txtFilename);
+                $('iframe#FileFrame').attr('src', response.data.txtPath);
+                $('input#RenewalCost').val(response.data.intRenewalCost);
+                getAllDepartments('CostCenter', response.data.intCostCenterID);
+                $('textarea#Notes').val(response.data.txtNote);
+            });
+        }
+
         $(document).ready(() => {
             $('#formNote').hide();
             $('#formNote').on('submit', (e) => {
@@ -273,7 +515,61 @@
                         });
                     }
                 });
-            })
+            });
+            $('.notif-icon').find('span').text();
+            $('#modal-form').on('hidden.bs.modal', () => {
+                $('#TypeID').val(null).trigger('change');
+                $('input#File').val('');
+                $('#modal-form form')[0].reset();
+                $('input[name="_method"]').remove();
+            });
+            $("input#PublishDate, input#ExpireDate").datepicker({
+                todayHighlight: true,
+                autoclose: true
+            });
+            $(document).on('select2:open', () => {
+                document.querySelector('.select2-search__field').focus();
+            });
+            $('select#TypeID').select2({
+                disabled: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select Document Type'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('select#PICDepartment').select2({
+                disabled: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select PIC Department'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('select#PICUser').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select PIC User'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('select#IssuerID').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select Document Issuer'
+                },
+                dropdownParent: $('#modal-form')
+            });
+            $('select#CostCenter').select2({
+                allowClear: true,
+                placeholder: {
+                    id: '-1',
+                    text: 'Select Cost Center Department'
+                },
+                dropdownParent: $('#modal-form')
+            });
         });
     </script>
 @endpush
