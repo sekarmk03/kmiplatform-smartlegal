@@ -56,8 +56,8 @@ Route::name('smartlegal.')->group(function () {
         Route::put('mandatory/{id}/approve', 'MyTaskMandatoryController@approve')->name('mandatory.approve');
     });
 
-    Route::prefix('request')->group(function () {
-        Route::get('mandatories', 'RequestMandatoryController@index')->name('request.mandatory.index');
+    Route::prefix('request')->name('request.')->group(function () {
+        Route::resource('mandatory', 'RequestMandatoryController')->only(['index', 'store']);
     });
 
     Route::prefix('library')->name('library.')->group(function () {
