@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Smartlegal\Entities\DocApproval;
 use Modules\Smartlegal\Entities\Document;
 use Modules\Smartlegal\Entities\DocVariant;
+use Modules\Smartlegal\Entities\File;
 use Modules\Smartlegal\Entities\Mandatory;
+use Modules\Smartlegal\Entities\PICReminder;
 use Modules\Smartlegal\Helpers\CurrencyFormatter;
 use Modules\Smartlegal\Helpers\LeadTimeCalculator;
 use Modules\Smartlegal\Helpers\PeriodFormatter;
@@ -261,7 +263,102 @@ class MyTaskMandatoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // get old data
+        $document = Document::where('intDocID', $id)->first();
+        $mandatory = Mandatory::where('intDocID', $id)->first();
+        $file = File::where('intFileID', $mandatory->intFileID)->first();
+        $picReminders = PICReminder::where('intMandatoryID', $mandatory->intMandatoryID)->get();
+        $prevLog = DocApproval::where('intDocID', $id)->orderBy('intApprovalID', 'DESC')->first();
+        if (!$prevLog) $prevLog = $document;
+
+        // construct request
+        $inputFile = [];
+        $inputDocument = [];
+        $inputMandatory = [];
+        $inputPICReminder = [];
+        $inputLog = [];
+
+        if ($request->hasFile('txtFile')) {
+            if($file->txtFilename != 'default.pdf') {
+                $destroy = public_path($file->txtPath);
+                unlink($destroy);
+            }
+            $reqFile = $request->file('txtFile');
+            $fileName = time() . '_' . $reqFile->getClientOriginalName();
+            $reqFile->move('upload/documents', $fileName);
+            $inputFile['txtFilename'] = $fileName;
+            $inputFile['txtPath'] = '/upload/documents/' . $fileName;
+        }
+
+        $inputDocument['txtRequestNumber'] = $request['txtRequestNumber'] ?: $document->txtRequestNumber;
+        $inputDocument['txtDocNumber'] = $request['txtDocNumber'] ?: $document->txtDocNumber;
+        $inputDocument['txtDocName'] = $request['txtDocName'] ?: $document->txtDocName;
+        $inputDocument['intRequestedBy'] = $document->intRequestedBy;
+        $inputDocument['intRequestStatus'] = 2; // Revise
+
+        $inputMandatory['intTypeID'] = $request['intTypeID'] ?: $mandatory->intTypeID;
+        $inputMandatory['intPICDeptID'] = $request['intPICDeptID'] ?: $mandatory->intPICDeptID;
+        $inputMandatory['intPICUserID'] = $request['intPICUserID'] ?: $mandatory->intPICUserID;
+        $inputMandatory['intVariantID'] = $request['intVariantID'] ?: $mandatory->intVariantID;
+        $inputMandatory['dtmPublishDate'] = $request['dtmPublishDate'] ?: $mandatory->dtmPublishDate;
+        $inputMandatory['dtmExpireDate'] = $request['intVariantID'] == 1 ? null : ($request['dtmExpireDate'] ?: $mandatory->dtmExpireDate);
+        $inputMandatory['intExpirationPeriod'] = $request['intVariantID'] == 1 ? null : ($inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : $mandatory->intExpirationPeriod);
+        $inputMandatory['intIssuerID'] = $request['intIssuerID'];
+        $inputMandatory['intReminderPeriod'] = $request['intVariantID'] == 1 ? null : ($request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : $mandatory->intReminderPeriod);
+        $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
+        $inputMandatory['intRenewalCost'] = $request['intVariantID'] == 1 ? 0 : ($request['intRenewalCost'] ?: $mandatory->intRenewalCost);
+        $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
+        $inputMandatory['txtNote'] = $request['txtNote'];
+        $inputMandatory['txtTerminationNote'] = null;
+        $inputMandatory['intCreatedBy'] = $mandatory->intCreatedBy;
+        $inputMandatory['intFileID'] = $mandatory->intFileID;
+        $inputMandatory['intDocID'] = $document->intDocID;
+
+        $inputLog['intState'] = 2; // Revised
+        $inputLog['intUserID'] = Auth::user()->id;
+        $inputLog['txtNote'] = $request['txtNote'];
+        $inputLog['intDocID'] = $document->intDocID;
+        $prevTime = $prevLog->dtmCreatedAt->format('Y-m-d H:i:s');
+        $now = new DateTime();
+        $now = $now->format('Y-m-d H:i:s');
+        $inputLog['txtLeadTime'] = PeriodFormatter::date($prevTime, $now, 'min');
+        
+        try {
+            DB::beginTransaction();
+            if ($request->hasFile('txtFile')) $file->update($inputFile);
+            $document->update($inputDocument);
+            $mandatory->update($inputMandatory);
+            
+            if ($request['intVariantID'] == 2) {
+                if (count($picReminders) > 0) {
+                    foreach ($picReminders as $pic) {
+                        $pic->delete();
+                    }
+                }
+                if (count($request['picReminders']) > 0) {
+                    foreach ($request['picReminders'] as $pr) {
+                        $inputPICReminder['intUserID'] = $pr;
+                        $inputPICReminder['intMandatoryID'] = $mandatory->intMandatoryID;
+                        $createPICReminder = PICReminder::create($inputPICReminder);
+                    }
+                }
+            }
+
+            $createLog = DocApproval::create($inputLog);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document Updated Successfully'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -282,7 +379,7 @@ class MyTaskMandatoryController extends Controller
      */
     public function approve(Request $request, $id)
     {
-        $prevLog = DocApproval::where('intDocID', $id)->orderBy('intApprovalID')->first();
+        $prevLog = DocApproval::where('intDocID', $id)->orderBy('intApprovalID', 'DESC')->first();
         $document = Document::where('intDocID', $id)->first();
         if (!$prevLog) $prevLog = $document;
 

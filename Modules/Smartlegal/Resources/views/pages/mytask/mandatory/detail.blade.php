@@ -8,6 +8,14 @@
     <link href="{{ asset('/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet">
+    <style>
+        td {
+            vertical-align: top;
+        }
+        tr td:first-child {
+            white-space: nowrap;
+        }
+    </style>
 @endpush
 @section('content')
     <!-- BEGIN breadcrumb -->
@@ -34,88 +42,83 @@
                         <table class="fs-5">
                             <tr>
                                 <td>No. Request</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['request_number'] }}</td>
                             </tr>
                             <tr>
                                 <td>No. Perizinan</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['doc_number'] }}</td>
                             </tr>
                             <tr>
                                 <td>Nama Dokumen</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['doc_name'] }}</td>
                             </tr>
                             <tr>
                                 <td>Status</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['status'] }}</td>
                             </tr>
                             <tr>
                                 <td>Tipe Perizinan</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['type'] }}</td>
                             </tr>
                             <tr>
                                 <td>PIC Dokumen</td>
-                                <td>:</td>
+                                <td style="vertical-align: top;">&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['pic'] }}</td>
                             </tr>
                             <tr>
                                 <td>Jenis Dokumen</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['variant'] }}</td>
                             </tr>
                             <tr>
                                 <td>Masa Berlaku</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['exp_period'] }}</td>
                             </tr>
                             <tr>
                                 <td>Tanggal Awal</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['publish_date'] }}</td>
                             </tr>
                             <tr>
                                 <td>Tanggal Akhir</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['exp_date'] }}</td>
                             </tr>
                             <tr>
                                 <td>Penerbit Dokumen</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['issuer'] }}</td>
                             </tr>
                             <tr>
                                 <td>Periode Reminder</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['rem_period'] }}</td>
                             </tr>
                             <tr>
-                                <td>Location Filling Hardcopy</td>
-                                <td>:</td>
+                                <td>Filling Hardcopy</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['location'] }}</td>
                             </tr>
                             <tr>
                                 <td>Biaya Renewal</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['renewal_cost'] }}</td>
                             </tr>
                             <tr>
                                 <td>Cost Center</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['cost_center'] }}</td>
                             </tr>
                             <tr>
                                 <td>Catatan</td>
-                                <td>:</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['note'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Catatan Termination</td>
-                                <td>:</td>
-                                <td>{{ $mandatory['termination_note'] }}</td>
                             </tr>
                         </table>
                         @if ($mandatory['status'] == 'Requested' || $mandatory['status'] == 'Revised')
@@ -354,7 +357,7 @@
                 {data: 'status', name: 'status', className: 'text-center'},
                 {data: 'name', name: 'name', className: 'text-center'},
                 {data: 'date', name: 'date', className: 'text-center'},
-                {data: 'note', name: 'note', className: 'text-center'},
+                {data: 'note', name: 'note', width: '40%'},
                 {data: 'lead_time', name: 'lead_time', className: 'text-center'},
             ]
         });
@@ -414,6 +417,10 @@
                 $.each(id, (i, val) => {
                     wrapper.picker('set', val);
                 });
+                wrapper.on('sp-change', () => {
+                    let selectedValue = wrapper.val();
+                    wrapper.val(selectedValue).picker();
+                });
             });
         }
 
@@ -425,7 +432,6 @@
             getUrl = getUrl.replace(':id', deptID);
             $.get(getUrl, (response) => {
                 $.each(response.data, (i, val) => {
-                    console.log(val);
                     option += `<option value="${val.id}">${val.txtInitial} - ${val.txtName}</option>`;
                 });
                 wrapper.append(option);
@@ -470,12 +476,12 @@
             method = "POST";
             $.get(editUrl, (response) => {
                 $('#modal-form').modal('show');
-                getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
                 $('input#RequestNumber').val(response.data.txtRequestNumber);
                 $('input#DocNumber').val(response.data.txtDocNumber);
                 $('input#DocName').val(response.data.txtDocName);
                 getAllDocTypes('TypeID', response.data.intTypeID);
                 getAllDepartments('PICDepartment', response.data.intPICDeptID);
+                getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
                 $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
                 $('input#PublishDate').val(response.data.dtmPublishDate);
                 $('input#ExpireDate').val(response.data.dtmExpireDate);
@@ -492,6 +498,15 @@
             });
         }
 
+        const notification = (status, message, bgclass) => {
+            $.gritter.add({
+                title: status,
+                text: `<p class="text-light">${message}</p>`,
+                class_name: bgclass
+            });
+            return false;
+        }
+
         $(document).ready(() => {
             $('#formNote').hide();
             $('#formNote').on('submit', (e) => {
@@ -504,7 +519,7 @@
                     success: (response) => {
                         refresh();
                         notification(response.status, response.message,'bg-success');
-                        conn.send(['success', 'issuer']);
+                        conn.send(['success', 'request']);
                     },
                     error: (response) => {
                         let fields = response.responseJSON.fields;
@@ -569,6 +584,32 @@
                     text: 'Select Cost Center Department'
                 },
                 dropdownParent: $('#modal-form')
+            });
+            $('.modal-body form').on('submit', (e) => {
+                e.preventDefault();
+                let formData = new FormData($('.modal-body form')[0]);
+                $.ajax({
+                    url: getUrl(),
+                    method: getMethod(),
+                    data: formData,
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: (response) => {
+                        $('#modal-form').modal('hide');
+                        refresh();
+                        notification(response.status, response.message,'bg-success');
+                        conn.send(['success', 'request']);
+                    },
+                    error: (response) => {
+                        let fields = response.responseJSON.fields;
+                        $.each(fields, (i, val) => {
+                            $.each(val, (ind, value) => {
+                                notification(response.responseJSON.status, val[ind],'bg-danger');
+                            });
+                        });
+                    }
+                });
             });
         });
     </script>
