@@ -45,8 +45,10 @@ Route::name('smartlegal.')->group(function () {
         
         Route::resource('mandatory', 'DocMandatoryController')->only(['index', 'store', 'edit', 'update', 'destroy']);
 
-        
         Route::get('menu', 'MenuController@index')->name('menu.index');
+
+        Route::resource('approval', 'DocApprovalController')->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::get('approval/document/{id}', 'DocApprovalController@getLogByDocument')->name('approval.document');
     });
 
     Route::prefix('mytask')->name('mytask.')->group(function () {

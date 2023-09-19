@@ -164,6 +164,38 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col ui-sortable mt-3">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Reviewer Notes</h4>
+                    <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a type="button" onclick="refresh()" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i class="fa fa-redo"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="daTable" class="table table-striped table-bordered align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">No.</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">User</th>
+                                    <th class="text-center">Tanggal</th>
+                                    <th class="text-center">Catatan</th>
+                                    <th class="text-center">Lead Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -187,13 +219,14 @@
             serverSide: true,
             autoWidth: true,
             responsive: true,
-            ajax: "{{ route('smartlegal.master.file.index') }}",
+            ajax: "{{ route('smartlegal.master.approval.document', $mandatory['doc_id']) }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center'},
-                {data: 'dtmCreatedAt', name: 'dtmCreatedAt', className: 'text-center'},
-                {data: 'txtFilename', name: 'txtFilename', className: 'text-center'},
-                {data: 'txtPath', name: 'txtPath', className: 'text-center'},
-                {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
+                {data: 'status', name: 'status', className: 'text-center'},
+                {data: 'name', name: 'name', className: 'text-center'},
+                {data: 'date', name: 'date', className: 'text-center'},
+                {data: 'note', name: 'note', className: 'text-center'},
+                {data: 'lead_time', name: 'lead_time', className: 'text-center'},
             ]
         });
         
