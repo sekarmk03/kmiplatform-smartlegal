@@ -206,7 +206,7 @@ class ROISController extends Controller
     public function getRHTemp()
     {
         $subQuery = LogRHTemp::selectRaw("MAX(intLog_RhandTemp_ID) AS intLog_RhandTemp_ID")
-            ->groupBy('intModule_ID', 'txtLineProcessName')
+            ->groupBy('txtLineProcessName', 'intArea_ID')
             ->get();
         $data = LogRHTemp::whereIn('intLog_RhandTemp_ID', $subQuery)->get();
         return response()->json([

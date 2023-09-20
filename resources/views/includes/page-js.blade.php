@@ -3,7 +3,7 @@
 <script src="{{ asset('/js/app.min.js') }}"></script>
 <!-- ================== END core-js ================== -->
 <script>
-var conn = new WebSocket('ws://localhost:8080');    
+var conn = new WebSocket('ws://10.175.13.146:8080');    
 conn.onopen = function(e) {
     console.log(e);
 };
