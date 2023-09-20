@@ -36,7 +36,7 @@ class RequestMandatoryController extends Controller
             ->leftJoin('kmi_smartlegal_2023.mdocumentvariants AS v', 'v.intDocVariantID', '=', 'm.intVariantID')
             ->leftJoin('db_standardization.mdepartments AS e2', 'e2.intDepartment_ID', '=', 'm.intCostCenterID')
             ->select([
-                'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName',
+                'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName', 'd.intRequestStatus',
                 'm.intRenewalCost', 'm.dtmCreatedAt',
                 't.txtTypeName',
                 'u2.txtName AS txtPICName', 'u2.txtInitial AS txtPICInitial',
@@ -52,6 +52,7 @@ class RequestMandatoryController extends Controller
                 return [
                     'doc_id' => $row->intDocID,
                     'request_number' => $row->txtRequestNumber,
+                    'status' => $row->intRequestStatus,
                     'doc_number' => $row->txtDocNumber,
                     'type' => $row->txtTypeName,
                     'variant' => $row->txtVariantName,
@@ -66,7 +67,13 @@ class RequestMandatoryController extends Controller
             return DataTables::of($transformedData)
                 ->addIndexColumn()
                 ->addColumn('action', function($row) {
-                    return '<div class="btn-group"><button onclick="update('.$row["doc_id"].')" class="btn btn-sm btn-green" data-bs-toggle="tooltip" data-bs-placement="top" title="Update">Update</button> <button onclick="terminate('.$row["doc_id"].')" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Terminate">Terminate</button></div>';
+                    $actionBtn = '<div class="btn-group"><button onclick="update('.$row["doc_id"].')" class="btn btn-sm btn-green" data-bs-toggle="tooltip" data-bs-placement="top" title="Update">Update</button>';
+                    if ($row['status'] == 7) {
+                        $actionBtn .= '<button class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Terminated"disabled>Terminated</button></div>';
+                    } else {
+                        $actionBtn .= '<button onclick="terminate('.$row["doc_id"].')" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Terminate">Terminate</button></div>';
+                    }
+                    return $actionBtn;
                 })
                 ->editColumn('created_at', function($row) {
                     return date('Y-m-d H:i', strtotime($row["created_at"]));
@@ -340,5 +347,38 @@ class RequestMandatoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function terminate(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $document = Document::where('intDocID', $id)->update(['intRequestStatus' => 7]);
+
+            $mandatory = Mandatory::where('intDocID', $id)->update(['txtTerminationNote' => $request['txtTerminationNote']]);
+
+            $inputLog['intDocID'] = $id;
+            $inputLog['intState'] = 7;
+            $inputLog['intUserID'] = Auth::user()->id;
+            $inputLog['txtNote'] = $request['txtTerminationNote'];
+            $inputLog['txtLeadTime'] = null;
+
+            $createLog = DocApproval::create($inputLog);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document Terminated Successfully'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+                'request' => $request['txtTerminationNote']
+            ], 500);
+        }
     }
 }

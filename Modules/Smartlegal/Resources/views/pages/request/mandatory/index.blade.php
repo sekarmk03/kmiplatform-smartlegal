@@ -181,6 +181,30 @@
         </div>
         </div>
     </div>
+    <!-- #modal-dialog-form note -->
+    <div class="modal fade" id="modal-form-note">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Add Termination Note</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+            <form action="" id="termination-form">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label" for="Notes">Notes</label>
+                        <textarea name="txtTerminationNote" id="TerminationNotes" cols="30" rows="7" class="form-control" placeholder="Enter Termination Notes.." required></textarea>
+                    </div>
+            </div>
+            <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Close</a>
+            <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
 @endsection
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -368,6 +392,13 @@
             });
         }
 
+        const terminate = ( id ) => {
+            $('#modal-form-note').modal('show');
+            url = "{{ route('smartlegal.request.mandatory.terminate', ':id') }}";
+            url = url.replace(':id', id);
+            method = "PUT";
+        }
+
         const notification = (status, message, bgclass) => {
             $.gritter.add({
                 title: status,
@@ -379,7 +410,7 @@
 
         $(document).ready(() => {
             $('.notif-icon').find('span').text();
-            $('#modal-form').on('hidden.bs.modal', () => {
+            $('#modal-form, #modal-form-note').on('hidden.bs.modal', () => {
                 $('#TypeID').val(null).trigger('change');
                 $('input#File').val('');
                 $('#modal-form form')[0].reset();
@@ -435,15 +466,21 @@
             $('.modal-body form').on('submit', (e) => {
                 e.preventDefault();
                 let formData = new FormData($('.modal-body form')[0]);
+                let processData = false;
+                let contentType = false;
+                if (JSON.stringify(formData) == '{}') {
+                    formData = $('.modal-body form#termination-form').serialize();
+                    contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+                }
                 $.ajax({
                     url: getUrl(),
                     method: getMethod(),
                     data: formData,
                     dataType: 'JSON',
-                    processData: false,
-                    contentType: false,
+                    processData: processData,
+                    contentType: contentType,
                     success: (response) => {
-                        $('#modal-form').modal('hide');
+                        $('#modal-form, #modal-form-note').modal('hide');
                         refresh();
                         location.reload();
                         notification(response.status, response.message,'bg-success');
