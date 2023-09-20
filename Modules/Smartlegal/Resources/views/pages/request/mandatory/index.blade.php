@@ -150,6 +150,12 @@
                         <label for="File" class="form-label">Pilih File</label>
                         <input class="form-control" type="file" id="File" name="txtFile" required>
                     </div>
+                    <div class="mb-3" id="FrameContainer">
+                        <label for="FileFrame" class="form-label" id="FileNameLabel"></label>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive embed-responsive-16by9" src="" frameborder="0" width="100%" height="300px" id="FileFrame"></iframe>
+                        </div>
+                    </div>
                     <div class="mb-3 renewal">
                         <label class="form-label" for="RenewalCost">Renewal Cost</label>
                         <div class="input-group">
@@ -306,6 +312,7 @@
         const create = () => {
             $('.modal-header h4').html('Create New Request');
             $('#modal-form').modal('show');
+            $("#FrameContainer").hide();
             getAllDocTypes('TypeID', false);
             getAllDepartments('PICDepartment', false);
             $('select#PICDepartment').change(() => {
@@ -326,6 +333,39 @@
             getAllUsers('PICReminder', []);
             url = "{{ route('smartlegal.request.mandatory.store') }}";
             method = "POST";
+        }
+
+        const update = ( id ) => {
+            // id document
+            $('.modal-header h4').html('Update Document');
+            let editUrl = "{{ route('smartlegal.request.mandatory.edit', ':id') }}";
+            editUrl = editUrl.replace(':id', id);
+            url = "{{ route('smartlegal.request.mandatory.update', ':id') }}";
+            url = url.replace(':id', id);
+            $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
+            method = "POST";
+            $.get(editUrl, (response) => {
+                $('#modal-form').modal('show');
+                $('input#DocName').val(response.data.txtDocName);
+                getAllDocTypes('TypeID', response.data.intTypeID);
+                $('select#TypeID').prop('disabled', true);
+                getAllDepartments('PICDepartment', response.data.intPICDeptID);
+                $('select#PICDepartment').prop('disabled', true);
+                getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
+                $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
+                $('input#PublishDate').val(response.data.dtmPublishDate);
+                $('input#ExpireDate').val(response.data.dtmExpireDate);
+                getAllIssuers('IssuerID', response.data.intIssuerID);
+                $('input#ReminderPeriod').val(response.data.intReminderPeriod);
+                $('select#RemPeriodUnit').val(response.data.remPeriodUnit);
+                getAllUsers('PICReminder', response.data.picReminders);
+                $('input#LocationFilling').val(response.data.txtLocationFilling);
+                $("#FileNameLabel").html(response.data.txtFilename);
+                $('iframe#FileFrame').attr('src', response.data.txtPath);
+                $('input#RenewalCost').val(response.data.intRenewalCost);
+                getAllDepartments('CostCenter', response.data.intCostCenterID);
+                $('textarea#Notes').val(response.data.txtNote);
+            });
         }
 
         const notification = (status, message, bgclass) => {

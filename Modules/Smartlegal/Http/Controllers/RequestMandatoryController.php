@@ -147,10 +147,12 @@ class RequestMandatoryController extends Controller
             $inputLog['intDocID'] = $createDocument->intDocID;
             
             if ($request['intVariantID'] == 2) {
-                foreach ($request['picReminders'] as $pr) {
-                    $inputPICReminder['intUserID'] = $pr;
-                    $inputPICReminder['intMandatoryID'] = $createMandatory->intMandatoryID;
-                    $createPICReminder = PICReminder::create($inputPICReminder);
+                if (count($request['picReminders']) > 0) {
+                    foreach ($request['picReminders'] as $pr) {
+                        $inputPICReminder['intUserID'] = $pr;
+                        $inputPICReminder['intMandatoryID'] = $createMandatory->intMandatoryID;
+                        $createPICReminder = PICReminder::create($inputPICReminder);
+                    }
                 }
             }
 
@@ -188,7 +190,43 @@ class RequestMandatoryController extends Controller
      */
     public function edit($id)
     {
-        return view('smartlegal::edit');
+        $data = DB::table('kmi_smartlegal_2023.mdocuments AS d')
+        ->leftJoin('db_standardization.musers AS u', 'u.id', '=', 'd.intRequestedBy')
+        ->leftJoin('kmi_smartlegal_2023.mmandatories AS m', 'd.intDocID', '=', 'm.intDocID')
+        ->leftJoin('kmi_smartlegal_2023.mfiles AS f', 'f.intFileID', 'm.intFileID')
+        ->select([
+            'd.intDocID', 'd.txtDocName',
+            'm.intMandatoryID', 'm.intTypeID', 'm.intPICDeptID', 'm.intPICUserID', 'm.intVariantID', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intIssuerID', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.intCostCenterID',
+            'f.intFileID', 'f.txtPath', 'f.txtFilename',
+        ])
+        ->where('d.intDocID', $id)
+        ->first();
+    
+        $picData = DB::table('kmi_smartlegal_2023.mpicreminders AS p')
+        ->leftJoin('db_standardization.musers AS u', 'p.intUserID', '=', 'u.id')
+        ->where('p.intMandatoryID', '=', $data->intMandatoryID)
+        ->get();
+        
+        $data->picReminders = [];
+        foreach ($picData as $pic) {
+            array_push($data->picReminders, $pic->id);
+        }
+
+        $remData = PeriodFormatter::countDayToUnit($data->intReminderPeriod);
+        $data->intReminderPeriod = $remData['number'];
+        $data->remPeriodUnit = $remData['unit'];
+
+        if ($data) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Not Found'
+            ], 404);
+        }
     }
 
     /**
@@ -199,7 +237,99 @@ class RequestMandatoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // get old data
+        $document = Document::where('intDocID', $id)->first();
+        $mandatory = Mandatory::where('intDocID', $id)->first();
+        $file = File::where('intFileID', $mandatory->intFileID)->first();
+
+        // construct request
+        $inputFile = [];
+        $inputDocument = [];
+        $inputMandatory = [];
+        $inputPICReminder = [];
+        $inputLog = [];
+
+        if ($request->hasFile('txtFile')) {
+            if($file->txtFilename != 'default.pdf') {
+                $destroy = public_path($file->txtPath);
+                unlink($destroy);
+            }
+            $reqFile = $request->file('txtFile');
+            $fileName = time() . '_' . $reqFile->getClientOriginalName();
+            $reqFile->move('upload/documents', $fileName);
+            $inputFile['txtFilename'] = $fileName;
+            $inputFile['txtPath'] = '/upload/documents/' . $fileName;
+        } else {
+            $inputFile['txtFilename'] = $file->txtFilename;
+            $inputFile['txtPath'] = $file->txtPath;
+        }
+
+        $department = DepartmentModel::where('intDepartment_ID', ($request['intPICDeptID'] ?: $mandatory->intPICDeptID))->first();
+        $inputDocument['txtRequestNumber'] = NumberIDGenerator::generateRequestNumber(($request['intTypeID'] ?: $mandatory->intTypeID), $department->txtInitial);
+        $inputDocument['txtDocNumber'] = NumberIDGenerator::generateDocumentNumber('PM', ($request['intTypeID'] ?: $mandatory->intTypeID), $department->txtInitial, $id);
+        $inputDocument['txtDocName'] = $request['txtDocName'] ?: $document->txtDocName;
+        $inputDocument['intRequestedBy'] = Auth::user()->id;
+        $inputDocument['intRequestStatus'] = 1; // New Request
+
+        $inputMandatory['intTypeID'] = $request['intTypeID'] ?: $mandatory->intTypeID;
+        $inputMandatory['intPICDeptID'] = $request['intPICDeptID'] ?: $mandatory->intPICDeptID;
+        $inputMandatory['intPICUserID'] = $request['intPICUserID'] ?: $mandatory->intPICUserID;
+        $inputMandatory['intVariantID'] = $request['intVariantID'] ?: $mandatory->intVariantID;
+        $inputMandatory['dtmPublishDate'] = $request['dtmPublishDate'] ?: $mandatory->dtmPublishDate;
+        $inputMandatory['dtmExpireDate'] = $request['intVariantID'] == 1 ? null : ($request['dtmExpireDate'] ?: $mandatory->dtmExpireDate);
+        $inputMandatory['intExpirationPeriod'] = $request['intVariantID'] == 1 ? null : ($inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : $mandatory->intExpirationPeriod);
+        $inputMandatory['intIssuerID'] = $request['intIssuerID'];
+        $inputMandatory['intReminderPeriod'] = $request['intVariantID'] == 1 ? null : ($request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : $mandatory->intReminderPeriod);
+        $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
+        $inputMandatory['intRenewalCost'] = $request['intVariantID'] == 1 ? 0 : ($request['intRenewalCost'] ?: $mandatory->intRenewalCost);
+        $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
+        $inputMandatory['txtNote'] = $request['txtNote'];
+        $inputMandatory['txtTerminationNote'] = null;
+        $inputMandatory['intCreatedBy'] = Auth::user()->id;
+
+        $inputLog['intState'] = 1; // New Request
+        $inputLog['intUserID'] = Auth::user()->id;
+        $inputLog['txtNote'] = $request['txtNote'];
+        $inputLog['txtLeadTime'] = null;
+        
+        try {
+            DB::beginTransaction();
+            if ($request->hasFile('txtFile')) {
+                $createFile = File::create($inputFile);
+                $inputMandatory['intFileID'] = $createFile->intFileID;
+            } else {
+                $inputMandatory['intFileID'] = $file->intFileID;
+            }
+            $createDocument = Document::create($inputDocument);
+            $inputMandatory['intDocID'] = $createDocument->intDocID;
+            $inputLog['intDocID'] = $createDocument->intDocID;
+            $createMandatory = Mandatory::create($inputMandatory);
+            
+            if ($request['intVariantID'] == 2) {
+                if (count($request['picReminders']) > 0) {
+                    foreach ($request['picReminders'] as $pr) {
+                        $inputPICReminder['intUserID'] = $pr;
+                        $inputPICReminder['intMandatoryID'] = $createMandatory->intMandatoryID;
+                        $createPICReminder = PICReminder::create($inputPICReminder);
+                    }
+                }
+            }
+
+            $createLog = DocApproval::create($inputLog);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document Updated Successfully'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**

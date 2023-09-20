@@ -57,7 +57,7 @@ Route::name('smartlegal.')->group(function () {
     });
 
     Route::prefix('request')->name('request.')->group(function () {
-        Route::resource('mandatory', 'RequestMandatoryController')->only(['index', 'store']);
+        Route::resource('mandatory', 'RequestMandatoryController')->only(['index', 'store', 'edit', 'update']);
     });
 
     Route::prefix('library')->name('library.')->group(function () {
