@@ -1,0 +1,13 @@
+{
+    "name": "Cmf",
+    "alias": "cmf",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Cmf\\Providers\\CmfServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
