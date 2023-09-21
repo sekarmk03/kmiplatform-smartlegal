@@ -11,5 +11,6 @@
     "FUI": true,
     "Facerecognition": true,
     "Faceid": true,
-    "ROIS": true
+    "ROIS": true,
+    "Cmf": true
 }
