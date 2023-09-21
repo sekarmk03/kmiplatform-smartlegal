@@ -44,26 +44,26 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">#</th>
-                                        <th class="text-center">CREATED AT</th>
+                                        <th class="text-center">CREATED&nbsp;AT</th>
                                         <th class="text-center">CREATED BY</th>
                                         <th class="text-center">REQUEST NUMBER</th>
-                                        <th class="text-center">DOCUMENT NUMBER</th>
-                                        <th class="text-center">DOCUMENT NAME</th>
+                                        <th class="text-center">DOCUMENT&nbsp;NUMBER</th>
+                                        <th class="text-center">DOCUMENT&nbsp;NAME</th>
                                         <th class="text-center">STATUS</th>
                                         <th class="text-center">TYPE</th>
                                         <th class="text-center">PIC DOCUMENT</th>
                                         <th class="text-center">VARIANT</th>
-                                        <th class="text-center">EXP PERIOD</th>
+                                        <th class="text-center">EXP&nbsp;PERIOD</th>
                                         <th class="text-center">PUBLISH DATE</th>
                                         <th class="text-center">EXPIRED DATE</th>
                                         <th class="text-center">ISSUER</th>
                                         <th class="text-center">REMINDER PERIOD</th>
-                                        <th class="text-center">PIC REMINDER</th>
+                                        <th class="text-center">PIC&nbsp;REMINDER</th>
                                         <th class="text-center">LOCATION FILLING</th>
                                         <th class="text-center">RENEWAL COST</th>
                                         <th class="text-center">COST CENTER</th>
-                                        <th class="text-center">NOTE</th>
-                                        <th class="text-center">TERMINATION NOTE</th>
+                                        <th class="text-center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        <th class="text-center">TERMINATION&nbsp;NOTE</th>
                                         <th class="text-center">ACTION</th>
                                     </tr>
                                     </thead>

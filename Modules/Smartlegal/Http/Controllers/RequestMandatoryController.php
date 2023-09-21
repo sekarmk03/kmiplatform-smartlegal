@@ -257,10 +257,6 @@ class RequestMandatoryController extends Controller
         $inputLog = [];
 
         if ($request->hasFile('txtFile')) {
-            if($file->txtFilename != 'default.pdf') {
-                $destroy = public_path($file->txtPath);
-                unlink($destroy);
-            }
             $reqFile = $request->file('txtFile');
             $fileName = time() . '_' . $reqFile->getClientOriginalName();
             $reqFile->move('upload/documents', $fileName);
@@ -285,7 +281,7 @@ class RequestMandatoryController extends Controller
         $inputMandatory['dtmPublishDate'] = $request['dtmPublishDate'] ?: $mandatory->dtmPublishDate;
         $inputMandatory['dtmExpireDate'] = $request['intVariantID'] == 1 ? null : ($request['dtmExpireDate'] ?: $mandatory->dtmExpireDate);
         $inputMandatory['intExpirationPeriod'] = $request['intVariantID'] == 1 ? null : ($inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : $mandatory->intExpirationPeriod);
-        $inputMandatory['intIssuerID'] = $request['intIssuerID'];
+        $inputMandatory['intIssuerID'] = $request['intIssuerID'] ?: $mandatory->intIssuerID;
         $inputMandatory['intReminderPeriod'] = $request['intVariantID'] == 1 ? null : ($request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : $mandatory->intReminderPeriod);
         $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
         $inputMandatory['intRenewalCost'] = $request['intVariantID'] == 1 ? 0 : ($request['intRenewalCost'] ?: $mandatory->intRenewalCost);
@@ -301,6 +297,7 @@ class RequestMandatoryController extends Controller
         
         try {
             DB::beginTransaction();
+            
             if ($request->hasFile('txtFile')) {
                 $createFile = File::create($inputFile);
                 $inputMandatory['intFileID'] = $createFile->intFileID;

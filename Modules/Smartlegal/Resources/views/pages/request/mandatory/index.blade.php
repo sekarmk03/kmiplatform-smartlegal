@@ -463,24 +463,47 @@
                 },
                 dropdownParent: $('#modal-form')
             });
-            $('.modal-body form').on('submit', (e) => {
+            $('#modal-form .modal-body form').on('submit', (e) => {
                 e.preventDefault();
                 let formData = new FormData($('.modal-body form')[0]);
-                let processData = false;
-                let contentType = false;
-                if (JSON.stringify(formData) == '{}') {
-                    formData = $('.modal-body form#termination-form').serialize();
-                    contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
-                }
+                console.log(formData);
                 $.ajax({
                     url: getUrl(),
                     method: getMethod(),
                     data: formData,
                     dataType: 'JSON',
-                    processData: processData,
+                    processData: false,
+                    contentType: false,
+                    success: (response) => {
+                        $('#modal-form').modal('hide');
+                        refresh();
+                        location.reload();
+                        notification(response.status, response.message,'bg-success');
+                        conn.send(['success', 'request']);
+                    },
+                    error: (response) => {
+                        let fields = response.responseJSON.fields;
+                        $.each(fields, (i, val) => {
+                            $.each(val, (ind, value) => {
+                                notification(response.responseJSON.status, val[ind],'bg-danger');
+                            });
+                        });
+                    }
+                });
+            });
+            $('#modal-form-note .modal-body form').on('submit', (e) => {
+                e.preventDefault();
+                let formData = $('#modal-form-note .modal-body form').serialize();
+                let contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+                console.log(formData);
+                $.ajax({
+                    url: getUrl(),
+                    method: getMethod(),
+                    data: formData,
+                    dataType: 'JSON',
                     contentType: contentType,
                     success: (response) => {
-                        $('#modal-form, #modal-form-note').modal('hide');
+                        $('#modal-form-note').modal('hide');
                         refresh();
                         location.reload();
                         notification(response.status, response.message,'bg-success');

@@ -39,6 +39,7 @@ class LibraryMandatoryController extends Controller
                     ->groupBy(DB::raw('substring(txtDocNumber, 1, 11)'));
             })
             ->whereIn('mdocuments.intRequestStatus', [3, 5, 6, 7])
+            ->orderBy('mdocuments.dtmUpdatedAt', 'DESC')
             ->get();
     
             $transformedData = $data->map(function ($row) {
@@ -58,7 +59,7 @@ class LibraryMandatoryController extends Controller
             return DataTables::of($transformedData)
                 ->addIndexColumn()
                 ->addColumn('action', function($row) {
-                    return '<button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-location-arrow"></i></button>';
+                    return '<button onclick="show('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="fas fa-link"></i></button>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);

@@ -147,6 +147,22 @@
             </div>
         </div>
     </div>
+    <!-- #modal-dialog-preview -->
+    <div class="modal fade" id="modal-preview">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Modal Dialog</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive embed-responsive-16by9" src="" frameborder="0" width="100%" height="600px" id="FileFrame"></iframe>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 @endsection
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -156,12 +172,16 @@
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
     <script>
+        let url = '';
+        let method = '';
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        }); 
-        var daTable = $('#daTable').DataTable({
+        });
+
+        let daTable = $('#daTable').DataTable({
             processing: true,
             serverSide: true,
             autoWidth: true,
@@ -178,8 +198,32 @@
                 {data: 'attachment', name: 'attachment', orderable: false, searchable: false, className: 'text-center'},
             ]
         });
-        function refresh(){
-            daTable.ajax.reload(null, false);
+
+        const getUrl = () => url;
+        const getMethod = () => method;
+        const refresh = () => daTable.ajax.reload(null, false);
+
+        const preview = ( id ) => {
+            $('.modal-header h4').html('File Preview');
+            let previewUrl = "{{ route('smartlegal.master.file.preview', ':id') }}";
+            previewUrl = previewUrl.replace(':id', id);
+            $.get(previewUrl, (response) => {
+                $('#modal-preview').modal('show');
+                $('iframe#FileFrame').attr('src', response.data.txtPath);
+            });
         }
+
+        const download = ( id ) => {
+            let downloadUrl = "{{ route('smartlegal.master.file.download', ':id') }}";
+            downloadUrl = downloadUrl.replace(':id', id);
+            window.location = downloadUrl;
+        }
+
+        $(document).ready(() => {
+            $('.notif-icon').find('span').text();
+            $('#modal-preview').on('hide.bs.modal', () => {
+                $('iframe#FileFrame').attr('src', '');
+            });
+        });
     </script>
 @endpush
