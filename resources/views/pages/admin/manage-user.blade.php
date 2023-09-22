@@ -5,162 +5,7 @@
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
-    <link href="{{ asset('/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
-@endpush
-@section('content')
-    <!-- BEGIN breadcrumb -->
-	<ol class="breadcrumb float-xl-end">
-		<li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
-		<li class="breadcrumb-item active">Manage Users</li>
-	</ol>
-	<!-- END breadcrumb -->
-	<!-- BEGIN page-header -->
-	<h1 class="page-header">Manage Users</h1>
-	<!-- END page-header -->
-    <div class="row">
-        <div class="col">
-            <div class="panel panel-inverse">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Users Table</h4>
-                    <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
-                        <a type="button" onclick="refresh()" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i class="fa fa-redo"></i></a>
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="row my-3">
-                        <div class="col-md-2 ms-auto">
-                            {!! Level::createBtn() !!}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!-- html -->
-                        <div class="table-responsive">
-                            <table id="daTable" class="table table-striped table-bordered align-middle">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <TH>DATE CREATED</TH>
-                                    <th>NAME</th>
-                                    <th>USER NAME</th>
-                                    <th>INITIAL</th>
-                                    <th>DEPT</th>
-                                    <th>LEVEL</th>
-                                    <TH>ACTION</TH>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- #modal-dialog -->
-    <div class="modal fade" id="modal-level">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h4 class="modal-title">Modal Dialog</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-                </div>
-                <div class="modal-body">
-                <form action="" method="post" id="form-user" data-parsley-validate="true">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label" for="Department_ID" data-parsley-required="true">Department</label>
-                            <select class="select2 form-control" id="Department_ID" name="intDepartment_ID" data-parsley-required="true">
-                                @foreach ($departments as $item)                        
-                                    <option value="{{ $item->intDepartment_ID }}">{{ $item->txtDepartmentName }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="NIK">NIK</label>
-                            <input class="form-control" type="text" name="txtNik" id="NIK" placeholder="NIK" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true"/>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Name">Name</label>
-                            <input class="form-control" type="text" name="txtName" id="Name" placeholder="Name" oninput="this.value = this.value.toUpperCase()" data-parsley-required="true" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Initial">Initial</label>
-                            <input class="form-control" type="text" name="txtInitial" id="Initial" placeholder="Initial Name" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="UserName">User Name</label>
-                            <input class="form-control" type="text" name="txtUsername" id="UserName" placeholder="User Name" oninput="this.value = this.value.toLowerCase()" onkeypress="return event.charCode != 32" data-parsley-required="true" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Email">Email</label>
-                            <input class="form-control" type="text" name="txtEmail" id="Email" placeholder="user@email.com" data-parsley-required="true" data-parsley-type="email" onkeypress="return event.charCode != 32"/>
-                        </div>
-                        <div class="mb-3 input-password">
-                            <label class="form-label" id="Password">Password</label>
-                            <div class="input-group">
-                                <input type="password" id="Password" class="form-control" name="txtPassword" placeholder="******" onkeypress="return event.charCode != 32" required/>
-                                <button type="button" class="btn btn-default" onclick="showPassword(this)"><div class="fas fa-eye"></div></button>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="Level_ID">Level</label>
-                            <select class="select2 form-control" id="Level_ID" name="intLevel_ID" data-parsley-required="true" >
-                                @foreach ($levels as $item)                        
-                                    <option value="{{ $item->intLevel_ID }}">{{ $item->txtLevelName }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <!-- file -->
-                            <label for="Photo" class="form-label">Photo Profile</label>
-                            <input type="file" class="form-control" name="txtPhoto" id="Photo" onchange="document.getElementById('preview-photo').src = window.URL.createObjectURL(this.files[0])"/>
-                        </div>
-                        <div class="mb-3">
-                            <div class="mx-auto">
-                                <img class="img-thumbnail" src="{{ asset('img/user/default.png') }}" alt="Photo Profile Preview" id="preview-photo" width="156">
-                            </div>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Close</a>
-                <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-                </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- #modal-dialog -->
-    <div class="modal fade" id="modal-reset">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h4 class="modal-title">Modal Dialog</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-                </div>
-                <div class="modal-body">
-                <form action="" method="post" id="reset-password" data-parsley-validate="true">
-                    <div class="mb-3">
-                        <label class="form-label" id="NewPassword">New Password</label>
-                        <div class="input-group">
-                            <input type="password" id="NewPassword" class="form-control" name="txtPassword" placeholder="******" onkeypress="return event.charCode != 32" required/>
-                            <button type="button" class="btn btn-default" onclick="showPassword(this)"><div class="fas fa-eye"></div></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Close</a>
-                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-                </form>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-    <link href="{{ asset('plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -169,23 +14,8 @@
     <script src="{{ asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
-<<<<<<< HEAD
-<<<<<<< HEAD
     <script src="{{ asset('/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
-<<<<<<< HEAD
-    <script src="{{ asset('plugins/select-picker/dist/picker.min.js') }}"></script>
-=======
-    <script src="{{ asset('/plugins/select2/dist/js/select2.min.js') }}"></script>
-    <script src="{{ asset('/plugins/select-picker/dist/picker.min.js') }}"></script>
-    <script src="{{ asset('/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
->>>>>>> 77cbe935 (upload from local to git)
-=======
-    <script src="{{ asset('/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
-    <script src="{{ asset('plugins/select-picker/dist/picker.min.js') }}"></script>
->>>>>>> b237c557 (02Mei2023 update)
-=======
     <script src="{{ asset('plugins/select2/dist/js/select2.min.js') }}"></script>
->>>>>>> 04ad640b (manage user fixing)
     <script>
         let url = '';
         let method = '';
@@ -216,7 +46,6 @@
         function getMethod(){
             return method;
         }
-<<<<<<< HEAD
         function getSubdepartmentList(iddept){
             let wrapper = $('#Subdepartment_ID');
             let opt = '';
@@ -249,8 +78,6 @@
                 }
             })
         }
-=======
->>>>>>> 77cbe935 (upload from local to git)
         function refresh(){
             daTable.ajax.reload(null, false);
         }
@@ -351,40 +178,6 @@
             return param.replace(':id', id);
         }
         $(document).ready(function(){
-<<<<<<< HEAD
-            $('select#Department_ID').picker({
-                search: true,
-                'texts': {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b237c557 (02Mei2023 update)
-                    trigger : "Select Department", 
-                    noResult : "No results", 
-                    search : "Search"
-                }
-<<<<<<< HEAD
-=======
-                    trigger : "Select a Department",
-                    search : "Search Department Name",
-                    noResult : "No results",
-                },
->>>>>>> 77cbe935 (upload from local to git)
-=======
->>>>>>> b237c557 (02Mei2023 update)
-            });
-            $('select#Level_ID').picker({
-                search: true,
-                'texts': {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b237c557 (02Mei2023 update)
-                    trigger : "Select Level", 
-                    noResult : "No results", 
-                    search : "Search"
-                }
-=======
             $('select#Department_ID').select2({
                 placeholder: "SELECT DEPARTMENT",
                 allowClear: true,
@@ -394,7 +187,6 @@
                 placeholder: "SELECT SUB DEPARTMENT",
                 allowClear: true,
                 dropdownParent: $('#modal-level')
->>>>>>> 04ad640b (manage user fixing)
             });
             $('select#Level_ID').select2({
                 placeholder: "SELECT LEVEL",
@@ -417,13 +209,8 @@
             })
             $('#modal-level').on('hide.bs.modal', function(){
                 $('.modal-body form')[0].reset();
-<<<<<<< HEAD
-                $('select#Department_ID, select#Level_ID').picker('set', '');
->>>>>>> b237c557 (02Mei2023 update)
-=======
                 $('select#Jobposition_ID, select#Subdepartment_ID').empty();
                 $('select#Department_ID, select#Level_ID, select#Subdepartment_ID, select#Cg_ID, select#Jobposition_ID').val('').trigger('change');
->>>>>>> 04ad640b (manage user fixing)
                 $('#preview-photo').attr('src', "{{ asset('img/user/default.png') }}");
                 $('input[name="_method"]').remove();
             })
@@ -471,10 +258,6 @@
             })
         })
     </script>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b237c557 (02Mei2023 update)
 @endpush
 @section('content')
     <!-- BEGIN breadcrumb -->
@@ -541,9 +324,6 @@
                 <form action="" method="post" id="form-user" data-parsley-validate="true">
                         @csrf
                         <div class="mb-3">
-<<<<<<< HEAD
-                            <label class="form-label" for="Department_ID" data-parsley-required="true">Department</label>
-=======
                             <label class="form-label" for="Level_ID">LEVEL*</label>
                             <select class="select2 form-control" id="Level_ID" name="intLevel_ID" data-parsley-required="true" >
                                 <option value=""></option>
@@ -554,7 +334,6 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="Department_ID">DEPARTMENT*</label>
->>>>>>> 04ad640b (manage user fixing)
                             <select class="select2 form-control" id="Department_ID" name="intDepartment_ID" data-parsley-required="true">
                                 <option value=""></option>
                                 @foreach ($departments as $item)                        
@@ -562,21 +341,8 @@
                                 @endforeach
                             </select>
                         </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                        <div class="subdept mb-3" style="display: none">
-                            <label class="form-label" for="Subdepartment_ID">Sub Department</label>
-                            <select class="select2 form-control" id="Subdepartment_ID" name="intSubdepartment_ID" data-parsley-required="true">
-                            </select>
-                        </div>
-=======
->>>>>>> b237c557 (02Mei2023 update)
-                        <div class="subdept mb-3" style="display: none">
-                            <label class="form-label" for="Subdepartment_ID">Sub Department</label>
-=======
                         <div class="mb-3">
                             <label class="form-label" for="Subdepartment_ID">SUB DEPARTMENT*</label>
->>>>>>> 04ad640b (manage user fixing)
                             <select class="select2 form-control" id="Subdepartment_ID" name="intSubdepartment_ID" data-parsley-required="true">
                             </select>
                         </div>
@@ -666,11 +432,4 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 @endsection
-=======
-@endpush
->>>>>>> 77cbe935 (upload from local to git)
-=======
-@endsection
->>>>>>> b237c557 (02Mei2023 update)
