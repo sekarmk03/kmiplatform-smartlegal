@@ -12,5 +12,6 @@
     "Facerecognition": true,
     "Faceid": true,
     "Smartlegal": true,
-    "ROIS": true
+    "ROIS": true,
+    "Cmf": true
 }
