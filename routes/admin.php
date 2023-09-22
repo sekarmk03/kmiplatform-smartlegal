@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\ManageSubdepartmentController;
 
         //Prefix: Manage Subdepartments
         Route::resource('subdepartment', ManageSubdepartmentController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
+        Route::get('subdepartment/list', [ManageSubdepartmentController::class, 'list'])->name('subdepartment.list');
 
         //Prefix: Manage Menus
         Route::resource('menu', ManageMenuController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);

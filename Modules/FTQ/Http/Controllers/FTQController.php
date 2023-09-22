@@ -66,7 +66,7 @@ class FTQController extends Controller
     }
 
     public function getOracle(){
-        $data = DB::connection('oracle')->select("SELECT DISTINCT TEST_CODE FROM XXKMIDQM.KMI_DQM_SPECPARAMTRS_V ORDER BY TEST_CODE ASC");
+        $data = DB::connection('oracle')->table("XXKMIDQM.KMI_DQM_SPECPARAMTRS_V")->get();
         return response()->json([
             'status' => 'success',
             'data' => $data

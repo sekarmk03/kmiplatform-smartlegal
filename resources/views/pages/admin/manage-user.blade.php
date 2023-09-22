@@ -356,26 +356,10 @@
                     noResult : "No results", 
                     search : "Search"
                 }
-<<<<<<< HEAD
             });
             $('select#Department_ID').on('sp-change', function(){
                 getSubdepartmentList($(this).val());
             })
-            $('#modal-level').on('hide.bs.modal', function(){
-                $('.modal-body form')[0].reset();
-                $('select#Department_ID, select#Level_ID').picker('set', '');
-=======
-                    trigger : "Select a Level",
-                    search : "Search Level Name",
-                    noResult : "No results",
-                },
-            });
-            $('#modal-level').on('hide.bs.modal', function(){
-                $('.modal-body form')[0].reset();
-                $('select#Department_ID, select#Level_ID').picker();
->>>>>>> 77cbe935 (upload from local to git)
-=======
-            });
             $('#modal-level').on('hide.bs.modal', function(){
                 $('.modal-body form')[0].reset();
                 $('select#Department_ID, select#Level_ID').picker('set', '');
@@ -497,11 +481,7 @@
                 <form action="" method="post" id="form-user" data-parsley-validate="true">
                         @csrf
                         <div class="mb-3">
-<<<<<<< HEAD
-                            <label class="form-label" for="Department_ID">Department</label>
-=======
                             <label class="form-label" for="Department_ID" data-parsley-required="true">Department</label>
->>>>>>> b237c557 (02Mei2023 update)
                             <select class="select2 form-control" id="Department_ID" name="intDepartment_ID" data-parsley-required="true">
                                 @foreach ($departments as $item)                        
                                     <option value="{{ $item->intDepartment_ID }}">{{ $item->txtDepartmentName }}</option>
@@ -516,6 +496,11 @@
                         </div>
 =======
 >>>>>>> b237c557 (02Mei2023 update)
+                        <div class="subdept mb-3" style="display: none">
+                            <label class="form-label" for="Subdepartment_ID">Sub Department</label>
+                            <select class="select2 form-control" id="Subdepartment_ID" name="intSubdepartment_ID" data-parsley-required="true">
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label" for="NIK">NIK</label>
                             <input class="form-control" type="text" name="txtNik" id="NIK" placeholder="NIK" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true"/>
