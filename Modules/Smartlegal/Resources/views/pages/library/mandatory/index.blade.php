@@ -62,12 +62,16 @@
     <script src="{{ asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
     <script>
+        let url = '';
+        let method = '';
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        }); 
-        var daTable = $('#daTable').DataTable({
+        });
+
+        let daTable = $('#daTable').DataTable({
             processing: true,
             serverSide: true,
             autoWidth: true,
@@ -84,8 +88,15 @@
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]
         });
-        function refresh(){
-            daTable.ajax.reload(null, false);
+
+        const getUrl = () => url;
+        const getMethod = () => method;
+        const refresh = () => daTable.ajax.reload(null, false);
+
+        const show = ( id ) => {
+            let showUrl = "{{ route('smartlegal.library.mandatory.show', ':id') }}"
+            showUrl = showUrl.replace(':id', id);
+            window.location.href = showUrl;
         }
     </script>
 @endpush

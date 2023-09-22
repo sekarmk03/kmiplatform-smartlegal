@@ -129,7 +129,7 @@
         const show = ( id ) => {
             let showUrl = "{{ route('smartlegal.mytask.mandatory.show', ':id') }}"
             showUrl = showUrl.replace(':id', id);
-            $.get(showUrl);
+            window.location.href = showUrl;
         }
 
         $(document).ready(() => {
