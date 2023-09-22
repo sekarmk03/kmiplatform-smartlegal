@@ -11,8 +11,6 @@
 |
 */
 
-use Modules\FTQ\Http\Controllers\FatBlendVerificationController;
-
 Route::name('ftq.')->group(function () {
     Route::get('/', 'FTQController@index');
     Route::get('/okp/list', 'FTQController@getOkp')->name('okp.list');

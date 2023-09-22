@@ -14,8 +14,6 @@ use Modules\FTQ\Entities\MfatblendVerification as Mfatblend;
 use Modules\FTQ\Entities\TrfatblendVerification as TrFatblend;
 use Yajra\DataTables\DataTables;
 
-use function PHPUnit\Framework\returnSelf;
-
 class FatBlendVerificationController extends Controller
 {
     /**

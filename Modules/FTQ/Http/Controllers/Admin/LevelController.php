@@ -102,7 +102,7 @@ class LevelController extends Controller
      */
     public function edit($id)
     {
-        $data = Level::with('menu')->find($id);
+        $data = Level::find($id);
         if ($data) {
             return response()->json([
                 'status' => 'success',

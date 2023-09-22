@@ -10,11 +10,11 @@ conn.onopen = function(e) {
 function countNotif(){
     let notif = $('.notif-icon');
     $.get("<?php echo e(route('notification.count')); ?>", function(response){
-        if (response > 0) {        
+        if (response.count > 0) {        
             if (notif.find('span.badge').length > 0) {
-                notif.find('span.badge').html(response);
+                notif.find('span.badge').html(response.count);
             } else {
-                $('<span class="badge">'+response+'</span>').insertAfter(notif.find('i'));
+                $('<span class="badge">'+response.count+'</span>').insertAfter(notif.find('i'));
             }
         }
     })
@@ -25,12 +25,10 @@ function getNotif(){
     notif.find('.dropdown-item').remove();
     $.get("<?php echo e(route('notification.get')); ?>", function(response){
         $.each(response.data, function(i, val){
-            anote += '<a href="javascript:;" class="dropdown-item media '+(val.has_read?' bg-default':'')+'">'+
-                    '<div class="media-left">'+
-                        '<i class="fa fa-bell fa-2x"></i>'+
-                    '</div>'+
+            anote += '<a href="javascript:;" class="dropdown-item media '+(val.read_at != ''?' bg-default':'')+'">'+
                     '<div class="media-body">'+
-                        '<h6 class="media-heading">'+val.txtnotification+'</h6>'+
+                        '<h6 class="media-heading">'+val.data.title+'</h6>'+
+                        '<p>'+val.data.message+'</p>'+
                     '</div>'+
                 '</a>';
         })
@@ -45,12 +43,8 @@ function onReadNotif(){
     getNotif();
 }
 conn.onmessage = function(e) {
-    let data = e.data.split(',');
-    console.log(data[1]);
-    if (data[1] == 'department') {
-        refresh();
-        countNotif();
-    }
+    refresh();
+    countNotif();
 };
 countNotif();
 </script>

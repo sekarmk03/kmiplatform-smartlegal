@@ -243,6 +243,36 @@
                 }
             })
         }
+        function onPublish(){
+            var formData = new FormData($('.modal-body form')[0]);
+            formData.append('txtOkp', $('span.nookp').text());
+            formData.append('txtOkpType', $('span.typeokp').text());
+            formData.append('txtProduct', $('span.product').text());
+            formData.append('txtTotal', $('span.total').text());
+            formData.append('tmPlannedStart', $('span.planned').text());
+            formData.append('txtMoveOrder', $('span.moveorder').text());
+            formData.append('intFormula', $('span.formula').text());
+            formData.append('intIsDraft', 0);
+            formData.append('txtCreatedBy', "{{ Auth::user()->id }}");
+            formData.append('txtUpdatedBy', "{{ Auth::user()->id }}");
+            $('input[name="isCheck[]"]').each(function(){
+                formData.append('intIsCheck[]', $(this).is(':checked')?1:0);
+            })
+            $.ajax({
+                url: url,
+                type: method,
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "JSON",
+                success: function(response){
+                    $('#modal-level').modal('hide');
+                    refresh();
+                    notification(response.status, response.message,'bg-success');
+                    conn.send('Verifikasi Fat Blend published');
+                }
+            })
+        }
         function addPic(){
             let wrapper = $('table#pic');
             if (pic_no < 3) {            
@@ -261,6 +291,7 @@
             $(that).closest('tr').remove();
         }
         function edit(id){
+            let role = "{!! $role->intLevel_ID !!}";
             let editUrl = "{{ route('ftq.verifikasi.fat-blend.edit', ':id') }}";
             let wrapper = $('tbody.ingredients');
             let td = '';
@@ -371,28 +402,6 @@
                 dropdownParent: $('#modal-level'),
                 placeholder: 'Pilih OKP'
             });
-            // $('.modal-body form').on('submit', function(e){
-            //     e.preventDefault();
-            //     $.ajax({
-            //         url: getUrl(),
-            //         method: getMethod(),
-            //         data: $(this).serialize(),
-            //         dataType: "JSON",
-            //         success: function(response){
-            //             $('#modal-level').modal('hide');
-            //             refresh();
-            //             notification(response.status, response.message,'bg-success');
-            //         },
-            //         error: function(response){
-            //             let fields = response.responseJSON.fields;
-            //             $.each(fields, function(i, val){
-            //                 $.each(val, function(ind, value){
-            //                     notification(response.responseJSON.status, val[ind],'bg-danger');
-            //                 })
-            //             })
-            //         }
-            //     })
-            // })
         })
     </script>
 @endpush
@@ -543,8 +552,12 @@
                 </div>
                 <div class="modal-footer">
                     <a onclick="confirmCloseModal()" class="btn btn-white"><i class="fa-solid fa-xmark"></i> Close</a>
-                    <button type="button" onclick="onDraft()" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Draft</button>
-                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Publish</button>
+                    @if ($role->intLevel_ID == 4)
+                        <button type="button" onclick="onPublish()" class="btn btn-success"><i class="fa-solid fa-thumbs-up"></i> Approve</button>
+                    @else
+                        <button type="button" onclick="onDraft()" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Draft</button>
+                        <button type="button" onclick="onPublish()" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Publish</button>                        
+                    @endif
                     </form>
                 </div>
             </div>
