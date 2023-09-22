@@ -28,7 +28,7 @@ class FotoKaryawanController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = DB::table('standardization.musers as users')->join('faceid.foto_karyawans as foto', 'foto.user_id', '=', 'users.id')->get(['txtName', 'created_at', 'foto', 'foto.id', 'is_export', 'is_edit']);
+            $data = DB::table('db_standardization.musers as users')->join('faceid.foto_karyawans as foto', 'foto.user_id', '=', 'users.id')->get(['txtName', 'created_at', 'foto', 'foto.id', 'is_export', 'is_edit']);
 
             return DataTables::of($data)
                 ->addIndexColumn()
