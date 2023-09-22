@@ -41,14 +41,11 @@ Route::group(['middleware' => 'auth'], function(){
     Route::put('/profile/{id}/password', [UserController::class, 'putPassword'])->name('user.profile.reset');
     Route::put('/profile/{id}/photo', [UserController::class, 'putPhotoProfile'])->name('user.profile.photo');
 
-<<<<<<< HEAD
     //Profile
     Route::get('/profile', [UserController::class, 'getProfile'])->name('user.profile');
     Route::put('/profile/{id}/password', [UserController::class, 'putPassword'])->name('user.profile.reset');
     Route::put('/profile/{id}/photo', [UserController::class, 'putPhotoProfile'])->name('user.profile.photo');
 
-=======
->>>>>>> 77cbe935 (upload from local to git)
     //Prefix: Manage Databases
     Route::get('/user/manage-databases/{id}', [ManageDatabasesController::class, 'getIndex'])->name('manage.database.index');
     Route::post('/user/manage-database', [ManageDatabasesController::class, 'storeDatabase'])->name('manage.database.store');

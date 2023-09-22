@@ -53,25 +53,15 @@
 		@endif
 	</div>
 	
-<<<<<<< HEAD
 	@include('includes.component.header-mega-menu')
-=======
-	@includeWhen($appHeaderMegaMenu, 'includes.component.header-mega-menu')
->>>>>>> 77cbe935 (upload from local to git)
 	
 	<!-- BEGIN header-nav -->
 	<div class="navbar-nav">
 		<a class="navbar-link icon text-dark" type="button" onclick="openFullscreen()" class="mr-3"><i class="fa-solid fa-expand fa-2x"></i></a>
 		<div class="navbar-item dropdown">
-<<<<<<< HEAD
 			<a onclick="onReadNotif()" href="#" data-bs-toggle="dropdown" class="navbar-link dropdown-toggle icon notif-icon">
 				<i class="fa fa-bell"></i>
 				{{-- <span class="badge">0</span> --}}
-=======
-			<a href="#" data-bs-toggle="dropdown" class="navbar-link dropdown-toggle icon">
-				<i class="fa fa-bell"></i>
-				<span class="badge">5</span>
->>>>>>> 77cbe935 (upload from local to git)
 			</a>
 			@include('includes.component.header-dropdown-notification')
 		</div>
