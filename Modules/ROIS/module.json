@@ -1,0 +1,13 @@
+{
+    "name": "ROIS",
+    "alias": "rois",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ROIS\\Providers\\ROISServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -11,5 +11,6 @@
     "FUI": true,
     "Facerecognition": true,
     "Faceid": true,
-    "Smartlegal": true
+    "Smartlegal": true,
+    "ROIS": true
 }
