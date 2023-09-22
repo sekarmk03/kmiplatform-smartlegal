@@ -99,41 +99,39 @@
                 end: $('input[name="end"]').val()
             }, function(response){
                 let xAxisCat = [];
-                let xAxisCat2 = [];
                 let datas = groupArray(response.data);
-                $.each(response.data, function(i, val){
-                    xAxisCat.push(val.xAxis);
-                });
-                chartA.xAxis[0].setCategories(xAxisCat);
-                chartE.xAxis[0].setCategories(xAxisCat);
-                chartJ.xAxis[0].setCategories(xAxisCat);
                 for (let idx = 0; idx < datas.length; idx++) {
                     let resultVal = [];
                     let line = datas[idx];
-                    // console.log(line[idx].txtLineProcessName);
+                    let axisCty = [];
                     $.each(line, function(key, val){
                         resultVal.push(val.floatValues);
-                        xAxisCat2.push(val.txtBatchOrder);
+                        axisCty.push(val.xAxis);
                     })
-                    // console.log(resultVal);
                     switch (line[idx].txtLineProcessName) {
                         case 'Filling Sachet A1':
                             chartA.series[0].setData(resultVal);
+                            chartA.xAxis[0].setCategories(axisCty);
                             break;
                         case 'Filling Sachet A2':
-                            chartA.series[1].setData(resultVal);                            
+                            chartA.series[1].setData(resultVal);
+                            chartA.xAxis[0].setCategories(axisCty);                            
                             break;
                         case 'Filling Sachet E1':
-                            chartE.series[0].setData(resultVal);                            
+                            chartE.series[0].setData(resultVal);
+                            chartE.xAxis[0].setCategories(axisCty);                            
                             break;
                         case 'Filling Sachet E2':
-                            chartE.series[1].setData(resultVal);                            
+                            chartE.series[1].setData(resultVal);
+                            chartE.xAxis[0].setCategories(axisCty);                            
                             break;
-                        case 'Filling Sachet J1':
-                            chartJ.series[0].setData(resultVal);                            
+                        case 'Filling Sachet D1':
+                            chartD.series[0].setData(resultVal);
+                            chartD.xAxis[0].setCategories(axisCty);                            
                             break;
-                        case 'Filling Sachet J2':
-                            chartJ.series[1].setData(resultVal);                            
+                        case 'Filling Sachet D2':
+                            chartD.series[1].setData(resultVal);
+                            chartD.xAxis[0].setCategories(axisCty);                            
                             break;
                     }
                 }
@@ -203,7 +201,7 @@
                         }
                     }
                 });
-                chartJ.update({
+                chartD.update({
                     legend: {
                         labelFormatter: function() {
                             var lastVal = this.yData[this.yData.length - 1] != undefined?this.yData[this.yData.length - 1]:0,
@@ -391,7 +389,7 @@
 	<!-- END breadcrumb -->
 	<!-- BEGIN page-header -->
 	<h1 class="page-header">PT Kalbe Morinaga Indonesia
-        <br><small>Monitoring RO Online</small>
+        <br><small>Residual Oxygen Inspection System | ROIS</small>
     </h1>
 	<!-- END page-header -->
     <div class="row">

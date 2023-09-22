@@ -1,7 +1,9 @@
 let categories = [];
 var chartA = new Highcharts.chart('LineA', {
     chart: {
+        type: "area",
         zoomType: 'x',
+        alignTicks: false,
         resetZoomButton: {
             position: {
               verticalAlign: 'bottom',
@@ -19,11 +21,9 @@ var chartA = new Highcharts.chart('LineA', {
         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in',
         align: 'center'
     },
-    xAxis: [{
-        type: 'categories'
-    }, {
-        type: 'categories'
-    }],
+    xAxis: {
+        type: 'datetime'
+    },
     yAxis: {
         title: {
             text: 'RO Value'
@@ -106,11 +106,9 @@ var chartA = new Highcharts.chart('LineA', {
         }
     },            
     series: [{
-        type: "area",
         name: 'Filling Sachet A1',
         data: []
     }, {
-        type: "area",
         name: 'Filling Sachet A2',
         data: []
     }]
@@ -118,7 +116,9 @@ var chartA = new Highcharts.chart('LineA', {
 
 var chartE = new Highcharts.chart('LineE', {
     chart: {
+        type: "area",
         zoomType: 'x',
+        alignTicks: false,
         resetZoomButton: {
             position: {
               verticalAlign: 'bottom',
@@ -136,11 +136,9 @@ var chartE = new Highcharts.chart('LineE', {
         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in',
         align: 'center'
     },
-    xAxis: [{
-        type: 'categories'
-    }, {
-        type: 'categories'
-    }],
+    xAxis: {
+        type: 'category'
+    },
     yAxis: {
         title: {
             text: 'RO Value'
@@ -223,18 +221,17 @@ var chartE = new Highcharts.chart('LineE', {
         }
     },        
     series: [{
-        type: "area",
         name: 'Filling Sachet E1',
         data: []
     }, {
-        type: "area",
         name: 'Filling Sachet E2',
         data: []
     }]
 });
 
-var chartJ = new Highcharts.chart('LineJ', {
+var chartD = new Highcharts.chart('LineJ', {
     chart: {
+        type: "area",
         zoomType: 'x',
         resetZoomButton: {
             position: {
@@ -245,7 +242,7 @@ var chartJ = new Highcharts.chart('LineJ', {
         },
     },
     title: {
-        text: 'Chart RO Line J',
+        text: 'Chart RO Line D',
         align: 'center'
     },
     subtitle: {
@@ -253,11 +250,9 @@ var chartJ = new Highcharts.chart('LineJ', {
         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in',
         align: 'center'
     },
-    xAxis: [{
-        type: 'categories'
-    }, {
-        type: 'categories'
-    }],
+    xAxis: {
+        type: 'category'
+    },
     yAxis: {
         title: {
             text: 'RO Value'
@@ -340,12 +335,10 @@ var chartJ = new Highcharts.chart('LineJ', {
         }
     },             
     series: [{
-        type: "area",
-        name: 'Filling Sachet J1',
+        name: 'Filling Sachet D1',
         data: []
     }, {
-        type: "area",
-        name: 'Filling Sachet J2',
+        name: 'Filling Sachet D2',
         data: []
     }]
 });

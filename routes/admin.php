@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\ManageSubdepartmentController;
 
         //Prefix: Manage Departments
         Route::resource('department', ManageDepartmentController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
+        Route::get('department/users', [ManageDepartmentController::class, 'listUsers'])->name('department.users');
 
         //Prefix: Manage Subdepartments
         Route::resource('subdepartment', ManageSubdepartmentController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
