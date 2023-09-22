@@ -2,20 +2,19 @@
 <script src="{{ asset('/js/vendor.min.js') }}"></script>
 <script src="{{ asset('/js/app.min.js') }}"></script>
 <!-- ================== END core-js ================== -->
-<<<<<<< HEAD
 <script>
 var conn = new WebSocket('ws://localhost:8080');    
 conn.onopen = function(e) {
-    console.log(e);
+    console.log("Connection established!");
 };
 function countNotif(){
     let notif = $('.notif-icon');
     $.get("{{ route('notification.count') }}", function(response){
-        if (response.count > 0) {        
+        if (response > 0) {        
             if (notif.find('span.badge').length > 0) {
-                notif.find('span.badge').html(response.count);
+                notif.find('span.badge').html(response);
             } else {
-                $('<span class="badge">'+response.count+'</span>').insertAfter(notif.find('i'));
+                $('<span class="badge">'+response+'</span>').insertAfter(notif.find('i'));
             }
         }
     })
@@ -26,10 +25,12 @@ function getNotif(){
     notif.find('.dropdown-item').remove();
     $.get("{{ route('notification.get') }}", function(response){
         $.each(response.data, function(i, val){
-            anote += '<a href="javascript:;" class="dropdown-item media '+(val.read_at != ''?' bg-default':'')+'">'+
+            anote += '<a href="javascript:;" class="dropdown-item media '+(val.has_read?' bg-default':'')+'">'+
+                    '<div class="media-left">'+
+                        '<i class="fa fa-bell fa-2x"></i>'+
+                    '</div>'+
                     '<div class="media-body">'+
-                        '<h6 class="media-heading">'+val.data.title+'</h6>'+
-                        '<p>'+val.data.message+'</p>'+
+                        '<h6 class="media-heading">'+val.txtnotification+'</h6>'+
                     '</div>'+
                 '</a>';
         })
@@ -44,11 +45,11 @@ function onReadNotif(){
     getNotif();
 }
 conn.onmessage = function(e) {
-    countNotif();
+    let data = e.data.split(',');
+    if (data[1] == 'department') {
+        refresh();
+    }
 };
 countNotif();
 </script>
-=======
-
->>>>>>> 77cbe935 (upload from local to git)
 @stack('scripts')

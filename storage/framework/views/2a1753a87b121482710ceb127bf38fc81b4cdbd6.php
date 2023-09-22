@@ -53,14 +53,14 @@
 		<?php endif; ?>
 	</div>
 	
-	<?php echo $__env->renderWhen($appHeaderMegaMenu, 'includes.component.header-mega-menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path'])); ?>
+	<?php echo $__env->make('includes.component.header-mega-menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 	
 	<!-- BEGIN header-nav -->
 	<div class="navbar-nav">
 		<div class="navbar-item dropdown">
-			<a href="#" data-bs-toggle="dropdown" class="navbar-link dropdown-toggle icon">
+			<a onclick="onReadNotif()" href="#" data-bs-toggle="dropdown" class="navbar-link dropdown-toggle icon notif-icon">
 				<i class="fa fa-bell"></i>
-				<span class="badge">5</span>
+				
 			</a>
 			<?php echo $__env->make('includes.component.header-dropdown-notification', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 		</div>

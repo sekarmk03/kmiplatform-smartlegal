@@ -8,6 +8,192 @@
     <link href="<?php echo e(asset('/plugins/select-picker/dist/picker.min.css')); ?>" rel="stylesheet" />
     <link href="<?php echo e(asset('/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css')); ?>" rel="stylesheet" />
 <?php $__env->stopPush(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+    <script src="<?php echo e(asset('/plugins/datatables.net/js/jquery.dataTables.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('/plugins/datatables.net-responsive/js/dataTables.responsive.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('/plugins/select-picker/dist/picker.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('/plugins/sweetalert/dist/sweetalert.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js')); ?>"></script>
+    <script src="<?php echo e(asset('/plugins/gritter/js/jquery.gritter.js')); ?>"></script>
+    <script>
+        let url = '';
+        let method = '';
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }); 
+        var daTable = $('#daTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "<?php echo e(route('roonline.manage.inspection')); ?>",
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'txtLineProcessName', name: 'txtLineProcessName'},
+                {data: 'txtBatchOrder', name: 'txtBatchOrder'},
+                {data: 'txtProductName', name: 'txtProductName'},
+                {data: 'txtProductionCode', name: 'txtProductionCode'},
+                {data: 'dtmExpireDate', name: 'dtmExpireDate'},
+                {data: 'txtOptFilling', name: 'txtOptFilling'},
+                {data: 'txtOptQA', name: 'txtOptQA'},
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+            ]
+        });
+        function getUrl(){
+            return url;
+        }
+        function getMethod(){
+            return method;
+        }
+        function refresh(){
+            daTable.ajax.reload(null, false);
+        }
+        function create(){
+            $('.modal-header h4').html('Create Level');
+            $('#modal-level').modal('show');
+            method = "POST";
+        }
+        function edit(id){
+            $('.modal-header h4').html('Edit Process');
+            $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
+            let editUrl = "<?php echo route('roonline.manage.inspection.edit', ':id'); ?>";
+            editUrl = editUrl.replace(':id', id);
+            url = "<?php echo e(route('roonline.manage.inspection.update', ':id')); ?>";
+            url = url.replace(':id', id);
+            method = "POST";
+            BatchOrderOption();
+            $.get(editUrl, function(response){
+                $('#modal-level').modal('show');
+                $('input#LineProccessName').val(response.data.txtLineProcessName);
+                $('input#Product').val(response.data.txtProductName);
+                $('input#ProductionCode').val(response.data.txtProductionCode);
+                $('input#ExpireDate').val(response.data.dtmExpireDate);
+                $('input#OptFilling').val(response.data.txtOptFilling);
+            }).fail(function(response){
+                notification(response.responseJSON.status, response.responseJSON.message,'bg-danger');
+            });
+        }
+        function destroy(id){
+            swal({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this Data!',
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: 'Cancel',
+                        value: null,
+                        visible: true,
+                        className: 'btn btn-default',
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: 'Delete',
+                        value: true,
+                        visible: true,
+                        className: 'btn btn-danger',
+                        closeModal: true
+                    }
+                }
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: deleteUrl,
+                        method: "DELETE",
+                        dataType: "JSON",
+                        success: function(response){
+                            refresh();
+                            notification(response.status, response.message,'bg-success');
+                        }
+                    })
+                }
+            });
+        }
+        function BatchOrderOption(){
+            let wrapper = $('select#BatchOrder');
+            wrapper.find('option').remove();
+            let opt = '';
+            $.get("<?php echo e(route('roonline.inspection.okp')); ?>", function(response){
+                let datas = response.data;
+                $.each(datas, function(idx, val){
+                    opt += '<option value="'+val[0].BATCH_NO+'">'+val[0].BATCH_NO+'</option>'
+                })
+                wrapper.append(opt);
+                wrapper.picker({
+                    search: true,
+                    'texts': {
+                        trigger : "Select an OKP",
+                        search : "Search an OKP",
+                        noResult : "No results",
+                    },
+                });
+            })            
+        }
+        function lotOption(lots){
+            let wrapper = $('#ProductionCode');
+            let opt = '';
+            wrapper.find('option').remove();
+            $.each(lots, function(inx, val){
+                opt += '<option value="'+val[0].LOT_NUMBER+'">'+val[0].LOT_NUMBER+'</option>';
+            })
+            wrapper.append(opt);
+        }
+        function notification(status, message, bgclass){
+            $.gritter.add({
+                title: status,
+                text: '<p class="text-light">'+message+'</p>',
+                class_name: bgclass
+            });
+            return false;
+        }
+        $(document).ready(function(){
+            $('select#BatchOrder').on('sp-change', function(){
+                $.get("<?php echo e(route('roonline.inspection.okp')); ?>", {batch: $(this).val()}, function(response){
+                    let data = response.data;
+                    $('input#Product').val(data.DESCRIPTION);
+                    $('input#ProductionCode').val(data.LOT_NUMBER);
+                    $('input#ExpireDate').val(data.EXPIRATION_DATE);
+                }).then(() => {
+                    $.post("<?php echo e(route('roonline.inspection.lot')); ?>", {batch: $(this).val()}, function(response){
+                        let data = response.data;
+                        lotOption(data);
+                    })
+                })
+            })
+            $('#modal-level').on('hidden.bs.modal', function(){
+                let wrapper = $('select#BatchOrder');
+                wrapper.find('option').remove();
+                wrapper.picker('destroy');
+            })
+            $('#form-level').on('submit', function(e){
+                e.preventDefault();
+                var formData = new FormData($(this)[0]);
+                formData.append('txtOptQA', "<?php echo e(Auth::user()->txtInitial); ?>");
+                $.ajax({
+                    url: getUrl(),
+                    method: getMethod(),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    success: function(response){
+                        $('#modal-level').modal('hide');
+                        refresh();
+                        notification(response.status, response.message,'bg-success');
+                    },
+                    error: function(response){
+                        let fields = response.responseJSON.fields;
+                        $.each(fields, function(i, val){
+                            notification(response.status, val[0],'bg-danger');
+                        })
+                    }
+                })
+            })
+        })
+    </script>
+<?php $__env->stopPush(); ?>
 <?php $__env->startSection('content'); ?>
     <!-- BEGIN breadcrumb -->
 	<ol class="breadcrumb float-xl-end">
@@ -81,7 +267,8 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="ProductionCode">Production Code*</label>
-                <input class="form-control" type="text" name="txtProductionCode" id="ProductionCode" placeholder="Production Code" readonly/>
+                <select name="txtProductionCode" id="ProductionCode" class="form-control" required>                    
+                </select>
             </div>
             <div class="mb-3">
                 <label for="ExpireDate" class="form-label">Expire Date*</label>
@@ -101,184 +288,4 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-<?php $__env->startPush('scripts'); ?>
-    <script src="<?php echo e(asset('/plugins/datatables.net/js/jquery.dataTables.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('/plugins/datatables.net-responsive/js/dataTables.responsive.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('/plugins/select-picker/dist/picker.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('/plugins/sweetalert/dist/sweetalert.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js')); ?>"></script>
-    <script src="<?php echo e(asset('/plugins/gritter/js/jquery.gritter.js')); ?>"></script>
-    <script>
-        let url = '';
-        let method = '';
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        }); 
-        var daTable = $('#daTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "<?php echo e(route('roonline.manage.inspection')); ?>",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'txtLineProcessName', name: 'txtLineProcessName'},
-                {data: 'txtBatchOrder', name: 'txtBatchOrder'},
-                {data: 'txtProductName', name: 'txtProductName'},
-                {data: 'txtProductionCode', name: 'txtProductionCode'},
-                {data: 'dtmExpireDate', name: 'dtmExpireDate'},
-                {data: 'txtOptFilling', name: 'txtOptFilling'},
-                {data: 'txtOptQA', name: 'txtOptQA'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
-        });
-        function getUrl(){
-            return url;
-        }
-        function getMethod(){
-            return method;
-        }
-        function refresh(){
-            daTable.ajax.reload(null, false);
-        }
-        function create(){
-            $('.modal-header h4').html('Create Level');
-            $('#modal-level').modal('show');
-            url = "<?php echo e(route('roonline.manage.device.store')); ?>";
-            method = "POST";
-        }
-        function edit(id){
-            $('.modal-header h4').html('Edit Process');
-            $('.modal-body form').append('<input type="hidden" name="_method" value="PUT">');
-            let editUrl = "<?php echo route('roonline.manage.inspection.edit', ':id'); ?>";
-            editUrl = editUrl.replace(':id', id);
-            url = "<?php echo e(route('roonline.manage.inspection.update', ':id')); ?>";
-            url = url.replace(':id', id);
-            method = "POST";
-            BatchOrderOption();
-            $.get(editUrl, function(response){
-                $('#modal-level').modal('show');
-                $('input#LineProccessName').val(response.data.txtLineProcessName);
-                $('input#Product').val(response.data.txtProductName);
-                $('input#ProductionCode').val(response.data.txtProductionCode);
-                $('input#ExpireDate').val(response.data.dtmExpireDate);
-                $('input#OptFilling').val(response.data.txtOptFilling);
-            }).fail(function(response){
-                notification(response.responseJSON.status, response.responseJSON.message,'bg-danger');
-            });
-        }
-        function destroy(id){
-            let deleteUrl = "<?php echo e(route('roonline.manage.device.destroy', ':id')); ?>";
-            deleteUrl = deleteUrl.replace(':id', id);
-            swal({
-                title: 'Are you sure?',
-                text: 'You will not be able to recover this Data!',
-                icon: 'warning',
-                buttons: {
-                    cancel: {
-                        text: 'Cancel',
-                        value: null,
-                        visible: true,
-                        className: 'btn btn-default',
-                        closeModal: true,
-                    },
-                    confirm: {
-                        text: 'Delete',
-                        value: true,
-                        visible: true,
-                        className: 'btn btn-danger',
-                        closeModal: true
-                    }
-                }
-            }).then(function(isConfirm) {
-                if (isConfirm) {
-                    $.ajax({
-                        url: deleteUrl,
-                        method: "DELETE",
-                        dataType: "JSON",
-                        success: function(response){
-                            refresh();
-                            notification(response.status, response.message,'bg-success');
-                        }
-                    })
-                }
-            });
-        }
-        function BatchOrderOption(){
-            let wrapper = $('select#BatchOrder');
-            wrapper.find('option').remove();
-            let opt = '';
-            $.get("<?php echo e(route('roonline.inspection.okp')); ?>", function(response){
-                let datas = response.data;
-                $.each(datas, function(idx, val){
-                    console.log(val);
-                    opt += '<option value="'+val[0].BATCH_NO+'">'+val[0].BATCH_NO+'</option>'
-                })
-                wrapper.append(opt);
-                wrapper.picker({
-                    search: true,
-                    'texts': {
-                        trigger : "Select an OKP",
-                        search : "Search an OKP",
-                        noResult : "No results",
-                    },
-                });
-            })            
-        }
-        function notification(status, message, bgclass){
-            $.gritter.add({
-                title: status,
-                text: '<p class="text-light">'+message+'</p>',
-                class_name: bgclass
-            });
-            return false;
-        }
-        $(document).ready(function(){
-            $("#ExpireDate").datepicker({
-                todayHighlight: true,
-                autoclose: true,
-                startDate: "now()"
-            });
-            $('select#BatchOrder').on('sp-change', function(){
-                $.get("<?php echo e(route('roonline.inspection.okp')); ?>", {batch: $(this).val()}, function(response){
-                    let data = response.data;
-                    $('input#Product').val(data.DESCRIPTION);
-                    $('input#ProductionCode').val(data.LOT_NUMBER);
-                    $('input#ExpireDate').val(data.EXPIRATION_DATE);
-                })
-            })
-            $('#modal-level').on('hidden.bs.modal', function(){
-                let wrapper = $('select#BatchOrder');
-                wrapper.find('option').remove();
-                wrapper.picker('destroy');
-            })
-            $('#form-level').on('submit', function(e){
-                e.preventDefault();
-                var formData = new FormData($(this)[0]);
-                formData.append('txtOptQA', "<?php echo e(Auth::user()->txtInitial); ?>");
-                $.ajax({
-                    url: getUrl(),
-                    method: getMethod(),
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    dataType: "JSON",
-                    success: function(response){
-                        $('#modal-level').modal('hide');
-                        refresh();
-                        notification(response.status, response.message,'bg-success');
-                    },
-                    error: function(response){
-                        let fields = response.responseJSON.fields;
-                        $.each(fields, function(i, val){
-                            notification(response.status, val[0],'bg-danger');
-                        })
-                    }
-                })
-            })
-        })
-    </script>
-<?php $__env->stopPush(); ?>
 <?php echo $__env->make('roonline::layouts.default_layout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\standardization\Modules/ROonline\Resources/views/pages/admin/inspections.blade.php ENDPATH**/ ?>

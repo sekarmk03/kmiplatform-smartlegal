@@ -6,10 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\ManageDatabasesController;
 use App\Http\Controllers\FileManagerController;
 use App\Http\Controllers\DashboardNavigationController;
-<<<<<<< HEAD
 use App\Http\Controllers\UserController;
-=======
->>>>>>> 77cbe935 (upload from local to git)
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +31,16 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/dashboard', [DashboardNavigationController::class, 'getIndex'])->name('dashboard.navigation');
     Route::get('/dashboard/modules/{id_dept}', [DashboardNavigationController::class, 'getModules'])->name('dashboard.navigation.modules');
 
+    //Profile
+    Route::get('/profile', [UserController::class, 'getProfile'])->name('user.profile');
+    Route::put('/profile/{id}/password', [UserController::class, 'putPassword'])->name('user.profile.reset');
+    Route::put('/profile/{id}/photo', [UserController::class, 'putPhotoProfile'])->name('user.profile.photo');
+
+    //Profile
+    Route::get('/profile', [UserController::class, 'getProfile'])->name('user.profile');
+    Route::put('/profile/{id}/password', [UserController::class, 'putPassword'])->name('user.profile.reset');
+    Route::put('/profile/{id}/photo', [UserController::class, 'putPhotoProfile'])->name('user.profile.photo');
+
 <<<<<<< HEAD
     //Profile
     Route::get('/profile', [UserController::class, 'getProfile'])->name('user.profile');
@@ -48,10 +55,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::delete('/user/manage-database/{id}', [ManageDatabasesController::class, 'destroyDatabase'])->name('manage.database.destroy');
     //File Manager
     Route::get('/filemanager', [FileManagerController::class, 'getIndex'])->name('filemanager');
-<<<<<<< HEAD
 
     //Notifications
     require __DIR__.'/notification.php';
-=======
->>>>>>> 77cbe935 (upload from local to git)
 });

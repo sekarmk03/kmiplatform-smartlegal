@@ -141,11 +141,7 @@
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('manage.subdepartment.update', ':id') }}";
             url = url.replace(':id', id);
-<<<<<<< HEAD
             method = "POST";
-=======
-            method = "PUT";
->>>>>>> 77cbe935 (upload from local to git)
             $.get(editUrl, function(response){
                 $('#modal-level').modal('show');
                 $('select#DepartmentName').picker('set', response.data.intDepartment_ID);
@@ -212,11 +208,7 @@
             })
             $('.modal-body form').on('submit', function(e){
                 e.preventDefault();
-<<<<<<< HEAD
                 var formData = new FormData($(this)[0]);
-=======
-                var formData = new FormData($(this));
->>>>>>> 77cbe935 (upload from local to git)
                 formData.append('txtCreatedBy', "{{ Auth::user()->txtName }}");
                 formData.append('txtUpdatedBy', "{{ Auth::user()->txtName }}");
                 $.ajax({
@@ -224,11 +216,8 @@
                     method: getMethod(),
                     data: formData,
                     dataType: "JSON",
-<<<<<<< HEAD
                     processData: false,
                     contentType: false,
-=======
->>>>>>> 77cbe935 (upload from local to git)
                     success: function(response){
                         $('#modal-level').modal('hide');
                         refresh();
@@ -237,13 +226,8 @@
                     error: function(response){
                         let fields = response.responseJSON.fields;
                         $.each(fields, function(i, val){
-<<<<<<< HEAD
                             $.each(val, function(idx, value){
                                 notification(response.responseJSON.status, val[idx],'bg-danger');
-=======
-                            $.each(val, function(ind, value){
-                                notification(response.responseJSON.status, val[ind],'bg-danger');
->>>>>>> 77cbe935 (upload from local to git)
                             })
                         })
                     }

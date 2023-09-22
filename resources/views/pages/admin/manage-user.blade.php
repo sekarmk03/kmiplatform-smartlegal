@@ -5,10 +5,6 @@
     <link href="{{ asset('/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
-<<<<<<< HEAD
-    <link href="{{ asset('plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
-@endpush
-=======
     <link href="{{ asset('/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
 @endpush
 @section('content')
@@ -164,7 +160,8 @@
         </div>
     </div>
 @endsection
->>>>>>> 77cbe935 (upload from local to git)
+    <link href="{{ asset('plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
+@endpush
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
@@ -173,6 +170,7 @@
     <script src="{{ asset('/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/plugins/gritter/js/jquery.gritter.js') }}"></script>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <script src="{{ asset('/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
     <script src="{{ asset('plugins/select-picker/dist/picker.min.js') }}"></script>
 =======
@@ -180,6 +178,10 @@
     <script src="{{ asset('/plugins/select-picker/dist/picker.min.js') }}"></script>
     <script src="{{ asset('/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+    <script src="{{ asset('/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
+    <script src="{{ asset('plugins/select-picker/dist/picker.min.js') }}"></script>
+>>>>>>> b237c557 (02Mei2023 update)
     <script>
         let url = '';
         let method = '';
@@ -326,25 +328,35 @@
                 search: true,
                 'texts': {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b237c557 (02Mei2023 update)
                     trigger : "Select Department", 
                     noResult : "No results", 
                     search : "Search"
                 }
+<<<<<<< HEAD
 =======
                     trigger : "Select a Department",
                     search : "Search Department Name",
                     noResult : "No results",
                 },
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+>>>>>>> b237c557 (02Mei2023 update)
             });
             $('select#Level_ID').picker({
                 search: true,
                 'texts': {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b237c557 (02Mei2023 update)
                     trigger : "Select Level", 
                     noResult : "No results", 
                     search : "Search"
                 }
+<<<<<<< HEAD
             });
             $('select#Department_ID').on('sp-change', function(){
                 getSubdepartmentList($(this).val());
@@ -362,6 +374,12 @@
                 $('.modal-body form')[0].reset();
                 $('select#Department_ID, select#Level_ID').picker();
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+            });
+            $('#modal-level').on('hide.bs.modal', function(){
+                $('.modal-body form')[0].reset();
+                $('select#Department_ID, select#Level_ID').picker('set', '');
+>>>>>>> b237c557 (02Mei2023 update)
                 $('#preview-photo').attr('src', "{{ asset('img/user/default.png') }}");
                 $('input[name="_method"]').remove();
             })
@@ -410,6 +428,9 @@
         })
     </script>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b237c557 (02Mei2023 update)
 @endpush
 @section('content')
     <!-- BEGIN breadcrumb -->
@@ -476,18 +497,25 @@
                 <form action="" method="post" id="form-user" data-parsley-validate="true">
                         @csrf
                         <div class="mb-3">
+<<<<<<< HEAD
                             <label class="form-label" for="Department_ID">Department</label>
+=======
+                            <label class="form-label" for="Department_ID" data-parsley-required="true">Department</label>
+>>>>>>> b237c557 (02Mei2023 update)
                             <select class="select2 form-control" id="Department_ID" name="intDepartment_ID" data-parsley-required="true">
                                 @foreach ($departments as $item)                        
                                     <option value="{{ $item->intDepartment_ID }}">{{ $item->txtDepartmentName }}</option>
                                 @endforeach
                             </select>
                         </div>
+<<<<<<< HEAD
                         <div class="subdept mb-3" style="display: none">
                             <label class="form-label" for="Subdepartment_ID">Sub Department</label>
                             <select class="select2 form-control" id="Subdepartment_ID" name="intSubdepartment_ID" data-parsley-required="true">
                             </select>
                         </div>
+=======
+>>>>>>> b237c557 (02Mei2023 update)
                         <div class="mb-3">
                             <label class="form-label" for="NIK">NIK</label>
                             <input class="form-control" type="text" name="txtNik" id="NIK" placeholder="NIK" oninput="this.value = this.value.toUpperCase()" onkeypress="return event.charCode != 32" data-parsley-required="true"/>
@@ -568,7 +596,11 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 @endsection
 =======
 @endpush
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+@endsection
+>>>>>>> b237c557 (02Mei2023 update)

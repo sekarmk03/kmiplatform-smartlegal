@@ -100,6 +100,7 @@
 				</div>
 			</div>				
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+			<?php if(in_array(Auth::user()->intLevel_ID, [1, 2])): ?>
 			<div class="menu-item">
 				<a href="http://localhost/phpmyadmin" class="menu-link" target="_new">
 					<div class="menu-icon">
@@ -115,7 +116,8 @@
 					</div>
 					<div class="menu-text">File Manager</div>
 				</a>
-			</div>
+			</div>				
+			<?php endif; ?>
 			<!-- BEGIN minify-button -->
 			<div class="menu-item d-flex">
 				<a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i class="fa fa-angle-double-left"></i></a>

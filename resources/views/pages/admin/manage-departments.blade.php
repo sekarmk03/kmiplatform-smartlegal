@@ -6,8 +6,6 @@
     <link href="{{ asset('/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
 @endpush
-<<<<<<< HEAD
-=======
 @section('content')
     <!-- BEGIN breadcrumb -->
 	<ol class="breadcrumb float-xl-end">
@@ -87,7 +85,6 @@
     </div>
 </div>
 @endsection
->>>>>>> 77cbe935 (upload from local to git)
 @push('scripts')
     <script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
@@ -176,9 +173,13 @@
                             refresh();
                             notification(response.status, response.message,'bg-success');
 <<<<<<< HEAD
+<<<<<<< HEAD
                             conn.send(['success', 'department']);
 =======
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+                            conn.send(['success', 'department']);
+>>>>>>> b237c557 (02Mei2023 update)
                         }
                     })
                 }
@@ -192,6 +193,7 @@
             });
             return false;
 <<<<<<< HEAD
+<<<<<<< HEAD
         }        
         $(document).ready(function(){
             $('.notif-icon').find('span').text();
@@ -199,6 +201,11 @@
         }
         $(document).ready(function(){
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+        }        
+        $(document).ready(function(){
+            $('.notif-icon').find('span').text();
+>>>>>>> b237c557 (02Mei2023 update)
             $('#modal-level').on('hide.bs.modal', function(){
                 $('input#DepartmentName').val('');
                 $('input#DepartmentInitial').val('');
@@ -216,9 +223,13 @@
                         refresh();
                         notification(response.status, response.message,'bg-success');
 <<<<<<< HEAD
+<<<<<<< HEAD
                         conn.send(['success', 'department']);
 =======
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+                        conn.send(['success', 'department']);
+>>>>>>> b237c557 (02Mei2023 update)
                     },
                     error: function(response){
                         let fields = response.responseJSON.fields;
@@ -233,6 +244,9 @@
         })
     </script>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b237c557 (02Mei2023 update)
 @endpush
 @section('content')
     <!-- BEGIN breadcrumb -->
@@ -312,7 +326,11 @@
       </div>
     </div>
 </div>
+<<<<<<< HEAD
 @endsection
 =======
 @endpush
 >>>>>>> 77cbe935 (upload from local to git)
+=======
+@endsection
+>>>>>>> b237c557 (02Mei2023 update)

@@ -30,7 +30,7 @@
 	
 	<div id="app" class="app app-sidebar-fixed <?php echo e($appClass); ?>">
 		
-		<?php echo $__env->renderWhen(!$appHeaderHide, 'roonline::includes.header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path'])); ?>
+		<?php echo $__env->renderWhen(!$appHeaderHide, 'includes.header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path'])); ?>
 		
 		<?php echo $__env->renderWhen($appTopMenu, 'roonline::includes.top-menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path'])); ?>
 		
