@@ -11,6 +11,7 @@ use App\Models\LevelModel as Level;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 use App\Helpers\LevelAccess as LevelHelper;
+use App\Models\CGModel;
 
 class ManageUserController extends Controller
 {
@@ -34,7 +35,8 @@ class ManageUserController extends Controller
             $levels = Level::all();
             return view('pages.admin.manage-user', [
                 'levels' => $levels,
-                'departments' => $departments
+                'departments' => $departments,
+                'cgs' => CGModel::all()
             ]);
         }
     }
