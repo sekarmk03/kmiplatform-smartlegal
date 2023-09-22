@@ -43,7 +43,6 @@ function onReadNotif(){
     getNotif();
 }
 conn.onmessage = function(e) {
-    refresh();
     countNotif();
 };
 countNotif();

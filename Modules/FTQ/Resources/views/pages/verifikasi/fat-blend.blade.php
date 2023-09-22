@@ -215,63 +215,10 @@
             });
         }
         function onDraft(){
-            var formData = new FormData($('.modal-body form')[0]);
-            formData.append('txtOkp', $('span.nookp').text());
-            formData.append('txtOkpType', $('span.typeokp').text());
-            formData.append('txtProduct', $('span.product').text());
-            formData.append('txtTotal', $('span.total').text());
-            formData.append('tmPlannedStart', $('span.planned').text());
-            formData.append('txtMoveOrder', $('span.moveorder').text());
-            formData.append('intFormula', $('span.formula').text());
-            formData.append('intIsDraft', 1);
-            formData.append('txtCreatedBy', "{{ Auth::user()->id }}");
-            formData.append('txtUpdatedBy', "{{ Auth::user()->id }}");
-            $('input[name="isCheck[]"]').each(function(){
-                formData.append('intIsCheck[]', $(this).is(':checked')?1:0);
-            })
-            $.ajax({
-                url: url,
-                type: method,
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: "JSON",
-                success: function(response){
-                    $('#modal-level').modal('hide');
-                    refresh();
-                    notification(response.status, response.message,'bg-success');
-                }
-            })
+            isDraft = 1;
         }
         function onPublish(){
-            var formData = new FormData($('.modal-body form')[0]);
-            formData.append('txtOkp', $('span.nookp').text());
-            formData.append('txtOkpType', $('span.typeokp').text());
-            formData.append('txtProduct', $('span.product').text());
-            formData.append('txtTotal', $('span.total').text());
-            formData.append('tmPlannedStart', $('span.planned').text());
-            formData.append('txtMoveOrder', $('span.moveorder').text());
-            formData.append('intFormula', $('span.formula').text());
-            formData.append('intIsDraft', 0);
-            formData.append('txtCreatedBy', "{{ Auth::user()->id }}");
-            formData.append('txtUpdatedBy', "{{ Auth::user()->id }}");
-            $('input[name="isCheck[]"]').each(function(){
-                formData.append('intIsCheck[]', $(this).is(':checked')?1:0);
-            })
-            $.ajax({
-                url: url,
-                type: method,
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: "JSON",
-                success: function(response){
-                    $('#modal-level').modal('hide');
-                    refresh();
-                    notification(response.status, response.message,'bg-success');
-                    conn.send('Verifikasi Fat Blend published');
-                }
-            })
+            isDraft = 0;
         }
         function addPic(){
             let wrapper = $('table#pic');
@@ -402,6 +349,36 @@
                 dropdownParent: $('#modal-level'),
                 placeholder: 'Pilih OKP'
             });
+            $('.modal-body form').on('submit', function(e){
+                e.preventDefault();
+                var formData = new FormData($('.modal-body form')[0]);
+                formData.append('txtOkp', $('span.nookp').text());
+                formData.append('txtOkpType', $('span.typeokp').text());
+                formData.append('txtProduct', $('span.product').text());
+                formData.append('txtTotal', $('span.total').text());
+                formData.append('tmPlannedStart', $('span.planned').text());
+                formData.append('txtMoveOrder', $('span.moveorder').text());
+                formData.append('intFormula', $('span.formula').text());
+                formData.append('intIsDraft', isDraft);
+                formData.append('txtCreatedBy', "{{ Auth::user()->id }}");
+                formData.append('txtUpdatedBy', "{{ Auth::user()->id }}");
+                $('input[name="isCheck[]"]').each(function(){
+                    formData.append('intIsCheck[]', $(this).is(':checked')?1:0);
+                })
+                $.ajax({
+                    url: url,
+                    type: method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "JSON",
+                    success: function(response){
+                        $('#modal-level').modal('hide');
+                        refresh();
+                        notification(response.status, response.message,'bg-success');
+                    }
+                })
+            })
         })
     </script>
 @endpush
@@ -470,7 +447,7 @@
                     <button onclick="confirmCloseModal()" type="button" class="btn-close" aria-hidden="true"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post">
+                    <form action="" method="post" id="FatBlendForm" data-parsley-validate="true">
                         @csrf
                         <div class="row mb-3">
                             <label class="form-label col-form-label col-md-3">Pilih OKP</label>
@@ -553,10 +530,10 @@
                 <div class="modal-footer">
                     <a onclick="confirmCloseModal()" class="btn btn-white"><i class="fa-solid fa-xmark"></i> Close</a>
                     @if ($role->intLevel_ID == 4)
-                        <button type="button" onclick="onPublish()" class="btn btn-success"><i class="fa-solid fa-thumbs-up"></i> Approve</button>
+                        <button type="button" class="btn btn-success"><i class="fa-solid fa-thumbs-up"></i> Approve</button>
                     @else
-                        <button type="button" onclick="onDraft()" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Draft</button>
-                        <button type="button" onclick="onPublish()" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Publish</button>                        
+                        <button type="submit" onclick="onDraft()" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Draft</button>
+                        <button type="submit" onclick="onPublish()" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Publish</button>                        
                     @endif
                     </form>
                 </div>

@@ -47,7 +47,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('auth')
+        Route::middleware('web')
             ->prefix('ftq')
             ->namespace($this->moduleNamespace)
             ->group(module_path('FTQ', '/Routes/web.php'));
