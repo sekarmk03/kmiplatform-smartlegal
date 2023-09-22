@@ -507,7 +507,7 @@
                         refresh();
                         location.reload();
                         notification(response.status, response.message,'bg-success');
-                        conn.send(['success', 'request']);
+                        conn.send(['success', 'terminate']);
                     },
                     error: (response) => {
                         let fields = response.responseJSON.fields;

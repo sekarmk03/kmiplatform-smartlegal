@@ -5,8 +5,11 @@ namespace Modules\Smartlegal\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Modules\Smartlegal\Entities\DocAttachment;
 use Modules\Smartlegal\Entities\Document;
+use Modules\Smartlegal\Entities\File;
 use Modules\Smartlegal\Entities\PICReminder;
 use Modules\Smartlegal\Helpers\CurrencyFormatter;
 use Modules\Smartlegal\Helpers\PeriodFormatter;
@@ -102,19 +105,20 @@ class LibraryMandatoryController extends Controller
             ->leftJoin('kmi_smartlegal_2023.missuers as i', 'm.intIssuerID', '=', 'i.intIssuerID')
             ->leftJoin('kmi_smartlegal_2023.mfiles as f', 'm.intFileID', '=', 'f.intFileID')
             ->select([
-                'd.intDocID', 'd.txtDocNumber', 'd.txtDocName', 'd.dtmUpdatedAt',
+                'd.intDocID', 'd.txtDocNumber', 'd.txtDocName', 'd.dtmUpdatedAt', 'd.dtmCreatedAt',
                 'm.intMandatoryID',
                 'i.intIssuerID', 'i.txtIssuerName', 'i.txtCode',
                 'f.intFileID', 'f.txtFilename', 'f.txtPath'
             ])
             ->where('d.txtDocNumber', 'like', $document->docNumber . '%')
+            ->orderBy('d.dtmCreatedAt', 'DESC')
             ->get();
 
             $transformedData = $versions->map(function ($row) {
                 return [
                     'doc_id' => $row->intDocID,
                     'doc_number' => $row->txtDocNumber,
-                    'date' => $row->dtmUpdatedAt,
+                    'date' => $row->dtmCreatedAt,
                     'doc_name' => $row->txtDocName,
                     'mandatory_id' => $row->intMandatoryID,
                     'issuer_id' => $row->intIssuerID,
@@ -132,7 +136,8 @@ class LibraryMandatoryController extends Controller
                     return '<div class="btn-group"><button onclick="preview('.$row["file_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Preview File"><i class="fas fa-eye"></i></button> <button onclick="download('.$row["file_id"].')" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Download File"><i class="fas fa-download"></i></button></div>';
                 })
                 ->addColumn('attachment', function($row) {
-                    return '<div class="btn-group"><button onclick="attachments('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Preview File"><i class="fas fa-file"></i></button> <button onclick="upload('.$row["doc_id"].')" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Download File"><i class="fas fa-upload"></i></button></div>';
+                    $fileInput = '<div><button onclick="triggerUpload(' . $row['doc_id'] . ')" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload Attachment"><i class="fas fa-upload"></i></button><input type="file" id="FileUpload" name="txtFile" style="display:none" onchange="upload()"></div>';
+                    return '<div class="btn-group"><button onclick="attachments('.$row["doc_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="See Attachments"><i class="fas fa-file"></i></button> ' . $fileInput . '</div>';
                 })
                 ->rawColumns(['action', 'attachment'])
                 ->make(true);
@@ -251,5 +256,80 @@ class LibraryMandatoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function attachment(Request $request, $id)
+    {
+        if ($request->wantsJson()) {
+            $versions = DB::table('kmi_smartlegal_2023.mattachments as a')
+            ->leftJoin('kmi_smartlegal_2023.mfiles as f', 'f.intFileID', '=', 'a.intFileID')
+            ->leftJoin('db_standardization.musers as u', 'u.id', '=', 'a.intCreatedBy')
+            ->select([
+                'a.intAttachmentID', 'a.intDocID', 'a.dtmCreatedAt',
+                'f.intFileID', 'f.txtFilename',
+                'u.txtName', 'u.txtInitial'
+            ])
+            ->where('a.intDocID', $id)
+            ->orderBy('a.intDocID', 'DESC')
+            ->get();
+
+            $transformedData = $versions->map(function ($row) {
+                return [
+                    'doc_id' => $row->intDocID,
+                    'attachment_id' => $row->intAttachmentID,
+                    'file_id' => $row->intFileID,
+                    'date' => $row->dtmCreatedAt,
+                    'file_name' => $row->txtFilename,
+                    'created_by' => $row->txtInitial
+                ];
+            });
+
+            return DataTables::of($transformedData)
+            ->addIndexColumn()
+            ->addColumn('action', function($row) {
+                return '<div class="btn-group"><button onclick="preview('.$row["file_id"].')" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Preview File"><i class="fas fa-eye"></i></button> <button onclick="download('.$row["file_id"].')" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Download File"><i class="fas fa-download"></i></button></div>';
+            })
+            ->rawColumns(['action', 'attachment'])
+            ->make(true);
+        } else {
+            return view('smartlegal::pages.library.mandatory.detail');
+        }
+    }
+
+    public function upload (Request $request) {
+        $fileInput = [];
+        $attachmentInput = [];
+        
+        if ($request->hasFile('txtFile')) {
+            $file = $request->file('txtFile');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move('upload/documents', $fileName);
+            $fileInput['txtFilename'] = $fileName;
+            $fileInput['txtPath'] = '/upload/documents/' . $fileName;
+        }
+
+        $attachmentInput['intDocID'] = $request['intDocID'];
+        $attachmentInput['intCreatedBy'] = Auth::user()->id;
+
+        try {
+            DB::beginTransaction();
+
+            $createFile = File::create($fileInput);
+            $attachmentInput['intFileID'] = $createFile->intFileID;
+
+            $createAttachment = DocAttachment::create($attachmentInput);
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Attachment Created Successfully'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 }

@@ -63,5 +63,7 @@ Route::name('smartlegal.')->group(function () {
 
     Route::prefix('library')->name('library.')->group(function () {
         Route::resource('mandatory', 'LibraryMandatoryController')->only('index', 'show');
+        Route::get('mandatory/{id}/attachment', 'LibraryMandatoryController@attachment')->name('mandatory.attachment');
+        Route::post('mandatory/upload', 'LibraryMandatoryController@upload')->name('mandatory.upload');
     });
 });
