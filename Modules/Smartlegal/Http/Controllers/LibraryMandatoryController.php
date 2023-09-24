@@ -26,8 +26,8 @@ class LibraryMandatoryController extends Controller
         if ($request->wantsJson()) {
             $data = Document::select(
                 'mdocuments.intDocID', 
-                'mdocuments.txtRequestNumber', 
-                DB::raw('substring(mdocuments.txtDocNumber, 1, 11) as txtDocNumber'), 
+                'mdocuments.txtRequestNumber',
+                DB::raw("SUBSTRING_INDEX(mdocuments.txtDocNumber, '-', 1) as txtDocNumber"), 
                 'mdocuments.txtDocName', 
                 'mdocumentstatuses.txtStatusName', 
                 'mmandatories.dtmPublishDate', 
@@ -39,7 +39,7 @@ class LibraryMandatoryController extends Controller
             ->whereIn('mdocuments.intDocID', function($query) {
                 $query->select(DB::raw('MAX(intDocID)'))
                     ->from('mdocuments')
-                    ->groupBy(DB::raw('substring(txtDocNumber, 1, 11)'));
+                    ->groupBy(DB::raw("SUBSTRING_INDEX(mdocuments.txtDocNumber, '-', 1)"));
             })
             ->whereIn('mdocuments.intRequestStatus', [3, 5, 6, 7])
             ->orderBy('mdocuments.dtmUpdatedAt', 'DESC')
@@ -98,7 +98,7 @@ class LibraryMandatoryController extends Controller
     public function show(Request $request, $id)
     {
         if ($request->wantsJson()) {
-            $document = Document::select(DB::raw('substring(txtDocNumber, 1, 11) as docNumber'))
+            $document = Document::select(DB::raw("SUBSTRING_INDEX(mdocuments.txtDocNumber, '-', 1) as docNumber"))
             ->where('intDocID', $id)->first();
             $versions = DB::table('kmi_smartlegal_2023.mdocuments as d')
             ->leftJoin('kmi_smartlegal_2023.mmandatories as m', 'd.intDocID', '=', 'm.intDocID')

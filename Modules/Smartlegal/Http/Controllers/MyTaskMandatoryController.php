@@ -52,6 +52,7 @@ class MyTaskMandatoryController extends Controller
                 'e2.txtDepartmentName AS txtCostCenterName', 'e2.txtInitial AS txtCostCenterInitial'
             ])
             ->where('d.intRequestStatus', 1)
+            ->orWhere('d.intRequestStatus', 2)
             ->get();
     
             $transformedData = $data->map(function ($row) {
