@@ -283,7 +283,7 @@ class MyTaskMandatoryController extends Controller
         if ($request->hasFile('txtFile')) {
             if($file->txtFilename != 'default.pdf') {
                 $destroy = public_path($file->txtPath);
-                unlink($destroy);
+                if (file_exists($destroy)) unlink($destroy);
             }
             $reqFile = $request->file('txtFile');
             $fileName = time() . '_' . $reqFile->getClientOriginalName();

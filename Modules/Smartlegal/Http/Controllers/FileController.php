@@ -122,7 +122,7 @@ class FileController extends Controller
         if ($request->hasFile('txtFile')) {
             if($oldFile->txtFilename != 'default.pdf') {
                 $destroy = public_path($oldFile->txtPath);
-                unlink($destroy);
+                if (file_exists($destroy)) unlink($destroy);
             }
             $file = $request->file('txtFile');
             $fileName = time() . '_' . $file->getClientOriginalName();
@@ -156,7 +156,7 @@ class FileController extends Controller
         if ($file) {
             if($file->txtFilename != 'default.pdf') {
                 $destroy = public_path($file->txtPath);
-                unlink($destroy);
+                if (file_exists($destroy)) unlink($destroy);
             }
             $delete = $file->delete();
             if ($delete) {
