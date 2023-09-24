@@ -39,12 +39,12 @@ class LibraryMandatoryController extends Controller
             ->whereIn('mdocuments.intDocID', function($query) {
                 $query->select(DB::raw('MAX(intDocID)'))
                     ->from('mdocuments')
+                    ->whereIn('mdocuments.intRequestStatus', [3, 5, 6, 7])
                     ->groupBy(DB::raw("SUBSTRING_INDEX(mdocuments.txtDocNumber, '-', 1)"));
             })
-            ->whereIn('mdocuments.intRequestStatus', [3, 5, 6, 7])
             ->orderBy('mdocuments.dtmUpdatedAt', 'DESC')
             ->get();
-    
+
             $transformedData = $data->map(function ($row) {
                 $renewalCost = CurrencyFormatter::formatIDR($row->intRenewalCost, 'Rp');
                 return [
@@ -98,19 +98,22 @@ class LibraryMandatoryController extends Controller
     public function show(Request $request, $id)
     {
         if ($request->wantsJson()) {
-            $document = Document::select(DB::raw("SUBSTRING_INDEX(mdocuments.txtDocNumber, '-', 1) as docNumber"))
+            $document = Document::select(DB::raw("SUBSTRING_INDEX(mdocuments.txtDocNumber, '-', 1) AS docNumber"))
             ->where('intDocID', $id)->first();
-            $versions = DB::table('kmi_smartlegal_2023.mdocuments as d')
-            ->leftJoin('kmi_smartlegal_2023.mmandatories as m', 'd.intDocID', '=', 'm.intDocID')
-            ->leftJoin('kmi_smartlegal_2023.missuers as i', 'm.intIssuerID', '=', 'i.intIssuerID')
-            ->leftJoin('kmi_smartlegal_2023.mfiles as f', 'm.intFileID', '=', 'f.intFileID')
+            $versions = DB::table('kmi_smartlegal_2023.mdocuments AS d')
+            ->leftJoin('kmi_smartlegal_2023.mmandatories AS m', 'd.intDocID', '=', 'm.intDocID')
+            ->leftJoin('kmi_smartlegal_2023.missuers AS i', 'm.intIssuerID', '=', 'i.intIssuerID')
+            ->leftJoin('kmi_smartlegal_2023.mfiles AS f', 'm.intFileID', '=', 'f.intFileID')
+            ->leftJoin('kmi_smartlegal_2023.mdocumentstatuses AS s', 'd.intRequestStatus', '=', 's.intDocStatusID')
             ->select([
                 'd.intDocID', 'd.txtDocNumber', 'd.txtDocName', 'd.dtmUpdatedAt', 'd.dtmCreatedAt',
                 'm.intMandatoryID',
                 'i.intIssuerID', 'i.txtIssuerName', 'i.txtCode',
-                'f.intFileID', 'f.txtFilename', 'f.txtPath'
+                'f.intFileID', 'f.txtFilename', 'f.txtPath',
+                's.txtStatusName'
             ])
             ->where('d.txtDocNumber', 'like', $document->docNumber . '%')
+            ->whereIn('d.intRequestStatus', [3, 5, 6, 7])
             ->orderBy('d.dtmCreatedAt', 'DESC')
             ->get();
 
@@ -120,6 +123,7 @@ class LibraryMandatoryController extends Controller
                     'doc_number' => $row->txtDocNumber,
                     'date' => $row->dtmCreatedAt,
                     'doc_name' => $row->txtDocName,
+                    'status' => $row->txtStatusName,
                     'mandatory_id' => $row->intMandatoryID,
                     'issuer_id' => $row->intIssuerID,
                     'issuer_name' => $row->txtIssuerName,

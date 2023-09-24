@@ -55,6 +55,7 @@ class MyTaskMandatoryController extends Controller
             ])
             ->where('d.intRequestStatus', 1)
             ->orWhere('d.intRequestStatus', 2)
+            ->orderBy('d.dtmUpdatedAt', 'DESC')
             ->get();
     
             $transformedData = $data->map(function ($row) {

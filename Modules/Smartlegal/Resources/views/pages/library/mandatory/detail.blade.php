@@ -32,7 +32,7 @@
 	<!-- END page-header -->
     <div class="row mt-4 pe-3">
         <div class="col">
-            <h3>No. {{ substr($mandatory['doc_number'], 0, 11) }}</h3>
+            <h3 class="mb-0">No. {{ substr($mandatory['doc_number'], 0, -3) }}</h3>
             <p class="fst-italic my-0">Terakhir diperbarui {{ $mandatory['updated_at'] }}</p>
             <?php 
                 $color = [
@@ -153,6 +153,7 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Kode Perizinan</th>
                                         <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Status</th>
                                         <th class="text-center">Nama Perizinan</th>
                                         <th class="text-center">Penerbit</th>
                                         <th class="text-center">Nama File</th>
@@ -292,9 +293,10 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center'},
                     {data: 'doc_number', name: 'doc_number', className: 'text-center'},
                     {data: 'date', name: 'date', className: 'text-center'},
+                    {data: 'status', name: 'status', className: 'text-center'},
                     {data: 'doc_name', name: 'doc_name', className: 'text-center'},
-                    {data: 'issuer_name', name: 'issuer_name', className: 'text-center'},
-                    {data: 'file_name', name: 'file_name', className: 'text-center', width: '30%'},
+                    {data: 'issuer_code', name: 'issuer_code', className: 'text-center'},
+                    {data: 'file_name', name: 'file_name', className: 'text-center', width: '25%'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
                     {data: 'attachment', name: 'attachment', orderable: false, searchable: false, className: 'text-center'},
                 ]
