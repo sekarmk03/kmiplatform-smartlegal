@@ -181,7 +181,7 @@ class LibraryMandatoryController extends Controller
             }
     
             if ($data->dtmExpireDate) {
-                $period = PeriodFormatter::readablePeriod($data->dtmPublishDate, $data->dtmExpireDate);
+                $period = PeriodFormatter::date($data->dtmPublishDate, $data->dtmExpireDate, 'day');
             } else {
                 $period = '-';
             }

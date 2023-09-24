@@ -50,8 +50,7 @@
                                         <th class="text-center">Tipe Perizinan</th>
                                         <th class="text-center">Jenis Perizinan</th>
                                         <th class="text-center">Nama Perizinan</th>
-                                        <th class="text-center">Biaya Pembaruan</th>
-                                        <th class="text-center">Cost Center</th>
+                                        <th class="text-center">Status</th>
                                         <th class="text-center">PIC</th>
                                         <th class="text-center">Action</th>
                                     </tr>
@@ -240,8 +239,7 @@
                 {data: 'type', name: 'type', className: 'text-center'},
                 {data: 'variant', name: 'variant', className: 'text-center'},
                 {data: 'doc_name', name: 'doc_name', className: 'text-center'},
-                {data: 'renewal_cost', name: 'renewal_cost', className: 'text-center'},
-                {data: 'cost_center', name: 'cost_center', className: 'text-center'},
+                {data: 'status', name: 'status', className: 'text-center'},
                 {data: 'pic', name: 'pic', className: 'text-center'},
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]

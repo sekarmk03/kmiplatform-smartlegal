@@ -132,7 +132,7 @@ class MyTaskMandatoryController extends Controller
         ->select([
             'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName', 'd.dtmCreatedAt', 'd.dtmUpdatedAt',
             'ds.txtStatusName as txtDocStatus',
-            'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote',
+            'm.intMandatoryID', 'm.intExpirationPeriod', 'm.dtmPublishDate', 'm.dtmExpireDate', 'm.intReminderPeriod', 'm.txtLocationFilling', 'm.intRenewalCost', 'm.txtNote', 'm.txtTerminationNote',
             'u.txtName AS txtReqByName', 'u.txtInitial AS txtReqByInitial',
             't.txtTypeName',
             'u2.txtName AS txtPICName', 'u2.txtInitial AS txtPICInitial',
@@ -144,6 +144,17 @@ class MyTaskMandatoryController extends Controller
         ])
         ->where('d.intDocID', $id)
         ->first();
+
+        $picData = DB::table('kmi_smartlegal_2023.mpicreminders AS p')
+        ->leftJoin('db_standardization.musers AS u', 'p.intUserID', '=', 'u.id')
+        ->select('u.txtInitial')
+        ->where('p.intMandatoryID', '=', $data->intMandatoryID)
+        ->get();
+
+        $picReminder = [];
+        foreach ($picData as $pic) {
+            array_push($picReminder, $pic->txtInitial);
+        }
 
         if ($data->dtmExpireDate) {
             $period = PeriodFormatter::date($data->dtmPublishDate, $data->dtmExpireDate, 'day');
@@ -183,7 +194,8 @@ class MyTaskMandatoryController extends Controller
             'termination_note' => $data->txtTerminationNote ?: '-',
             'file_id' => $data->intFileID,
             'file_path' => $data->txtPath,
-            'file_name' => $data->txtFilename
+            'file_name' => $data->txtFilename,
+            'pic_reminder' => count($picReminder) > 0 ? implode(", ", $picReminder) : '-'
         ];
 
         $pdfPath = public_path($mandatory['file_path']);

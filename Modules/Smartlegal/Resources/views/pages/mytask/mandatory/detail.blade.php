@@ -101,6 +101,11 @@
                                 <td>{{ $mandatory['rem_period'] }}</td>
                             </tr>
                             <tr>
+                                <td>PIC Reminder</td>
+                                <td>&nbsp;&nbsp;:&nbsp;</td>
+                                <td>{{ $mandatory['pic_reminder'] }}</td>
+                            </tr>
+                            <tr>
                                 <td>Filling Hardcopy</td>
                                 <td>&nbsp;&nbsp;:&nbsp;</td>
                                 <td>{{ $mandatory['location'] }}</td>

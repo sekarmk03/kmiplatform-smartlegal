@@ -11,6 +11,12 @@
             box-shadow: inset 0 0 0 9999px rgba(251, 255, 0, 0.5) !important;
             color: white;
         }
+        #detailTbl td {
+            vertical-align: top;
+        }
+        #detailTbl tr td:first-child {
+            white-space: nowrap;
+        }
     </style>
 @endpush
 @section('content')
@@ -45,7 +51,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <table>
+                        <table id="detailTbl">
                             <tr>
                                 <td>No. Request</td>
                                 <td>&nbsp;&nbsp;:&nbsp;</td>

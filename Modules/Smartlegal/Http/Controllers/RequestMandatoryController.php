@@ -36,7 +36,7 @@ class RequestMandatoryController extends Controller
             ->leftJoin('db_standardization.musers AS u2', 'u2.id', '=', 'm.intPICUserID')
             ->leftJoin('db_standardization.mdepartments AS e', 'e.intDepartment_ID', '=', 'm.intPICDeptID')
             ->leftJoin('kmi_smartlegal_2023.mdocumentvariants AS v', 'v.intDocVariantID', '=', 'm.intVariantID')
-            ->leftJoin('db_standardization.mdepartments AS e2', 'e2.intDepartment_ID', '=', 'm.intCostCenterID')
+            ->leftJoin('kmi_smartlegal_2023.mdocumentstatuses AS s', 'd.intRequestStatus', '=', 's.intDocStatusID')
             ->select([
                 'd.intDocID', 'd.txtRequestNumber', 'd.txtDocNumber', 'd.txtDocName', 'd.intRequestStatus',
                 'm.intRenewalCost', 'm.dtmCreatedAt',
@@ -44,7 +44,7 @@ class RequestMandatoryController extends Controller
                 'u2.txtName AS txtPICName', 'u2.txtInitial AS txtPICInitial',
                 'e.txtDepartmentName', 'e.txtInitial AS txtPICDeptInitial',
                 'v.txtVariantName',
-                'e2.txtDepartmentName AS txtCostCenterName', 'e2.txtInitial AS txtCostCenterInitial'
+                's.txtStatusName'
             ])
             ->orderBy('intDocID', 'DESC')
             ->get();
@@ -59,8 +59,7 @@ class RequestMandatoryController extends Controller
                     'type' => $row->txtTypeName,
                     'variant' => $row->txtVariantName,
                     'doc_name' => $row->txtDocName,
-                    'renewal_cost' => $renewalCost,
-                    'cost_center' => $row->txtCostCenterInitial,
+                    'status' => $row->txtStatusName,
                     'pic' => $row->txtPICDeptInitial . ' - ' . $row->txtPICName,
                     'created_at' => $row->dtmCreatedAt
                 ];
