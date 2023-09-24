@@ -70,11 +70,11 @@
             <form action="" method="post">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label" for="IssuerName">Issuer Name</label>
+                        <label class="form-label" for="IssuerName">Issuer Name<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtIssuerName" id="IssuerName" placeholder="Enter document issuer name.." required/>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="IssuerCode">Issuer Code/Initial</label>
+                        <label class="form-label" for="IssuerCode">Issuer Code/Initial<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtCode" id="IssuerCode" placeholder="Enter document issuer code or initial.." oninput="this.value = this.value.toUpperCase()"/>
                     </div>
                     <div class="mb-3">
@@ -135,12 +135,14 @@
         const create = () => {
             $('.modal-header h4').html('Create Document Issuer');
             $('#modal-level').modal('show');
+            $('.modal-body form label span').show();
             url = "{{ route('smartlegal.master.issuer.store') }}";
             method = "POST";
         }
 
         const edit = ( id ) => {
             $('.modal-header h4').html('Edit Document Issuer');
+            $('.modal-body form label span').hide();
             let editUrl = "{{ route('smartlegal.master.issuer.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.issuer.update', ':id') }}";

@@ -73,7 +73,7 @@
             <form action="" method="post">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label" for="UserID">User</label>
+                        <label class="form-label" for="UserID">User<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intUserID" id="UserID" required>
                             @foreach ($users as $item)
                             <option value="{{ $item->intUserID }}">{{ $item->txtInitial }} - {{ $item->txtName }}</option>
@@ -81,7 +81,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="RoleID">Role</label>
+                        <label class="form-label" for="RoleID">Role<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intRoleID" id="RoleID" required>
                             @foreach ($roles as $item)
                             <option value="{{ $item->intRoleID }}">{{ $item->txtRoleName }}</option>
@@ -143,6 +143,7 @@
         const create = () => {
             $('.modal-header h4').html('Create Access Control');
             $('#modal-level').modal('show');
+            $('.modal-body form label span').show();
             $('select#UserID').val(null).trigger('change');
             $('select#RoleID').val(null).trigger('change');
             url = "{{ route('smartlegal.master.userrole.store') }}";
@@ -151,6 +152,7 @@
 
         const edit = ( id ) => {
             $('.modal-header h4').html('Edit Access Control');
+            $('.modal-body form label span').hide();
             let editUrl = "{{ route('smartlegal.master.userrole.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.userrole.update', ':id') }}";

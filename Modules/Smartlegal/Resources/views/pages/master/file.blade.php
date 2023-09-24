@@ -85,7 +85,7 @@
             <form action="" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
-                        <label for="File" class="form-label">Pilih File</label>
+                        <label for="File" class="form-label">Pilih File<span style="color: red">*</span></label>
                         <input class="form-control" type="file" id="File" name="txtFile" required>
                     </div>
                     <div class="mb-3" id="FrameContainer">
@@ -159,6 +159,7 @@
         const create = () => {
             $('.modal-header h4').html('Add File');
             $('#modal-form').modal('show');
+            $('.modal-body form label span').show();
             $("#FrameContainer").hide();
             url = "{{ route('smartlegal.master.file.store') }}";
             method = "POST";
@@ -166,6 +167,7 @@
 
         const edit = ( id ) => {
             $('.modal-header h4').html('Edit File');
+            $('.modal-body form label span').hide();
             let editUrl = "{{ route('smartlegal.master.file.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.file.update', ':id') }}";

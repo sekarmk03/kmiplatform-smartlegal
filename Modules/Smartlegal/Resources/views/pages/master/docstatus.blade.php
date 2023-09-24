@@ -69,7 +69,7 @@
             <form action="" method="post">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label" for="StatusName">Status Name</label>
+                        <label class="form-label" for="StatusName">Status Name<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtStatusName" id="StatusName" placeholder="Enter status name.." required/>
                     </div>
                     <div class="mb-3">
@@ -129,12 +129,14 @@
         const create = () => {
             $('.modal-header h4').html('Create Document Status');
             $('#modal-level').modal('show');
+            $('.modal-body form label span').show();
             url = "{{ route('smartlegal.master.docstatus.store') }}";
             method = "POST";
         }
 
         const edit = ( id ) => {
             $('.modal-header h4').html('Edit Document Status');
+            $('.modal-body form label span').hide();
             let editUrl = "{{ route('smartlegal.master.docstatus.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.docstatus.update', ':id') }}";

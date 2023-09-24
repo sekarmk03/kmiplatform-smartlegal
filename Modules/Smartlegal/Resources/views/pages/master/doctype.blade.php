@@ -69,7 +69,7 @@
             <form action="" method="post">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label" for="TypeName">Type Name</label>
+                        <label class="form-label" for="TypeName">Type Name<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtTypeName" id="TypeName" placeholder="Enter type name.." required/>
                     </div>
                     <div class="mb-3">
@@ -128,12 +128,14 @@
         const create = () => {
             $('.modal-header h4').html('Create Document Type');
             $('#modal-level').modal('show');
+            $('.modal-body form label span').show();
             url = "{{ route('smartlegal.master.doctype.store') }}";
             method = "POST";
         }
 
         const edit = ( id ) => {
             $('.modal-header h4').html('Edit Document Type');
+            $('.modal-body form label span').hide();
             let editUrl = "{{ route('smartlegal.master.doctype.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.doctype.update', ':id') }}";

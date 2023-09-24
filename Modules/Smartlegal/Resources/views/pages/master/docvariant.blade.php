@@ -69,7 +69,7 @@
             <form action="" method="post">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label" for="VariantName">Variant Name</label>
+                        <label class="form-label" for="VariantName">Variant Name<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtVariantName" id="VariantName" placeholder="Enter variant name.." required/>
                     </div>
                     <div class="mb-3">
@@ -129,12 +129,14 @@
         const create = () => {
             $('.modal-header h4').html('Create Document Variant');
             $('#modal-level').modal('show');
+            $('.modal-body form label span').show();
             url = "{{ route('smartlegal.master.docvariant.store') }}";
             method = "POST";
         }
 
         const edit = ( id ) => {
             $('.modal-header h4').html('Edit Document Variant');
+            $('.modal-body form label span').hide();
             let editUrl = "{{ route('smartlegal.master.docvariant.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.docvariant.update', ':id') }}";

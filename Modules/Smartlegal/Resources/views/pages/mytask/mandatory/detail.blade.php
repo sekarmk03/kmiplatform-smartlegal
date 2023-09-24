@@ -124,15 +124,15 @@
                         @if ($mandatory['status'] == 'Requested' || $mandatory['status'] == 'Revised')
                         <div class="mt-4 px-5 mb-3">
                             <div class="btn-group w-100 fs-4">
-                                <button type="button" class="btn btn-primary" onclick="addNote({{ $mandatory['doc_id'] }}, 2)">
+                                <button type="button" class="btn btn-primary" id="2" onclick="addNote({{ $mandatory['doc_id'] }}, 2)">
                                     <i class="fas fa-pencil-alt"></i>
                                     Revise
                                 </button>
-                                <button type="button" class="btn btn-green" onclick="addNote({{ $mandatory['doc_id'] }}, 3)">
+                                <button type="button" class="btn btn-green" id="3" onclick="addNote({{ $mandatory['doc_id'] }}, 3)">
                                     <i class="fas fa-check"></i>
                                     Approve
                                 </button>
-                                <button type="button" class="btn btn-danger" onclick="addNote({{ $mandatory['doc_id'] }}, 4)">
+                                <button type="button" class="btn btn-danger" id="4" onclick="addNote({{ $mandatory['doc_id'] }}, 4)">
                                     <i class="fas fa-reply"></i>
                                     Reject
                                 </button>
@@ -151,7 +151,7 @@
                                 <div class="mb-2">
                                     <label class="form-label" for="Note">Catatan</label>
                                     <input type="text" hidden id="noteType" name="noteType">
-                                    <textarea name="txtNote" id="Note" cols="30" rows="5" class="form-control" placeholder="Masukkan catatan"></textarea>
+                                    <textarea name="txtNote" id="Note" cols="30" rows="5" class="form-control" placeholder="Masukkan catatan" required></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
                             </form>
@@ -368,13 +368,16 @@
 
         const addNote = ( id, action ) => {
             $('#formNote').show();
+            $('.btn-group #2, .btn-group #3, .btn-group #4').prop('disabled', false);
+            $(`.btn-group #${action}`).prop('disabled', true);
             const actionList = {
-                2: 'revise',
-                3: 'approve',
-                4: 'reject'
+                2: 'Revise',
+                3: 'Approve',
+                4: 'Reject'
             };
             if (action != 0 && action in actionList) {
                 $('#noteType').val(action);
+                $('#formNote label').html(`Catatan ${actionList[action]}<span style="color: red">*</span>`);
                 $('textarea#Note').attr('placeholder', `Masukkan catatan ${actionList[action]}`);
                 url = "{{ route('smartlegal.mytask.mandatory.approve', ':id') }}";
                 url = url.replace(':id', id);
