@@ -339,7 +339,7 @@
             $('.modal-header h4').html('Create New Request');
             $('#modal-form').modal('show');
             $("#FrameContainer").hide();
-            $('#OtherIssuer').hide().removeAttr('required');
+            $('#OtherIssuer').hide().removeAttr('required').val('');
             getAllDocTypes('TypeID', false);
             getAllDepartments('PICDepartment', false);
             $('select#PICDepartment').change(() => {
@@ -361,7 +361,7 @@
                 if ($('#IssuerID').val() == 0) {
                     $('#OtherIssuer').show().prop('required', true);
                 } else {
-                    $('#OtherIssuer').hide().removeAttr('required');;
+                    $('#OtherIssuer').hide().removeAttr('required').val('');
                 }
             });
             getAllUsers('PICReminder', []);
@@ -380,7 +380,13 @@
             method = "POST";
             $.get(editUrl, (response) => {
                 $('#modal-form').modal('show');
-                $('#OtherIssuer').hide().removeAttr('required');
+                $('#OtherIssuer').hide().removeAttr('required').val('');
+                let selectedVal = response.data.intVariantID;
+                if (selectedVal == 1) {
+                    $('div.renewal').hide();
+                } else if (selectedVal == 2) {
+                    $('div.renewal').show();
+                }
                 $('input#DocName').val(response.data.txtDocName);
                 getAllDocTypes('TypeID', response.data.intTypeID);
                 $('select#TypeID').prop('disabled', true);
@@ -388,14 +394,23 @@
                 $('select#PICDepartment').prop('disabled', true);
                 getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
                 $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
+                $('input[name="intVariantID"]').change(() => {
+                    selectedVal = $('input[name="intVariantID"]:checked').val();
+
+                    if (selectedVal == 1) {
+                        $('div.renewal').hide();
+                    } else if (selectedVal == 2) {
+                        $('div.renewal').show();
+                    }
+                });
                 $('input#PublishDate').val(response.data.dtmPublishDate);
                 $('input#ExpireDate').val(response.data.dtmExpireDate);
                 getAllIssuers('IssuerID', response.data.intIssuerID);
                 $('#IssuerID').change(() => {
-                if ($('#IssuerID').val() == 0) {
+                    if ($('#IssuerID').val() == 0) {
                         $('#OtherIssuer').show().prop('required', true);
                     } else {
-                        $('#OtherIssuer').hide().removeAttr('required');;
+                        $('#OtherIssuer').hide().removeAttr('required').val('');
                     }
                 });
                 $('input#ReminderPeriod').val(response.data.intReminderPeriod);

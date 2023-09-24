@@ -107,10 +107,22 @@
                     <div class="mb-3">
                         <label class="form-label" for="RequestNumber">Request Number<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtRequestNumber" id="RequestNumber" placeholder="YYYY/Reg-[No.Type]/[Dept]/xxxx" required/>
+                        <div class="form-check mt-1 check-auto-generate">
+                            <input class="form-check-input" type="checkbox" value="" id="autoReqNumber" checked>
+                            <label class="form-check-label" for="autoReqNumber">
+                                Auto Generate Request Number
+                            </label>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="DocNumber">Document Number<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtDocNumber" id="DocNumber" placeholder="[Category][No.Type][Dept]xxxx-xx" required/>
+                        <div class="form-check mt-1 check-auto-generate">
+                            <input class="form-check-input" type="checkbox" value="" id="autoDocNumber" checked>
+                            <label class="form-check-label" for="autoDocNumber">
+                                Auto Generate Document Number
+                            </label>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="DocName">Document Name<span style="color: red">*</span></label>
@@ -163,6 +175,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="IssuerID">Issuer<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intIssuerID" id="IssuerID" required></select>
+                        <input class="form-control mt-1" type="text" name="txtOtherIssuer" id="OtherIssuer" placeholder="Enter issuer name.."/>
                     </div>
                     <div class="mb-3 renewal">
                         <label class="form-label" for="ReminderPeriod">Reminder Period<span style="color: red">*</span></label>
@@ -380,6 +393,7 @@
                 $.each(response.data, (i, val) => {
                     option += `<option value="${val.intIssuerID}">${val.txtCode} - ${val.txtIssuerName}</option>`;
                 });
+                option += `<option value="0">Other..</option>`;
                 wrapper.append(option);
                 wrapper.val(id).trigger('change');
             });
@@ -400,6 +414,24 @@
             $('#modal-form').modal('show');
             $('.modal-body form label span').show();
             $("#FrameContainer").hide();
+            $('#OtherIssuer').hide().removeAttr('required').val('');
+            $('.check-auto-generate').show();
+            $('#RequestNumber').prop('disabled', true).val('');
+            $('#DocNumber').prop('disabled', true).val('');
+            $('#autoReqNumber').change(() => {
+                if ($('#autoReqNumber').is(':checked')) {
+                    $('#RequestNumber').prop('disabled', true).val('');
+                } else {
+                    $('#RequestNumber').prop('disabled', false);
+                }
+            });
+            $('#autoDocNumber').change(() => {
+                if ($('#autoDocNumber').is(':checked')) {
+                    $('#DocNumber').prop('disabled', true).val('');
+                } else {
+                    $('#DocNumber').prop('disabled', false);
+                }
+            });
             getAllDocStatuses('StatusID', false);
             getAllDocTypes('TypeID', false);
             getAllDepartments('PICDepartment', false);
@@ -418,6 +450,13 @@
                 }
             });
             getAllIssuers('IssuerID', false);
+            $('#IssuerID').change(() => {
+                if ($('#IssuerID').val() == 0) {
+                    $('#OtherIssuer').show().prop('required', true);
+                } else {
+                    $('#OtherIssuer').hide().removeAttr('required').val('');
+                }
+            });
             getAllUsers('PICReminder', []);
             url = "{{ route('smartlegal.master.mandatory.store') }}";
             method = "POST";
@@ -428,6 +467,7 @@
             $('.modal-header h4').html('Edit Mandatory Document');
             $('.modal-body form label span').hide();
             $("#FrameContainer").show();
+            $('.check-auto-generate').hide();
             let editUrl = "{{ route('smartlegal.master.mandatory.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.mandatory.update', ':id') }}";
@@ -436,6 +476,13 @@
             method = "POST";
             $.get(editUrl, (response) => {
                 $('#modal-form').modal('show');
+                $('#OtherIssuer').hide().removeAttr('required').val('');
+                let selectedVal = response.data.intVariantID;
+                if (selectedVal == 1) {
+                    $('div.renewal').hide();
+                } else if (selectedVal == 2) {
+                    $('div.renewal').show();
+                }
                 $('input#RequestNumber').val(response.data.txtRequestNumber);
                 $('input#DocNumber').val(response.data.txtDocNumber);
                 $('input#DocName').val(response.data.txtDocName);
@@ -447,9 +494,25 @@
                     getUsersByDepartments('PICUser', response.data.intPICUserID, selectedOpt);
                 });
                 $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
+                $('input[name="intVariantID"]').change(() => {
+                    selectedVal = $('input[name="intVariantID"]:checked').val();
+
+                    if (selectedVal == 1) {
+                        $('div.renewal').hide();
+                    } else if (selectedVal == 2) {
+                        $('div.renewal').show();
+                    }
+                });
                 $('input#PublishDate').val(response.data.dtmPublishDate);
                 $('input#ExpireDate').val(response.data.dtmExpireDate);
                 getAllIssuers('IssuerID', response.data.intIssuerID);
+                $('#IssuerID').change(() => {
+                    if ($('#IssuerID').val() == 0) {
+                        $('#OtherIssuer').show().prop('required', true);
+                    } else {
+                        $('#OtherIssuer').hide().removeAttr('required').val('');
+                    }
+                });
                 $('input#ReminderPeriod').val(response.data.intReminderPeriod);
                 $('select#RemPeriodUnit').val(response.data.remPeriodUnit);
                 getAllUsers('PICReminder', response.data.picReminders);

@@ -268,6 +268,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="IssuerID">Issuer</label>
                         <select class="select2 form-select" name="intIssuerID" id="IssuerID"></select>
+                        <input class="form-control mt-1" type="text" name="txtOtherIssuer" id="OtherIssuer" placeholder="Enter issuer name.."/>
                     </div>
                     <div class="mb-3 renewal">
                         <label class="form-label" for="ReminderPeriod">Reminder Period</label>
@@ -463,6 +464,7 @@
                 $.each(response.data, (i, val) => {
                     option += `<option value="${val.intIssuerID}">${val.txtCode} - ${val.txtIssuerName}</option>`;
                 });
+                option += `<option value="0">Other..</option>`;
                 wrapper.append(option);
                 wrapper.val(id).trigger('change');
             });
@@ -479,6 +481,13 @@
             method = "POST";
             $.get(editUrl, (response) => {
                 $('#modal-form').modal('show');
+                $('#OtherIssuer').hide().removeAttr('required').val('');
+                let selectedVal = response.data.intVariantID;
+                if (selectedVal == 1) {
+                    $('div.renewal').hide();
+                } else if (selectedVal == 2) {
+                    $('div.renewal').show();
+                }
                 $('input#RequestNumber').val(response.data.txtRequestNumber);
                 $('input#DocNumber').val(response.data.txtDocNumber);
                 $('input#DocName').val(response.data.txtDocName);
@@ -486,9 +495,25 @@
                 getAllDepartments('PICDepartment', response.data.intPICDeptID);
                 getUsersByDepartments('PICUser', response.data.intPICUserID, response.data.intPICDeptID);
                 $('input[name="intVariantID"][value="' + response.data.intVariantID + '"]').prop('checked', true);
+                $('input[name="intVariantID"]').change(() => {
+                    selectedVal = $('input[name="intVariantID"]:checked').val();
+
+                    if (selectedVal == 1) {
+                        $('div.renewal').hide();
+                    } else if (selectedVal == 2) {
+                        $('div.renewal').show();
+                    }
+                });
                 $('input#PublishDate').val(response.data.dtmPublishDate);
                 $('input#ExpireDate').val(response.data.dtmExpireDate);
                 getAllIssuers('IssuerID', response.data.intIssuerID);
+                $('#IssuerID').change(() => {
+                    if ($('#IssuerID').val() == 0) {
+                        $('#OtherIssuer').show().prop('required', true);
+                    } else {
+                        $('#OtherIssuer').hide().removeAttr('required').val('');
+                    }
+                });
                 $('input#ReminderPeriod').val(response.data.intReminderPeriod);
                 $('select#RemPeriodUnit').val(response.data.remPeriodUnit);
                 getAllUsers('PICReminder', response.data.picReminders);

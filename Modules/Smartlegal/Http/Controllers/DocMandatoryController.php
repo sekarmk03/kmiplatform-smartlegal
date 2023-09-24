@@ -19,7 +19,9 @@ use Modules\Smartlegal\Entities\Issuer;
 use Modules\Smartlegal\Entities\Mandatory;
 use Modules\Smartlegal\Entities\PICReminder;
 use Modules\Smartlegal\Helpers\CurrencyFormatter;
+use Modules\Smartlegal\Helpers\NumberIDGenerator;
 use Modules\Smartlegal\Helpers\PeriodFormatter;
+use Modules\Smartlegal\Helpers\TextFormatter;
 use Yajra\DataTables\DataTables;
 
 class DocMandatoryController extends Controller
@@ -99,7 +101,7 @@ class DocMandatoryController extends Controller
                     'exp_period' => $period ?: '-',
                     'publish_date' => $row->dtmPublishDate,
                     'exp_date' => $row->dtmExpireDate ?: '-',
-                    'issuer' => $row->txtIssuerName,
+                    'issuer' => $row->txtCode,
                     'rem_period' => $remPeriod,
                     'pic_reminder' => count($picReminder) > 0 ? implode(", ", $picReminder) : '-',
                     'location' => $row->txtLocationFilling,
@@ -148,6 +150,7 @@ class DocMandatoryController extends Controller
         $inputMandatory = [];
         $inputPICReminder = [];
         $inputLog = [];
+        $inputIssuer = [];
 
         if ($request->hasFile('txtFile')) {
             $file = $request->file('txtFile');
@@ -157,8 +160,9 @@ class DocMandatoryController extends Controller
             $inputFile['txtPath'] = '/upload/documents/' . $fileName;
         }
 
-        $inputDocument['txtRequestNumber'] = $request['txtRequestNumber'];
-        $inputDocument['txtDocNumber'] = $request['txtDocNumber'];
+        $department = DepartmentModel::where('intDepartment_ID', $request['intPICDeptID'])->first();
+        $inputDocument['txtRequestNumber'] = $request['txtRequestNumber'] ?: NumberIDGenerator::generateRequestNumber($request['intTypeID'], $department->txtInitial);
+        $inputDocument['txtDocNumber'] = $request['txtDocNumber'] ?: NumberIDGenerator::generateDocumentNumber('PM', $request['intTypeID'], $department->txtInitial, null);
         $inputDocument['txtDocName'] = $request['txtDocName'];
         $inputDocument['intRequestedBy'] = Auth::user()->id;
         $inputDocument['intRequestStatus'] = $request['intRequestStatus'] ?: 1;
@@ -168,15 +172,14 @@ class DocMandatoryController extends Controller
         $inputMandatory['intPICUserID'] = $request['intPICUserID'];
         $inputMandatory['intVariantID'] = $request['intVariantID'];
         $inputMandatory['dtmPublishDate'] = $request['dtmPublishDate'];
-        $inputMandatory['dtmExpireDate'] = $request['dtmExpireDate'] ?: null;
-        $inputMandatory['intExpirationPeriod'] = $inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : null;
-        $inputMandatory['intIssuerID'] = $request['intIssuerID'];
-        $inputMandatory['intReminderPeriod'] = $request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : null;
+        $inputMandatory['dtmExpireDate'] = $request['intVariantID'] == 1 ? null : ($request['dtmExpireDate'] ?: null);
+        $inputMandatory['intExpirationPeriod'] = $request['intVariantID'] == 1 ? null : ($inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : null);
+        $inputMandatory['intReminderPeriod'] = $request['intVariantID'] == 1 ? null : ($request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : null);
         $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
-        $inputMandatory['intRenewalCost'] = $request['intRenewalCost'] ?: 0;
+        $inputMandatory['intRenewalCost'] = $request['intVariantID'] == 1 ? 0 : ($request['intRenewalCost'] ?: 0);
         $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
-        $inputMandatory['txtNote'] = $request['txtNote'];
-        $inputMandatory['txtTerminationNote'] = $request['txtTerminationNote'];
+        $inputMandatory['txtNote'] = $request['txtNote'] ?: '';
+        $inputMandatory['txtTerminationNote'] = $request['txtTerminationNote'] ?: null;
         $inputMandatory['intCreatedBy'] = Auth::user()->id;
 
         $inputLog['intState'] = $request['intDocStatusID'];
@@ -186,11 +189,24 @@ class DocMandatoryController extends Controller
         
         try {
             DB::beginTransaction();
+
             $createFile = File::create($inputFile);
+
             $createDocument = Document::create($inputDocument);
+
+            if ($request['intIssuerID'] == 0) {
+                $inputIssuer['txtIssuerName'] = $request['txtOtherIssuer'];
+                $inputIssuer['txtCode'] = TextFormatter::getInitials($request['txtOtherIssuer']);
+                $createIssuer = Issuer::create($inputIssuer);
+                $inputMandatory['intIssuerID'] = $createIssuer->intIssuerID;
+            } else {
+                $inputMandatory['intIssuerID'] = $request['intIssuerID'];
+            }
+            
             $inputMandatory['intFileID'] = $createFile->intFileID;
             $inputMandatory['intDocID'] = $createDocument->intDocID;
             $createMandatory = Mandatory::create($inputMandatory);
+
             $inputLog['intDocID'] = $createDocument->intDocID;
             
             if ($request['intVariantID'] == 2) {
@@ -318,15 +334,14 @@ class DocMandatoryController extends Controller
         $inputMandatory['intPICUserID'] = $request['intPICUserID'];
         $inputMandatory['intVariantID'] = $request['intVariantID'];
         $inputMandatory['dtmPublishDate'] = $request['dtmPublishDate'];
-        $inputMandatory['dtmExpireDate'] = $request['dtmExpireDate'] ?: null;
-        $inputMandatory['intExpirationPeriod'] = $inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : null;
-        $inputMandatory['intIssuerID'] = $request['intIssuerID'];
-        $inputMandatory['intReminderPeriod'] = $request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : null;
+        $inputMandatory['dtmExpireDate'] = $request['intVariantID'] == 1 ? null : ($request['dtmExpireDate'] ?: $mandatory->dtmExpireDate);
+        $inputMandatory['intExpirationPeriod'] = $request['intVariantID'] == 1 ? null : ($inputMandatory['dtmExpireDate'] ? PeriodFormatter::dayCounter($inputMandatory['dtmPublishDate'], $inputMandatory['dtmExpireDate']) : $mandatory->intExpirationPeriod);
+        $inputMandatory['intReminderPeriod'] = $request['intVariantID'] == 1 ? null : ($request['intReminderPeriod'] ? PeriodFormatter::countInputToDay($request['intReminderPeriod'], $request['remPeriodUnit']) : $mandatory->intReminderPeriod);
         $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
-        $inputMandatory['intRenewalCost'] = $request['intRenewalCost'] ?: 0;
+        $inputMandatory['intRenewalCost'] = $request['intVariantID'] == 1 ? 0 : ($request['intRenewalCost'] ?: $mandatory->intRenewalCost);
         $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
-        $inputMandatory['txtNote'] = $request['txtNote'];
-        $inputMandatory['txtTerminationNote'] = $request['txtTerminationNote'];
+        $inputMandatory['txtNote'] = $request['txtNote'] ?: '';
+        $inputMandatory['txtTerminationNote'] = $request['txtTerminationNote'] ?: null;
         $inputMandatory['intCreatedBy'] = Auth::user()->id;
         $inputMandatory['intFileID'] = $mandatory->intFileID;
         $inputMandatory['intDocID'] = $document->intDocID;
@@ -339,8 +354,20 @@ class DocMandatoryController extends Controller
         
         try {
             DB::beginTransaction();
+
             $file->update($inputFile);
+
             $document->update($inputDocument);
+
+            if ($request['intIssuerID'] == 0) {
+                $inputIssuer['txtIssuerName'] = $request['txtOtherIssuer'];
+                $inputIssuer['txtCode'] = TextFormatter::getInitials($request['txtOtherIssuer']);
+                $createIssuer = Issuer::create($inputIssuer);
+                $inputMandatory['intIssuerID'] = $createIssuer->intIssuerID;
+            } else {
+                $inputMandatory['intIssuerID'] = $request['intIssuerID'] ?: $mandatory->intIssuerID;
+            }
+
             $mandatory->update($inputMandatory);
             
             if ($request['intVariantID'] == 2) {

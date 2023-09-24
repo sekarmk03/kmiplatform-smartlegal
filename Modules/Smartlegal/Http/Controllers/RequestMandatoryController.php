@@ -138,7 +138,7 @@ class RequestMandatoryController extends Controller
         $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
         $inputMandatory['intRenewalCost'] = $request['intVariantID'] == 1 ? 0 : ($request['intRenewalCost'] ?: 0);
         $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
-        $inputMandatory['txtNote'] = $request['txtNote'];
+        $inputMandatory['txtNote'] = $request['txtNote'] ?: '';
         $inputMandatory['intCreatedBy'] = Auth::user()->id;
 
         $inputLog['intState'] = 1;
@@ -301,7 +301,7 @@ class RequestMandatoryController extends Controller
         $inputMandatory['txtLocationFilling'] = $request['txtLocationFilling'];
         $inputMandatory['intRenewalCost'] = $request['intVariantID'] == 1 ? 0 : ($request['intRenewalCost'] ?: $mandatory->intRenewalCost);
         $inputMandatory['intCostCenterID'] = $request['intCostCenterID'];
-        $inputMandatory['txtNote'] = $request['txtNote'];
+        $inputMandatory['txtNote'] = $request['txtNote'] ?: '';
         $inputMandatory['txtTerminationNote'] = null;
         $inputMandatory['intCreatedBy'] = Auth::user()->id;
 
@@ -330,7 +330,7 @@ class RequestMandatoryController extends Controller
             } else {
                 $inputMandatory['intIssuerID'] = $request['intIssuerID'] ?: $mandatory->intIssuerID;
             }
-            
+
             $inputMandatory['intDocID'] = $createDocument->intDocID;
             $inputLog['intDocID'] = $createDocument->intDocID;
             $createMandatory = Mandatory::create($inputMandatory);
