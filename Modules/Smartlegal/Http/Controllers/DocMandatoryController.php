@@ -311,7 +311,7 @@ class DocMandatoryController extends Controller
         $inputDocument['txtDocNumber'] = $request['txtDocNumber'];
         $inputDocument['txtDocName'] = $request['txtDocName'];
         $inputDocument['intRequestedBy'] = Auth::user()->id;
-        $inputDocument['intRequestStatus'] = $request['intRequestStatus'] ?: 1;
+        $inputDocument['intRequestStatus'] = $request['intRequestStatus'];
 
         $inputMandatory['intTypeID'] = $request['intTypeID'];
         $inputMandatory['intPICDeptID'] = $request['intPICDeptID'];

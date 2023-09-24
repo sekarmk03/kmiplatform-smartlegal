@@ -105,27 +105,27 @@
             <form action="" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label" for="RequestNumber">Request Number</label>
+                        <label class="form-label" for="RequestNumber">Request Number<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtRequestNumber" id="RequestNumber" placeholder="YYYY/Reg-[No.Type]/[Dept]/xxxx" required/>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="DocNumber">Document Number</label>
+                        <label class="form-label" for="DocNumber">Document Number<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtDocNumber" id="DocNumber" placeholder="[Category][No.Type][Dept]xxxx-xx" required/>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="DocName">Document Name</label>
+                        <label class="form-label" for="DocName">Document Name<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtDocName" id="DocName" placeholder="Enter document name.." required/>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="StatusID">Status</label>
+                        <label class="form-label" for="StatusID">Status<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intDocStatusID" id="StatusID"></select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="TypeID">Type</label>
+                        <label class="form-label" for="TypeID">Type<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intTypeID" id="TypeID" required></select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="PICUser">PIC Document</label>
+                        <label class="form-label" for="PICUser">PIC Document<span style="color: red">*</span></label>
                         <div class="input-group">
                             <div class="col-4">
                                 <select class="select2 form-select" name="intPICDeptID" id="PICDepartment" required></select>
@@ -136,7 +136,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="">Variant</label>
+                        <label class="form-label" for="">Variant<span style="color: red">*</span></label>
                         <div>
                             @foreach ($variants as $item)
                             <div class="form-check form-check-inline">
@@ -147,25 +147,25 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="PublishDate">Publish Date</label>
+                        <label class="form-label" for="PublishDate">Publish Date<span style="color: red">*</span></label>
                         <div class="input-group">
                             <input class="form-control" type="text" name="dtmPublishDate" id="PublishDate" placeholder="Enter document publish date.." data-date-format="yyyy-mm-dd" required/>
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
                     <div class="mb-3 renewal">
-                        <label class="form-label" for="ExpireDate">Expire Date</label>
+                        <label class="form-label" for="ExpireDate">Expire Date<span style="color: red">*</span></label>
                         <div class="input-group">
                             <input class="form-control" type="text" name="dtmExpireDate" id="ExpireDate" placeholder="Enter document expire date.." data-date-format="yyyy-mm-dd"/>
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="IssuerID">Issuer</label>
+                        <label class="form-label" for="IssuerID">Issuer<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intIssuerID" id="IssuerID" required></select>
                     </div>
                     <div class="mb-3 renewal">
-                        <label class="form-label" for="ReminderPeriod">Reminder Period</label>
+                        <label class="form-label" for="ReminderPeriod">Reminder Period<span style="color: red">*</span></label>
                         <div class="input-group">
                             <input class="form-control" type="number" name="intReminderPeriod" id="ReminderPeriod" placeholder="Enter reminder period (day format).."/>
                             <div class="col-3">
@@ -178,15 +178,15 @@
                         </div>
                     </div>
                     <div class="mb-3 renewal">
-                        <label class="form-label" for="PICReminder">PIC Reminder</label>
+                        <label class="form-label" for="PICReminder">PIC Reminder<span style="color: red">*</span></label>
                         <select class="selectpicker form-select" name="picReminders[]" id="PICReminder" multiple></select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="LocationFilling">Location Filling</label>
+                        <label class="form-label" for="LocationFilling">Location Filling<span style="color: red">*</span></label>
                         <input class="form-control" type="text" name="txtLocationFilling" id="LocationFilling" placeholder="Enter location filling document.." required/>
                     </div>
                     <div class="mb-3">
-                        <label for="File" class="form-label">Pilih File</label>
+                        <label for="File" class="form-label">Pilih File<span style="color: red">*</span></label>
                         <input class="form-control" type="file" id="File" name="txtFile">
                     </div>
                     <div class="mb-3" id="FrameContainer">
@@ -196,19 +196,19 @@
                         </div>
                     </div>
                     <div class="mb-3 renewal">
-                        <label class="form-label" for="RenewalCost">Renewal Cost</label>
+                        <label class="form-label" for="RenewalCost">Renewal Cost<span style="color: red">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">Rp</span>
                             <input class="form-control" type="number" name="intRenewalCost" id="RenewalCost" placeholder="Enter renewal cost (e.g. 250000).."/>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="CostCenter" class="form-label">Cost Center</label>
+                        <label for="CostCenter" class="form-label">Cost Center<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intCostCenterID" id="CostCenter" required>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="Notes">Notes</label>
+                        <label class="form-label" for="Notes">Notes<span style="color: red">*</span></label>
                         <textarea name="txtNote" id="Notes" cols="30" rows="5" class="form-control" placeholder="Enter Document Notes.."></textarea>
                     </div>
                     <div class="mb-3">
@@ -284,7 +284,7 @@
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]
         });
-        
+
         const getUrl = () => url;
         const getMethod = () => method;
         const refresh = () => daTable.ajax.reload(null, false);
@@ -398,6 +398,7 @@
         const create = () => {
             $('.modal-header h4').html('Add Mandatory Document');
             $('#modal-form').modal('show');
+            $('.modal-body form label span').show();
             $("#FrameContainer").hide();
             getAllDocStatuses('StatusID', false);
             getAllDocTypes('TypeID', false);
@@ -425,6 +426,8 @@
         const edit = ( id ) => {
             // id document
             $('.modal-header h4').html('Edit Mandatory Document');
+            $('.modal-body form label span').hide();
+            $("#FrameContainer").show();
             let editUrl = "{{ route('smartlegal.master.mandatory.edit', ':id') }}";
             editUrl = editUrl.replace(':id', id);
             url = "{{ route('smartlegal.master.mandatory.update', ':id') }}";

@@ -122,7 +122,7 @@
                 {
                     data: 'txtDesc',
                     name: 'txtDesc',
-                    width: '50%'
+                    width: '40%'
                 },
                 {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'},
             ]
