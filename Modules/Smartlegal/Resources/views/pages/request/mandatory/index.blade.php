@@ -124,6 +124,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="IssuerID">Issuer<span style="color: red">*</span></label>
                         <select class="select2 form-select" name="intIssuerID" id="IssuerID" required></select>
+                        <input class="form-control mt-1" type="text" name="txtOtherIssuer" id="OtherIssuer" placeholder="Enter issuer name.."/>
                     </div>
                     <div class="mb-3 renewal">
                         <label class="form-label" for="ReminderPeriod">Reminder Period<span style="color: red">*</span></label>
@@ -328,6 +329,7 @@
                 $.each(response.data, (i, val) => {
                     option += `<option value="${val.intIssuerID}">${val.txtCode} - ${val.txtIssuerName}</option>`;
                 });
+                option += `<option value="0">Other..</option>`;
                 wrapper.append(option);
                 wrapper.val(id).trigger('change');
             });
@@ -337,6 +339,7 @@
             $('.modal-header h4').html('Create New Request');
             $('#modal-form').modal('show');
             $("#FrameContainer").hide();
+            $('#OtherIssuer').hide().removeAttr('required');
             getAllDocTypes('TypeID', false);
             getAllDepartments('PICDepartment', false);
             $('select#PICDepartment').change(() => {
@@ -354,6 +357,13 @@
                 }
             });
             getAllIssuers('IssuerID', false);
+            $('#IssuerID').change(() => {
+                if ($('#IssuerID').val() == 0) {
+                    $('#OtherIssuer').show().prop('required', true);
+                } else {
+                    $('#OtherIssuer').hide().removeAttr('required');;
+                }
+            });
             getAllUsers('PICReminder', []);
             url = "{{ route('smartlegal.request.mandatory.store') }}";
             method = "POST";
@@ -370,6 +380,7 @@
             method = "POST";
             $.get(editUrl, (response) => {
                 $('#modal-form').modal('show');
+                $('#OtherIssuer').hide().removeAttr('required');
                 $('input#DocName').val(response.data.txtDocName);
                 getAllDocTypes('TypeID', response.data.intTypeID);
                 $('select#TypeID').prop('disabled', true);
@@ -380,6 +391,13 @@
                 $('input#PublishDate').val(response.data.dtmPublishDate);
                 $('input#ExpireDate').val(response.data.dtmExpireDate);
                 getAllIssuers('IssuerID', response.data.intIssuerID);
+                $('#IssuerID').change(() => {
+                if ($('#IssuerID').val() == 0) {
+                        $('#OtherIssuer').show().prop('required', true);
+                    } else {
+                        $('#OtherIssuer').hide().removeAttr('required');;
+                    }
+                });
                 $('input#ReminderPeriod').val(response.data.intReminderPeriod);
                 $('select#RemPeriodUnit').val(response.data.remPeriodUnit);
                 getAllUsers('PICReminder', response.data.picReminders);
